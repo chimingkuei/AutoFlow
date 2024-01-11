@@ -160,34 +160,82 @@ namespace AutoFlow
         }
         #endregion
 
-        private void GetClickPoint()
+        private void DrawCross()
         {
-            // Image控件顯示紅點
-            Ellipse reddot = new Ellipse
+            Line cross1 = new Line
+            {
+                Stroke = System.Windows.Media.Brushes.Red,
+                StrokeThickness = 3,
+                X1 = _downPoint.X - 3,
+                Y1 = _downPoint.Y - 3,
+                X2 = _downPoint.X + 3,
+                Y2 = _downPoint.Y + 3
+            };
+            Line cross2 = new Line
+            {
+                Stroke = System.Windows.Media.Brushes.Red,
+                StrokeThickness = 3,
+                X1 = _downPoint.X + 3,
+                Y1 = _downPoint.Y - 3,
+                X2 = _downPoint.X - 3,
+                Y2 = _downPoint.Y + 3
+            };
+            cross1list.Add(cross1);
+            cross2list.Add(cross2);
+            canvas.Children.Add(cross1);
+            canvas.Children.Add(cross2);
+        }
+
+        private void DrawDot()
+        {
+            Ellipse dot = new Ellipse
             {
                 Stroke = System.Windows.Media.Brushes.Red,
                 StrokeThickness = 5
             };
-            Canvas.SetLeft(reddot, _downPoint.X);
-            Canvas.SetTop(reddot, _downPoint.Y);
-            reddotlist.Add(reddot);
-            canvas.Children.Add(reddot);
+            Canvas.SetLeft(dot, _downPoint.X);
+            Canvas.SetTop(dot, _downPoint.Y);
+            dotlist.Add(dot);
+            canvas.Children.Add(dot);
+        }
+
+        private void GetClickPoint()
+        {
+            //DrawDot();
+            DrawCross();
             // List螢幕座標位置
             int screen_x = Convert.ToInt32(_downPoint.X / Display_Image.ActualWidth * 1920);
             int screen_y = Convert.ToInt32(_downPoint.Y / Display_Image.ActualHeight * 1080);
+            pointlist.Add(new System.Drawing.Point(screen_x, screen_y));
             //Console.WriteLine($"螢幕X座標:{screen_x}");
             //Console.WriteLine($"螢幕Y座標:{screen_y}");
-            pointlist.Add(new System.Drawing.Point(screen_x, screen_y));
+        }
+
+        private void RemoveDot()
+        {
+            if (dotlist.Count != 0)
+            {
+                canvas.Children.Remove(dotlist[dotlist.Count - 1]);
+                dotlist.Remove(dotlist[dotlist.Count - 1]);
+                pointlist.Remove(pointlist[pointlist.Count - 1]);
+            }
+        }
+        private void RemoveCross()
+        {
+            if (cross1list.Count != 0)
+            {
+                canvas.Children.Remove(cross1list[cross1list.Count - 1]);
+                canvas.Children.Remove(cross2list[cross2list.Count - 1]);
+                cross1list.Remove(cross1list[cross1list.Count - 1]);
+                cross2list.Remove(cross2list[cross2list.Count - 1]);
+                pointlist.Remove(pointlist[pointlist.Count - 1]);
+            }
         }
 
         private void RemoveClickPoint()
         {
-            if (reddotlist.Count != 0)
-            {
-                canvas.Children.Remove(reddotlist[reddotlist.Count - 1]);
-                reddotlist.Remove(reddotlist[reddotlist.Count - 1]);
-                pointlist.Remove(pointlist[pointlist.Count - 1]);
-            }
+            //RemoveDot();
+            RemoveCross();
         }
         #endregion
 
@@ -280,7 +328,9 @@ namespace AutoFlow
         #endregion
 
         #region Mouse Button Event
-        private List<Ellipse> reddotlist = new List<Ellipse>();
+        private List<Ellipse> dotlist = new List<Ellipse>();
+        private List<Line> cross1list = new List<Line>();
+        private List<Line> cross2list = new List<Line>();
         private List<System.Drawing.Point> pointlist = new List<System.Drawing.Point>();
         private void AddPointButtonDown(object sender, MouseButtonEventArgs e)
         {
