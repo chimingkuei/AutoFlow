@@ -257,13 +257,12 @@ namespace AutoFlow
         }
 
         // The name of chart can't be repeated.(ScatterPlot)
-        public void ScatterChart(string filepath, List<List<Tuple<double, double>>> lists)
+        public void ScatterChart(string filepath, string sheetname, List<List<Tuple<double, double>>> lists)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            var fileInfo = new FileInfo(filepath);
-            using (var package = new ExcelPackage(fileInfo))
+            using (var package = new ExcelPackage())
             {
-                var worksheet = package.Workbook.Worksheets[0];
+                var worksheet = package.Workbook.Worksheets.Add(sheetname);
                 if (!CheckChartName(worksheet, "ScatterPlot"))
                 {
                     var chart = worksheet.Drawings.AddChart("ScatterPlot", eChartType.XYScatter);
@@ -286,7 +285,7 @@ namespace AutoFlow
                 }
                 try
                 {
-                    package.Save();
+                    package.SaveAs(new FileInfo(filepath));
                 }
                 catch
                 {
@@ -296,7 +295,45 @@ namespace AutoFlow
             }
         }
 
-       
+        public void CSVToList(string csvfilepath, Tuple<int, int> index)
+        {
+            List<List<Tuple<double, double>>> dataListChunks = new List<List<Tuple<double, double>>>();
+            int chunkSize = 256;
+            // 確保CSV檔案存在
+            if (File.Exists(csvfilepath))
+            {
+                using (StreamReader reader = new StreamReader(csvfilepath))
+                {
+                    // 跳過標題行（如果有的話）
+                    reader.ReadLine();
+                    List<Tuple<double, double>> currentChunk = new List<Tuple<double, double>>();
+                    // 讀取CSV檔案中的每一行
+                    while (!reader.EndOfStream)
+                    {
+                        string line = reader.ReadLine();
+                        string[] fields = line.Split(',');
+                        Tuple<double, double> rowData = new Tuple<double, double> (Convert.ToDouble(fields[index.Item1]), Convert.ToDouble(fields[index.Item2]));
+                        currentChunk.Add(rowData);
+                        // 如果已經累積了256筆資料，將它添加到主List中，然後重新創建新的List
+                        if (currentChunk.Count == chunkSize)
+                        {
+                            dataListChunks.Add(currentChunk);
+                            currentChunk = new List<Tuple<double, double>>();
+                        }
+                    }
+                }
+                // 打印第一個List的第一筆數據（可選）
+                //if (dataListChunks.Count > 0 && dataListChunks[0].Count > 0)
+                //{
+                //    Tuple<double, double> firstData = dataListChunks[0][0];
+                //    Console.WriteLine($"Column1: {firstData.Item1}, Column2: {firstData.Item2}");
+                //}
+            }
+            else
+            {
+                Console.WriteLine("CSV檔案不存在");
+            }
+        }
 
 
     }

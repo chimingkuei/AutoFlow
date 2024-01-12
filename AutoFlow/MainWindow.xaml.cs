@@ -39,7 +39,7 @@ namespace AutoFlow
         public string Coordinate_Y_val { get; set; }
         public List<System.Drawing.Point> click_points { get; set; }
     }
-    
+   
     public partial class MainWindow : System.Windows.Window
     {
         
@@ -220,6 +220,7 @@ namespace AutoFlow
                 pointlist.Remove(pointlist[pointlist.Count - 1]);
             }
         }
+
         private void RemoveCross()
         {
             if (cross1list.Count != 0)
@@ -249,6 +250,7 @@ namespace AutoFlow
         }
         BaseConfig<Parameter> Config = new BaseConfig<Parameter>();
         Core Do = new Core();
+        ExcelHandler EH = new ExcelHandler();
         BaseLogRecord Logger = new BaseLogRecord();
         CancellationTokenSource cts;
         private bool _started;
@@ -300,7 +302,9 @@ namespace AutoFlow
                     }
                 case nameof(Stop):
                     {
-                        cts.Cancel();
+                        //cts.Cancel();
+                        string csvFilePath = @"D:\TEST.csv";
+                        EH.CSVToList(csvFilePath, new Tuple<int, int>(1, 2));
                         break;
                     }
                 case nameof(Capture_Screen):
