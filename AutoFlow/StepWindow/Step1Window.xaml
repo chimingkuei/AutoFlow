@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutoFlow.StepWindow"
         mc:Ignorable="d"
-        Title="Step1Window" Height="450" Width="700" Background="#FFE6F0FF" Loaded="Window_Loaded">
+        Title="Step1Window" Height="450" Width="700" Background="#FFE6F0FF" Loaded="Window_Loaded" Icon="/Icon/Deepwise.ico">
     <Grid>
         <WrapPanel Orientation="Horizontal" Margin="36,43,448,38">
             <RadioButton x:Name="VSM" Content="點選vsm檔" HorizontalAlignment="Left" Margin="10,8,0,0" VerticalAlignment="Top" Checked="VSM_Checked"/>
