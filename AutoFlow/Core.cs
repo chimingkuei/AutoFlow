@@ -22,9 +22,16 @@ using System.Windows.Forms;
 using System.Windows.Markup;
 using System.Windows.Media.Imaging;
 using System.Windows.Interop;
+using static AutoFlow.MainWindow;
+using Newtonsoft.Json.Linq;
 
 namespace AutoFlow
 {
+    enum ChartType
+    {
+        Wave, Wafer
+    }
+
     class Core
     {
         [DllImport("user32.dll")]
@@ -56,7 +63,7 @@ namespace AutoFlow
             return SetForegroundWindow(hWnd);
         }
 
-        public void SimulateLeftMouseClick(IntPtr windowHandle, int x, int y)
+        public void SimulateLeftMouseClick(int x, int y)
         {
             SetCursorPos(x, y);
             mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, IntPtr.Zero);
@@ -64,9 +71,33 @@ namespace AutoFlow
             mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, IntPtr.Zero);
         }
 
-        public void SimulateRightMouseClick(IntPtr windowHandle, int x, int y)
+        public void SimulateLeftMouseDoubleClick(int x, int y)
         {
             SetCursorPos(x, y);
+            mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, IntPtr.Zero);
+            Thread.Sleep(100);
+            mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, IntPtr.Zero);
+            Thread.Sleep(100);
+            mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, IntPtr.Zero);
+            Thread.Sleep(100);
+            mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, IntPtr.Zero);
+        }
+
+        public void SimulateRightMouseClick(int x, int y)
+        {
+            SetCursorPos(x, y);
+            mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, IntPtr.Zero);
+            Thread.Sleep(100);
+            mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, IntPtr.Zero);
+        }
+
+        public void SimulateRightMouseDoubleClick(int x, int y)
+        {
+            SetCursorPos(x, y);
+            mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, IntPtr.Zero);
+            Thread.Sleep(100);
+            mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, IntPtr.Zero);
+            Thread.Sleep(100);
             mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, IntPtr.Zero);
             Thread.Sleep(100);
             mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, IntPtr.Zero);
@@ -145,12 +176,26 @@ namespace AutoFlow
             BitmapImage bitmapImage = ConvertBitmapToBitmapImage(screenshot);
             display_image.Source = bitmapImage;
         }
-        
 
+        public void CheckModel(string filePath, string model)
+        {
+            string jsonData = File.ReadAllText(filePath);
+            JArray jsonArray = JArray.Parse(jsonData);
+            foreach (JObject item in jsonArray.Children<JObject>())
+            {
+                JProperty designProperty = item.Property("design");
+                if (designProperty != null)
+                {
+                    designProperty.Value = model;
+                }
+            }
+            File.WriteAllText(filePath, jsonArray.ToString());
+        }
     }
 
     class ExcelHandler
     {
+        public string waferID { get; set; }
         public void CreateXlsx(string filepath, string sheetname)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -226,22 +271,12 @@ namespace AutoFlow
 
         private void SetChartStyle(ExcelChart chart)
         {
-            chart.SetPosition(1, 0, 4, 0); // Set chart position
-            chart.SetSize(600, 400); // Set chart size
-            chart.Title.Text = "圖表標題";// Set chart title
-            chart.Title.Fill.Color = Color.Cyan;// Set color of chart title
-            chart.Legend.Position = eLegendPosition.Right;// Set position of legend
-            chart.Legend.Fill.Color = Color.LightGray;// Set color of legend
-            chart.XAxis.Title.Text = "X Axis Title";
-            chart.XAxis.MajorGridlines.Fill.Color = Color.Gray;
-            chart.XAxis.MinorGridlines.Fill.Color = Color.LightGray;
-            chart.XAxis.MinValue = 0;
-            chart.XAxis.MaxValue = 20;
-            chart.YAxis.Title.Text = "Y Axis Title";
-            chart.YAxis.MajorGridlines.Fill.Color = Color.Gray;
-            chart.YAxis.MinorGridlines.Fill.Color = Color.LightGray;
-            chart.YAxis.MinValue = 0;
-            chart.YAxis.MaxValue = 20;
+            chart.SetPosition(1, 0, 4, 0);
+            chart.SetSize(600, 400);
+            chart.Title.Text = waferID;
+            chart.Legend.Position = eLegendPosition.Right;
+            chart.XAxis.MajorGridlines.Fill.Color = Color.LightGray;
+            chart.YAxis.MajorGridlines.Fill.Color = Color.LightGray;
         }
 
         private bool CheckChartName(ExcelWorksheet worksheet, string chartname)
@@ -257,15 +292,29 @@ namespace AutoFlow
         }
 
         // The name of chart can't be repeated.(ScatterPlot)
-        public void ScatterChart(string filepath, string sheetname, List<List<Tuple<double, double>>> lists)
+        public void ScatterChart(string filepath, string sheetname, List<List<Tuple<double, double>>> lists, ChartType type)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using (var package = new ExcelPackage())
             {
                 var worksheet = package.Workbook.Worksheets.Add(sheetname);
-                if (!CheckChartName(worksheet, "ScatterPlot"))
+                string chartname = "ScatterPlot";
+                if (!CheckChartName(worksheet, chartname))
                 {
-                    var chart = worksheet.Drawings.AddChart("ScatterPlot", eChartType.XYScatter);
+                    ExcelChart chart = null;
+                    switch (type)
+                    {
+                        case ChartType.Wave:
+                            {
+                                chart = worksheet.Drawings.AddChart(chartname, eChartType.XYScatterLines);
+                                break;
+                            }
+                        case ChartType.Wafer:
+                            {
+                                chart = worksheet.Drawings.AddChart(chartname, eChartType.XYScatter);
+                                break;
+                            }
+                    }
                     SetChartStyle(chart);
                     // Set X and Y axis data ranges
                     for (int list_index = 0; list_index < lists.Count; list_index++)
@@ -299,7 +348,6 @@ namespace AutoFlow
         {
             List<List<Tuple<double, double>>> dataListChunks = new List<List<Tuple<double, double>>>();
             int chunkSize = 256;
-            // 確保CSV檔案存在
             if (File.Exists(csvfilepath))
             {
                 using (StreamReader reader = new StreamReader(csvfilepath))
@@ -307,14 +355,13 @@ namespace AutoFlow
                     // 跳過標題行（如果有的話）
                     reader.ReadLine();
                     List<Tuple<double, double>> currentChunk = new List<Tuple<double, double>>();
-                    // 讀取CSV檔案中的每一行
                     while (!reader.EndOfStream)
                     {
                         string line = reader.ReadLine();
                         string[] fields = line.Split(',');
                         Tuple<double, double> rowData = new Tuple<double, double> (Convert.ToDouble(fields[index.Item1]), Convert.ToDouble(fields[index.Item2]));
                         currentChunk.Add(rowData);
-                        // 如果已經累積了256筆資料，將它添加到主List中，然後重新創建新的List
+                        // 如果已經累積chunkSize筆資料，將它添加到主List中，重新創建新的List
                         if (currentChunk.Count == chunkSize)
                         {
                             dataListChunks.Add(currentChunk);
@@ -322,7 +369,7 @@ namespace AutoFlow
                         }
                     }
                 }
-                // 打印第一個List的第一筆數據（可選）
+                // 打印第一個List的第一筆數據
                 //if (dataListChunks.Count > 0 && dataListChunks[0].Count > 0)
                 //{
                 //    Tuple<double, double> firstData = dataListChunks[0][0];
@@ -335,6 +382,6 @@ namespace AutoFlow
             }
         }
 
-
+        
     }
 }

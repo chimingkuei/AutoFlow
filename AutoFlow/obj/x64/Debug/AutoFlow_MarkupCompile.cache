@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 D:\Chimingkuei\repos\Project\AutoFlow\AutoFlow\App.xaml
-995768037
+101746361356
 4755472595
-8-1246693019
+10-1420223583
 3964914342
-MainWindow.xaml;UI\ButtonStyles.xaml;UI\CheckBoxStyles.xaml;UI\ComboBoxStyles.xaml;UI\GroupBoxStyles.xaml;UI\RadioButtonStyles.xaml;UI\SliderStyles.xaml;UI\TabControlStyles.xaml;UI\TextBoxStyles.xaml;
+MainWindow.xaml;StepWindow\Step1Window.xaml;UI\ButtonStyles.xaml;UI\CheckBoxStyles.xaml;UI\ComboBoxStyles.xaml;UI\GroupBoxStyles.xaml;UI\RadioButtonStyles.xaml;UI\SliderStyles.xaml;UI\TabControlStyles.xaml;UI\TextBoxStyles.xaml;
 
 False
 

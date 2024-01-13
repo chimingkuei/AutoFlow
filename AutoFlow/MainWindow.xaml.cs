@@ -29,6 +29,7 @@ using System.Drawing.Imaging;
 using System.Windows.Media.Media3D;
 using System.Windows.Interop;
 using System.Diagnostics;
+using AutoFlow.StepWindow;
 
 namespace AutoFlow
 {
@@ -69,7 +70,7 @@ namespace AutoFlow
         {
             notifyIcon = new System.Windows.Forms.NotifyIcon();
             notifyIcon.Icon = new System.Drawing.Icon(@"Icon/Deepwise.ico");
-            notifyIcon.Text = "Elf";
+            notifyIcon.Text = "AutoFlow";
             notifyIcon.Visible = true;
             notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(notifyIcon_MouseClick);
             this.StateChanged += new EventHandler(WPFUI_StateChanged);
@@ -207,8 +208,8 @@ namespace AutoFlow
             int screen_x = Convert.ToInt32(_downPoint.X / Display_Image.ActualWidth * 1920);
             int screen_y = Convert.ToInt32(_downPoint.Y / Display_Image.ActualHeight * 1080);
             pointlist.Add(new System.Drawing.Point(screen_x, screen_y));
-            //Console.WriteLine($"螢幕X座標:{screen_x}");
-            //Console.WriteLine($"螢幕Y座標:{screen_y}");
+            Console.WriteLine($"螢幕X座標:{screen_x}");
+            Console.WriteLine($"螢幕Y座標:{screen_y}");
         }
 
         private void RemoveDot()
@@ -247,6 +248,13 @@ namespace AutoFlow
             LoadConfig();
             //Do.LoadEIM();
             //Do.CloseCapsLock();
+            Step1Data.CheckSendValueEventHandler1 += (val) =>
+            {
+                if (val == true)
+                {
+                    Step1Data.Step1_data1 = "TEST1";
+                }
+            };
         }
         BaseConfig<Parameter> Config = new BaseConfig<Parameter>();
         Core Do = new Core();
@@ -286,9 +294,9 @@ namespace AutoFlow
                                     #endregion
                                     Do.PackSetForegroundWindow(targetWindowHandle);
                                     // Action process example:
-                                    Do.SimulateRightMouseClick(targetWindowHandle, Convert.ToInt32(TextBoxDispatcherGetValue(Coordinate_X)), Convert.ToInt32(TextBoxDispatcherGetValue(Coordinate_Y)));
+                                    Do.SimulateRightMouseClick(Convert.ToInt32(TextBoxDispatcherGetValue(Coordinate_X)), Convert.ToInt32(TextBoxDispatcherGetValue(Coordinate_Y)));
                                     System.Windows.Forms.SendKeys.SendWait("D:\\oCam");
-                                    //Do.SimulateLeftMouseClick(targetWindowHandle, 899, 156);
+                                    Do.SimulateLeftMouseClick(899, 156);
                                     Thread.Sleep(3000);
                                 }
                                 else
@@ -302,14 +310,20 @@ namespace AutoFlow
                     }
                 case nameof(Stop):
                     {
-                        //cts.Cancel();
-                        string csvFilePath = @"D:\TEST.csv";
-                        EH.CSVToList(csvFilePath, new Tuple<int, int>(1, 2));
+                        cts.Cancel();
                         break;
                     }
                 case nameof(Capture_Screen):
                     {
                         Do.CaptureScreen(Display_Image);
+                        break;
+                    }
+                case nameof(Step1):
+                    {
+                        Step1Window SW = new Step1Window();
+                        SW.Left = this.Left + (this.Width- SW.Width)/2;
+                        SW.Top= this.Top + this.Height/2;
+                        SW.Show();
                         break;
                     }
             }
