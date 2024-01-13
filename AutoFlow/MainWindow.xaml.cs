@@ -30,6 +30,7 @@ using System.Windows.Media.Media3D;
 using System.Windows.Interop;
 using System.Diagnostics;
 using AutoFlow.StepWindow;
+using System.Security.Cryptography;
 
 namespace AutoFlow
 {
@@ -105,7 +106,6 @@ namespace AutoFlow
                 this.Visibility = Visibility.Hidden;
             }
         }
-
         private void nIconMenuItem1_Click(object sender, System.EventArgs e)
         {
             System.Windows.Application.Current.Shutdown();
@@ -161,6 +161,7 @@ namespace AutoFlow
         }
         #endregion
 
+        #region For Mouse Button Event function
         private void DrawCross()
         {
             Line cross1 = new Line
@@ -186,7 +187,6 @@ namespace AutoFlow
             canvas.Children.Add(cross1);
             canvas.Children.Add(cross2);
         }
-
         private void DrawDot()
         {
             Ellipse dot = new Ellipse
@@ -199,7 +199,6 @@ namespace AutoFlow
             dotlist.Add(dot);
             canvas.Children.Add(dot);
         }
-
         private void GetClickPoint()
         {
             //DrawDot();
@@ -211,7 +210,6 @@ namespace AutoFlow
             Console.WriteLine($"螢幕X座標:{screen_x}");
             Console.WriteLine($"螢幕Y座標:{screen_y}");
         }
-
         private void RemoveDot()
         {
             if (dotlist.Count != 0)
@@ -221,7 +219,6 @@ namespace AutoFlow
                 pointlist.Remove(pointlist[pointlist.Count - 1]);
             }
         }
-
         private void RemoveCross()
         {
             if (cross1list.Count != 0)
@@ -233,11 +230,43 @@ namespace AutoFlow
                 pointlist.Remove(pointlist[pointlist.Count - 1]);
             }
         }
-
         private void RemoveClickPoint()
         {
             //RemoveDot();
             RemoveCross();
+        }
+        #endregion
+
+        private string ConvertCoordStr(System.Windows.Point point , System.Windows.Controls.Image display_image)
+        {
+            if (point!=new System.Windows.Point(0,0))
+            {
+                string x = Convert.ToInt32(point.X / display_image.ActualWidth * 1920).ToString();
+                string y = Convert.ToInt32(point.Y / display_image.ActualHeight * 1080).ToString();
+                return "(" + x + "," + y + ")";
+            }
+            else
+            {
+                return "(0,0)";
+            }
+        }
+            
+        private void CheckSendValueInit()
+        {
+            Step1Data.CheckSendValueEventHandler1 += (val) =>
+            {
+                if (val == true)
+                {
+                    Step1Data.Step1_data1 = ConvertCoordStr(_downPoint, Display_Image);
+                }
+            };
+            Step1Data.CheckSendValueEventHandler2 += (val) =>
+            {
+                if (val == true)
+                {
+                    Step1Data.Step1_data2 = ConvertCoordStr(_downPoint, Display_Image);
+                }
+            };
         }
         #endregion
 
@@ -248,13 +277,7 @@ namespace AutoFlow
             LoadConfig();
             //Do.LoadEIM();
             //Do.CloseCapsLock();
-            Step1Data.CheckSendValueEventHandler1 += (val) =>
-            {
-                if (val == true)
-                {
-                    Step1Data.Step1_data1 = "TEST1";
-                }
-            };
+            CheckSendValueInit();
         }
         BaseConfig<Parameter> Config = new BaseConfig<Parameter>();
         Core Do = new Core();

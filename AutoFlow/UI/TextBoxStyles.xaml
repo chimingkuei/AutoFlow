@@ -4,7 +4,7 @@
         <Style.Resources>
             <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
                 <VisualBrush.Visual>
-                    <Label Content="浮水印顯示文字" Foreground="#FF6DC33C"/>
+                    <Label Content="請輸入座標!" Foreground="#FF6DC33C"/>
                 </VisualBrush.Visual>
             </VisualBrush>
         </Style.Resources>

@@ -5,11 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutoFlow.StepWindow"
         mc:Ignorable="d"
-        Title="Step1Window" Height="450" Width="700" Loaded="Window_Loaded">
+        Title="Step1Window" Height="450" Width="700" Background="#FFE6F0FF" Loaded="Window_Loaded">
     <Grid>
-        <TextBox x:Name="textBox1" HorizontalAlignment="Left" Margin="257,142,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="textBox2" HorizontalAlignment="Left" Margin="265,205,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <RadioButton x:Name="radioButton" Content="RadioButton" HorizontalAlignment="Left" Margin="105,139,0,0" VerticalAlignment="Top" Checked="radioButton_Checked"/>
+        <WrapPanel Orientation="Horizontal" Margin="36,43,448,38">
+            <RadioButton x:Name="VSM" Content="點選vsm檔" HorizontalAlignment="Left" Margin="10,8,0,0" VerticalAlignment="Top" Checked="VSM_Checked"/>
+            <TextBox x:Name="VSM_Text" Style="{StaticResource BaseTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="100" Height="30" Margin="10,0,0,0"/>
+            <RadioButton x:Name="DTCS" Content="點選DTCS" HorizontalAlignment="Left" Margin="10,15,0,0" VerticalAlignment="Top" Checked="DTCS_Checked"/>
+            <TextBox x:Name="DTCS_Text" Style="{StaticResource BaseTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="100" Height="30" Margin="13,7,0,0"/>
 
+        </WrapPanel>
+        <Button x:Name="Save_Config" Style="{StaticResource CircleButton}" Margin="442,239,163,100" Content="儲存參數" Click="Save_Config_Click"/>
     </Grid>
 </Window>
