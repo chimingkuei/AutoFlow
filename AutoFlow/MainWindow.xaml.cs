@@ -184,8 +184,8 @@ namespace AutoFlow
             };
             cross1list.Add(cross1);
             cross2list.Add(cross2);
-            canvas.Children.Add(cross1);
-            canvas.Children.Add(cross2);
+            Canvas.Children.Add(cross1);
+            Canvas.Children.Add(cross2);
         }
         private void DrawDot()
         {
@@ -197,7 +197,7 @@ namespace AutoFlow
             Canvas.SetLeft(dot, _downPoint.X);
             Canvas.SetTop(dot, _downPoint.Y);
             dotlist.Add(dot);
-            canvas.Children.Add(dot);
+            Canvas.Children.Add(dot);
         }
         private void GetClickPoint()
         {
@@ -214,7 +214,7 @@ namespace AutoFlow
         {
             if (dotlist.Count != 0)
             {
-                canvas.Children.Remove(dotlist[dotlist.Count - 1]);
+                Canvas.Children.Remove(dotlist[dotlist.Count - 1]);
                 dotlist.Remove(dotlist[dotlist.Count - 1]);
                 pointlist.Remove(pointlist[pointlist.Count - 1]);
             }
@@ -223,8 +223,8 @@ namespace AutoFlow
         {
             if (cross1list.Count != 0)
             {
-                canvas.Children.Remove(cross1list[cross1list.Count - 1]);
-                canvas.Children.Remove(cross2list[cross2list.Count - 1]);
+                Canvas.Children.Remove(cross1list[cross1list.Count - 1]);
+                Canvas.Children.Remove(cross2list[cross2list.Count - 1]);
                 cross1list.Remove(cross1list[cross1list.Count - 1]);
                 cross2list.Remove(cross2list[cross2list.Count - 1]);
                 pointlist.Remove(pointlist[pointlist.Count - 1]);
@@ -250,7 +250,7 @@ namespace AutoFlow
                 return "(0,0)";
             }
         }
-            
+
         private void CheckSendValueInit()
         {
             Step1Data.CheckSendValueEventHandler1 += (val) =>

@@ -30,6 +30,7 @@ namespace AutoFlow.StepWindow
         }
 
         #region Function
+        #region Config
         private void LoadConfig()
         {
             List<Parameter> Parameter_info = Config.Load();
@@ -50,6 +51,7 @@ namespace AutoFlow.StepWindow
 
         }
         #endregion
+        #endregion
 
         #region Parameter and Init
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -66,7 +68,6 @@ namespace AutoFlow.StepWindow
 
         }
         BaseConfig<Parameter> Config = new BaseConfig<Parameter>(@"Step1Data.json");
-        
         #endregion
 
         private void VSM_Checked(object sender, RoutedEventArgs e)

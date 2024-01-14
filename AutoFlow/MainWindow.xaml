@@ -42,11 +42,13 @@
                 <Grid>
                     <Image Name="Display_Image" MouseLeftButtonDown="AddPointButtonDown" MouseLeftButtonUp="AddPointButtonUp" 
                            MouseRightButtonDown="DeletePointButtonDown" MouseRightButtonUp="DeletePointButtonUp" Margin="10,16,231,15"/>
-                    <Canvas x:Name="canvas" Margin="10,16,231,15"/>
-                    <Button x:Name="Start" Style="{StaticResource CircleButton}" Width="120" Height="120" Margin="736,16,116,310" Click="Main_Btn_Click">Start</Button>
-                    <Button x:Name="Stop" Style="{StaticResource CircleButton}" Width="120" Height="120" Margin="739,148,113,178" Click="Main_Btn_Click">Stop</Button>
-                    <Button x:Name="Capture_Screen" Style="{StaticResource CircleButton}" Width="120" Height="120" Margin="738,280,114,46" Content="Capture Screen" Click="Main_Btn_Click"/>
-                    <Button x:Name="Step1" Style="{StaticResource CircleButton}" Width="120" Height="120" Margin="860,13,-8,313" Content="步驟1" Click="Main_Btn_Click"/>
+                    <Border BorderBrush="Black" BorderThickness="1" Opacity="1" Margin="10,16,231,15">
+                        <Canvas x:Name="Canvas" Margin="0,0,0,0"/>
+                    </Border>
+                    <Button x:Name="Start" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="762,26,110,320" Click="Main_Btn_Click">Start</Button>
+                    <Button x:Name="Stop" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="762,139,110,207" Click="Main_Btn_Click">Stop</Button>
+                    <Button x:Name="Capture_Screen" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="762,260,110,86" Content="Capture Screen" Click="Main_Btn_Click"/>
+                    <Button x:Name="Step1" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="860,13,-8,313" Content="步驟1" Click="Main_Btn_Click"/>
 
                 </Grid>
             </TabItem>
