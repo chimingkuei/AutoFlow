@@ -27,11 +27,6 @@ using Newtonsoft.Json.Linq;
 
 namespace AutoFlow
 {
-    enum ChartType
-    {
-        Wave, Wafer
-    }
-
     class Core
     {
         [DllImport("user32.dll")]
@@ -63,17 +58,17 @@ namespace AutoFlow
             return SetForegroundWindow(hWnd);
         }
 
-        public void SimulateLeftMouseClick(int x, int y)
+        public void SimulateLeftMouseClick(System.Drawing.Point pos)
         {
-            SetCursorPos(x, y);
+            SetCursorPos(pos.X, pos.Y);
             mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, IntPtr.Zero);
             Thread.Sleep(100);
             mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, IntPtr.Zero);
         }
 
-        public void SimulateLeftMouseDoubleClick(int x, int y)
+        public void SimulateLeftMouseDoubleClick(System.Drawing.Point pos)
         {
-            SetCursorPos(x, y);
+            SetCursorPos(pos.X, pos.Y);
             mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, IntPtr.Zero);
             Thread.Sleep(100);
             mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, IntPtr.Zero);
@@ -83,17 +78,17 @@ namespace AutoFlow
             mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, IntPtr.Zero);
         }
 
-        public void SimulateRightMouseClick(int x, int y)
+        public void SimulateRightMouseClick(System.Drawing.Point pos)
         {
-            SetCursorPos(x, y);
+            SetCursorPos(pos.X, pos.Y);
             mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, IntPtr.Zero);
             Thread.Sleep(100);
             mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, IntPtr.Zero);
         }
 
-        public void SimulateRightMouseDoubleClick(int x, int y)
+        public void SimulateRightMouseDoubleClick(System.Drawing.Point pos)
         {
-            SetCursorPos(x, y);
+            SetCursorPos(pos.X, pos.Y);
             mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, IntPtr.Zero);
             Thread.Sleep(100);
             mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, IntPtr.Zero);
@@ -191,11 +186,17 @@ namespace AutoFlow
             }
             File.WriteAllText(filePath, jsonArray.ToString());
         }
+
+        public string[] GetFilename(string folderPath, string filetype)
+        {
+            return Directory.GetFiles(folderPath, filetype);
+        }
     }
 
     class ExcelHandler
     {
         public string waferID { get; set; }
+        public int datagap { get; set; }
         public void CreateXlsx(string filepath, string sheetname)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -258,25 +259,33 @@ namespace AutoFlow
             }
         }
 
-        private List<Tuple<string, string, string, Color>> SetCategoryColor()
+        private Dictionary<string, int> GetTupleExtremum(List<List<Tuple<double, double>>> lists)
         {
-            List<Tuple<string, string, string, Color>> categorycolor = new List<Tuple<string, string, string, Color>>
-            {
-                new Tuple<string, string, string, Color>("M1:M", "N1:N", "Label A", Color.Red),
-                new Tuple<string, string, string, Color>("O1:O", "P1:P", "Label B",Color.Green),
-                new Tuple<string, string, string, Color>("Q1:Q", "R1:R", "Label C",Color.Blue)
-            };
-            return categorycolor;
+            double XmaxTuple0 = lists.SelectMany(list => list).Max(tuple => tuple.Item1);
+            double XminTuple0 = lists.SelectMany(list => list).Min(tuple => tuple.Item1);
+            double YmaxTuple1 = lists.SelectMany(list => list).Max(tuple => tuple.Item2);
+            double YminTuple1 = lists.SelectMany(list => list).Min(tuple => tuple.Item2);
+            Dictionary<string, int> dict = new Dictionary<string, int>();
+            dict["XMax"] = Convert.ToInt32(XmaxTuple0) + 50;
+            dict["XMin"] = Convert.ToInt32(XminTuple0) - 50;
+            dict["YMax"] = Convert.ToInt32(YmaxTuple1);
+            dict["YMin"] = Convert.ToInt32(YminTuple1);
+            return dict;
         }
 
-        private void SetChartStyle(ExcelChart chart)
+        private void SetChartStyle(ExcelChart chart, Tuple<int, int, int, int> position, List<List<Tuple<double, double>>> lists)
         {
-            chart.SetPosition(1, 0, 4, 0);
+            Dictionary<string, int> range= GetTupleExtremum(lists);
+            chart.SetPosition(position.Item1, position.Item2, position.Item3, position.Item4);
             chart.SetSize(600, 400);
             chart.Title.Text = waferID;
             chart.Legend.Position = eLegendPosition.Right;
             chart.XAxis.MajorGridlines.Fill.Color = Color.LightGray;
+            chart.XAxis.MaxValue = range["XMax"];
+            chart.XAxis.MinValue = range["XMin"];
             chart.YAxis.MajorGridlines.Fill.Color = Color.LightGray;
+            chart.YAxis.MaxValue = range["YMax"];
+            chart.YAxis.MinValue = range["YMin"];
         }
 
         private bool CheckChartName(ExcelWorksheet worksheet, string chartname)
@@ -291,45 +300,46 @@ namespace AutoFlow
             return false;
         }
 
+        private string GetRange(string field, int list_index)
+        {
+            return field + (list_index * datagap + 1).ToString() + ":" + field + ((list_index + 1) * datagap).ToString();
+        }
+
+        private string GetCell(string field, int list_index, int cell_index)
+        {
+            return field + (list_index * datagap + 1 + cell_index).ToString();
+        }
+
         // The name of chart can't be repeated.(ScatterPlot)
-        public void ScatterChart(string filepath, string sheetname, List<List<Tuple<double, double>>> lists, ChartType type)
+        public void WaveToScatterChart(string filepath, string sheetname, List<List<Tuple<double, double>>> lists)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using (var package = new ExcelPackage())
             {
                 var worksheet = package.Workbook.Worksheets.Add(sheetname);
-                string chartname = "ScatterPlot";
-                if (!CheckChartName(worksheet, chartname))
+                for (int list_index = 0; list_index < lists.Count / 2; list_index++)
                 {
-                    ExcelChart chart = null;
-                    switch (type)
+                    string chartname = "ScatterPlot" + list_index.ToString();
+                    if (!CheckChartName(worksheet, chartname))
                     {
-                        case ChartType.Wave:
-                            {
-                                chart = worksheet.Drawings.AddChart(chartname, eChartType.XYScatterLines);
-                                break;
-                            }
-                        case ChartType.Wafer:
-                            {
-                                chart = worksheet.Drawings.AddChart(chartname, eChartType.XYScatter);
-                                break;
-                            }
-                    }
-                    SetChartStyle(chart);
-                    // Set X and Y axis data ranges
-                    for (int list_index = 0; list_index < lists.Count; list_index++)
-                    {
-                        for (int i = 0; i < lists[list_index].Count; i++)
+                        ExcelChart chart = worksheet.Drawings.AddChart(chartname, eChartType.XYScatterLinesNoMarkers);
+                        SetChartStyle(chart, new Tuple<int, int, int, int>(list_index * datagap, 0, list_index + 5, 0), lists);
+                        // Set X and Y axis data ranges
+                        for (int cell_index = 0; cell_index < datagap; cell_index++)
                         {
-                            worksheet.Cells[SetCategoryColor()[list_index].Item1[0]+(i+1).ToString()].Value = lists[list_index][i].Item1;
-                            worksheet.Cells[SetCategoryColor()[list_index].Item2[0] + (i + 1).ToString()].Value = lists[list_index][i].Item2;
+                            worksheet.Cells[GetCell("A", list_index, cell_index)].Value = lists[list_index][cell_index].Item1;
+                            worksheet.Cells[GetCell("B", list_index, cell_index)].Value = lists[list_index][cell_index].Item2;
+                            worksheet.Cells[GetCell("C", list_index, cell_index)].Value = lists[(lists.Count + 1) / 2 + list_index][cell_index].Item1;
+                            worksheet.Cells[GetCell("D", list_index, cell_index)].Value = lists[(lists.Count + 1) / 2 + list_index][cell_index].Item2;
                         }
-                        var xRange = worksheet.Cells[SetCategoryColor()[list_index].Item1 + lists[list_index].Count];
-                        var yRange = worksheet.Cells[SetCategoryColor()[list_index].Item2 + lists[list_index].Count];
-                        var series = (ExcelScatterChartSerie)chart.Series.Add(xRange, yRange);
-                        series.Header = SetCategoryColor()[list_index].Item3;
-                        series.Marker.Fill.Color = SetCategoryColor()[list_index].Item4;
-                        series.Marker.Style = eMarkerStyle.Circle;
+                        var ARange = worksheet.Cells[GetRange("A", list_index)];
+                        var BRange = worksheet.Cells[GetRange("B", list_index)];
+                        var CRange = worksheet.Cells[GetRange("C", list_index)];
+                        var DRange = worksheet.Cells[GetRange("D", list_index)];
+                        var series1 = (ExcelScatterChartSerie)chart.Series.Add(BRange, ARange);
+                        var series2 = (ExcelScatterChartSerie)chart.Series.Add(DRange, CRange);
+                        series1.Header = "0-量測";
+                        series2.Header = "模擬";
                     }
                 }
                 try
@@ -344,10 +354,9 @@ namespace AutoFlow
             }
         }
 
-        public void CSVToList(string csvfilepath, Tuple<int, int> index)
+        public List<List<Tuple<double, double>>> CSVToList(string csvfilepath, Tuple<int, int> index)
         {
             List<List<Tuple<double, double>>> dataListChunks = new List<List<Tuple<double, double>>>();
-            int chunkSize = 256;
             if (File.Exists(csvfilepath))
             {
                 using (StreamReader reader = new StreamReader(csvfilepath))
@@ -362,24 +371,19 @@ namespace AutoFlow
                         Tuple<double, double> rowData = new Tuple<double, double> (Convert.ToDouble(fields[index.Item1]), Convert.ToDouble(fields[index.Item2]));
                         currentChunk.Add(rowData);
                         // 如果已經累積chunkSize筆資料，將它添加到主List中，重新創建新的List
-                        if (currentChunk.Count == chunkSize)
+                        if (currentChunk.Count == datagap)
                         {
                             dataListChunks.Add(currentChunk);
                             currentChunk = new List<Tuple<double, double>>();
                         }
                     }
                 }
-                // 打印第一個List的第一筆數據
-                //if (dataListChunks.Count > 0 && dataListChunks[0].Count > 0)
-                //{
-                //    Tuple<double, double> firstData = dataListChunks[0][0];
-                //    Console.WriteLine($"Column1: {firstData.Item1}, Column2: {firstData.Item2}");
-                //}
             }
             else
             {
                 Console.WriteLine("CSV檔案不存在");
             }
+            return dataListChunks;
         }
 
         

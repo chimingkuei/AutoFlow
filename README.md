@@ -18,34 +18,33 @@ chart.YAxis.MinorGridlines.Fill.Color = Color.LightGray;
 chart.YAxis.MinValue = 0;
 chart.YAxis.MaxValue = 20;
 ```
-#For ScatterChart function test
+#Generate scatter map
 ```
- var data1 = new List<Tuple<double, double>>
-  {
-      Tuple.Create(1.0, 2.0),
-      Tuple.Create(2.0, 3.0),
-      Tuple.Create(3.0, 4.0),
-      Tuple.Create(4.0, 5.0),
-      // Add more data points as needed
-  };
- var data2 = new List<Tuple<double, double>>
- {
-     Tuple.Create(5.0, 8.0),
-     Tuple.Create(4.0, 5.0),
-     Tuple.Create(5.0, 2.0),
-     Tuple.Create(1.0, 1.0),
-     // Add more data points as needed
- };
- List<List<Tuple<double, double>>> lists = new List<List<Tuple<double, double>>>
- {
-     data1,
-     data2
- };
- ExcelHandler EH = new ExcelHandler();
- EH.ScatterChart(@"D:\test.xlsx", "test", lists, ChartType.Wave);
+string csvpath = "put your csv path"; 
+string wavepath = "put your xlsx path";
+List<List<Tuple<double, double>>> lists = EH.CSVToList(csvpath, new Tuple<int, int>(2, 3));
+EH.WaveToScatterChart(wavepath, "sheetname", lists);
 ```
-#CSV to list
 ```
-string csvFilePath = @"D:\TEST.csv";
-EH.CSVToList(csvFilePath, new Tuple<int, int>(1, 2));
+IntPtr targetWindowHandle = Do.PackFindWindow(null, TextBoxDispatcherGetValue(Window_Name));
+if (targetWindowHandle != IntPtr.Zero)
+{
+    #region Get window position and size.
+    //Console.WriteLine($"找到了 {TextBoxDispatcherGetValue(Window_Name)} 的視窗句柄: {targetWindowHandle}");
+    //RECT windowRect;
+    //GetWindowRect(targetWindowHandle, out windowRect);
+    //Console.WriteLine($"視窗位置: ({windowRect.Left}, {windowRect.Top})");
+    //Console.WriteLine($"視窗大小: {windowRect.Right - windowRect.Left} x {windowRect.Bottom - windowRect.Top}");
+    #endregion
+    Do.PackSetForegroundWindow(targetWindowHandle);
+    // Action process example:
+    Do.SimulateRightMouseClick(Convert.ToInt32(TextBoxDispatcherGetValue(Coordinate_X)), Convert.ToInt32(TextBoxDispatcherGetValue(Coordinate_Y)));
+    System.Windows.Forms.SendKeys.SendWait("D:\\oCam");
+    Do.SimulateLeftMouseClick(899, 156);
+    Thread.Sleep(3000);
+}
+else
+{
+    Console.WriteLine($"{TextBoxDispatcherGetValue(Window_Name)} Window can't be found.");
+}
 ```

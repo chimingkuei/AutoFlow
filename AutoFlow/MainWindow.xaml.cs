@@ -31,6 +31,8 @@ using System.Windows.Interop;
 using System.Diagnostics;
 using AutoFlow.StepWindow;
 using System.Security.Cryptography;
+using System.Text.RegularExpressions;
+using Microsoft.Win32;
 
 namespace AutoFlow
 {
@@ -40,8 +42,13 @@ namespace AutoFlow
         public string Coordinate_X_val { get; set; }
         public string Coordinate_Y_val { get; set; }
         public List<System.Drawing.Point> click_points { get; set; }
+        public string Setting_File_Location_val { get; set; }
+        public string VSM_File_Location_val { get; set; }
+        public string Dat_File_Location_val { get; set; }
+        public string Xlsx_File_Location_val { get; set; }
+        public string Wafer_Type_val { get; set; }
     }
-   
+
     public partial class MainWindow : System.Windows.Window
     {
         
@@ -112,6 +119,7 @@ namespace AutoFlow
         }
         #endregion
 
+        #region Dispatcher Invoke Wrapper
         public string TextBoxDispatcherGetValue(TextBox control)
         {
             string name = "";
@@ -122,7 +130,9 @@ namespace AutoFlow
             return name;
 
         }
+        #endregion
 
+        #region GetWindowRect
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
@@ -135,6 +145,7 @@ namespace AutoFlow
             public int Right;
             public int Bottom;
         }
+        #endregion
 
         #region Config
         private void LoadConfig()
@@ -142,7 +153,12 @@ namespace AutoFlow
             List<Parameter> Parameter_info = Config.Load();
             Window_Name.Text = Parameter_info[0].Window_Name_val;
             Coordinate_X.Text = Parameter_info[0].Coordinate_X_val;
-            Coordinate_Y.Text = Parameter_info[0].Coordinate_Y_val; 
+            Coordinate_Y.Text = Parameter_info[0].Coordinate_Y_val;
+            Setting_File_Location.Text = Parameter_info[0].Setting_File_Location_val;
+            VSM_File_Location.Text = Parameter_info[0].VSM_File_Location_val;
+            Dat_File_Location.Text = Parameter_info[0].Dat_File_Location_val;
+            Xlsx_File_Location.Text = Parameter_info[0].Xlsx_File_Location_val;
+            Wafer_Type.Text = Parameter_info[0].Wafer_Type_val;
         }
 
         private void SaveConfig()
@@ -153,11 +169,15 @@ namespace AutoFlow
                     Window_Name_val = Window_Name.Text,
                     Coordinate_X_val = Coordinate_X.Text,
                     Coordinate_Y_val = Coordinate_Y.Text,
-                    click_points = pointlist
-                }
+                    click_points = pointlist,
+                    Setting_File_Location_val = Setting_File_Location.Text,
+                    VSM_File_Location_val = VSM_File_Location.Text,
+                    Dat_File_Location_val = Dat_File_Location.Text,
+                    Xlsx_File_Location_val = Xlsx_File_Location.Text,
+                    Wafer_Type_val = Wafer_Type.Text
+            }
             };
             Config.Save(Parameter_config);
-
         }
         #endregion
 
@@ -251,6 +271,12 @@ namespace AutoFlow
             }
         }
 
+        private System.Drawing.Point ConvertCoordXY(string coord_str)
+        {
+            Match match = Regex.Match(coord_str, @"\((\d+),(\d+)\)");  
+            return new System.Drawing.Point(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
+        }
+
         private void CheckSendValueInit()
         {
             Step1Data.CheckSendValueEventHandler1 += (val) =>
@@ -267,6 +293,111 @@ namespace AutoFlow
                     Step1Data.Step1_data2 = ConvertCoordStr(_downPoint, Display_Image);
                 }
             };
+            Step1Data.CheckSendValueEventHandler3 += (val) =>
+            {
+                if (val == true)
+                {
+                    Step1Data.Step1_data3 = ConvertCoordStr(_downPoint, Display_Image);
+                }
+            };
+            Step1Data.CheckSendValueEventHandler4 += (val) =>
+            {
+                if (val == true)
+                {
+                    Step1Data.Step1_data4 = ConvertCoordStr(_downPoint, Display_Image);
+                }
+            };
+            Step1Data.CheckSendValueEventHandler5 += (val) =>
+            {
+                if (val == true)
+                {
+                    Step1Data.Step1_data5 = ConvertCoordStr(_downPoint, Display_Image);
+                }
+            };
+            Step1Data.CheckSendValueEventHandler6 += (val) =>
+            {
+                if (val == true)
+                {
+                    Step1Data.Step1_data6 = ConvertCoordStr(_downPoint, Display_Image);
+                }
+            };
+            Step1Data.CheckSendValueEventHandler7 += (val) =>
+            {
+                if (val == true)
+                {
+                    Step1Data.Step1_data7 = ConvertCoordStr(_downPoint, Display_Image);
+                }
+            };
+            Step1Data.CheckSendValueEventHandler8 += (val) =>
+            {
+                if (val == true)
+                {
+                    Step1Data.Step1_data8 = ConvertCoordStr(_downPoint, Display_Image);
+                }
+            };
+            Step1Data.CheckSendValueEventHandler9 += (val) =>
+            {
+                if (val == true)
+                {
+                    Step1Data.Step1_data9 = ConvertCoordStr(_downPoint, Display_Image);
+                }
+            };
+            Step1Data.CheckSendValueEventHandler10 += (val) =>
+            {
+                if (val == true)
+                {
+                    Step1Data.Step1_data10 = ConvertCoordStr(_downPoint, Display_Image);
+                }
+            };
+            Step1Data.CheckSendValueEventHandler11 += (val) =>
+            {
+                if (val == true)
+                {
+                    Step1Data.Step1_data11 = ConvertCoordStr(_downPoint, Display_Image);
+                }
+            };
+            Step1Data.CheckSendValueEventHandler12 += (val) =>
+            {
+                if (val == true)
+                {
+                    Step1Data.Step1_data12 = ConvertCoordStr(_downPoint, Display_Image);
+                }
+            };
+            Step1Data.CheckSendValueEventHandler13 += (val) =>
+            {
+                if (val == true)
+                {
+                    Step1Data.Step1_data13 = ConvertCoordStr(_downPoint, Display_Image);
+                }
+            };
+            Step1Data.CheckSendValueEventHandler14 += (val) =>
+            {
+                if (val == true)
+                {
+                    Step1Data.Step1_data14 = ConvertCoordStr(_downPoint, Display_Image);
+                }
+            };
+            Step1Data.CheckSendValueEventHandler15 += (val) =>
+            {
+                if (val == true)
+                {
+                    Step1Data.Step1_data15 = ConvertCoordStr(_downPoint, Display_Image);
+                }
+            };
+            Step1Data.CheckSendValueEventHandler16 += (val) =>
+            {
+                if (val == true)
+                {
+                    Step1Data.Step1_data16 = ConvertCoordStr(_downPoint, Display_Image);
+                }
+            };
+            Step1Data.CheckSendValueEventHandler17 += (val) =>
+            {
+                if (val == true)
+                {
+                    Step1Data.Step1_data17 = ConvertCoordStr(_downPoint, Display_Image);
+                }
+            };
         }
         #endregion
 
@@ -277,9 +408,11 @@ namespace AutoFlow
             LoadConfig();
             //Do.LoadEIM();
             //Do.CloseCapsLock();
+            EH.datagap = 256;
             CheckSendValueInit();
         }
         BaseConfig<Parameter> Config = new BaseConfig<Parameter>();
+        BaseConfig<AutoFlow.StepWindow.Parameter> Step1Config = new BaseConfig<AutoFlow.StepWindow.Parameter>(@"Step1Data.json");
         Core Do = new Core();
         ExcelHandler EH = new ExcelHandler();
         BaseLogRecord Logger = new BaseLogRecord();
@@ -295,45 +428,32 @@ namespace AutoFlow
             {
                 case nameof(Start):
                     {
-                        cts = new CancellationTokenSource();
-                        Task.Run(() =>
+                        List<AutoFlow.StepWindow.Parameter> Step1Parameter_info = Step1Config.Load();
+                        //Task.Run(() =>
+                        //{
+                        string[] vsm_file = Do.GetFilename(TextBoxDispatcherGetValue(VSM_File_Location), "*.vsm");
+                        for (int file = 0; file < vsm_file.Length; file++)
                         {
-                            while (true)
-                            {
-                                if (cts.Token.IsCancellationRequested)
-                                {
-                                    Console.WriteLine("Stop running the software.");
-                                    return;
-                                }
-                                IntPtr targetWindowHandle = Do.PackFindWindow(null, TextBoxDispatcherGetValue(Window_Name));
-                                if (targetWindowHandle != IntPtr.Zero)
-                                {
-                                    #region Get window position and size.
-                                    //Console.WriteLine($"找到了 {TextBoxDispatcherGetValue(Window_Name)} 的視窗句柄: {targetWindowHandle}");
-                                    //RECT windowRect;
-                                    //GetWindowRect(targetWindowHandle, out windowRect);
-                                    //Console.WriteLine($"視窗位置: ({windowRect.Left}, {windowRect.Top})");
-                                    //Console.WriteLine($"視窗大小: {windowRect.Right - windowRect.Left} x {windowRect.Bottom - windowRect.Top}");
-                                    #endregion
-                                    Do.PackSetForegroundWindow(targetWindowHandle);
-                                    // Action process example:
-                                    Do.SimulateRightMouseClick(Convert.ToInt32(TextBoxDispatcherGetValue(Coordinate_X)), Convert.ToInt32(TextBoxDispatcherGetValue(Coordinate_Y)));
-                                    System.Windows.Forms.SendKeys.SendWait("D:\\oCam");
-                                    Do.SimulateLeftMouseClick(899, 156);
-                                    Thread.Sleep(3000);
-                                }
-                                else
-                                {
-                                    Console.WriteLine($"{TextBoxDispatcherGetValue(Window_Name)} Window can't be found.");
-                                }
-                                Thread.Sleep(3000);
-                            }
-                        }, cts.Token);
+                            Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Open_Text_val));
+                            Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].ChoosePath_Text_val));
+                            System.Windows.Forms.SendKeys.SendWait(TextBoxDispatcherGetValue(VSM_File_Location));
+                            Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].VSM_Text_val));
+                            Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].VSMType_Text_val));
+                            Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].InputVSM_Text_val));
+                            System.Windows.Forms.SendKeys.SendWait(System.IO.Path.GetFileName(vsm_file[file]));
+                            Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].TurnOn_Text_val));
+                            Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].View_Text_val));
+                            Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Display_Text_val));
+                            Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].OnePane_Text_val));
+                            Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Magnification_Text_val));
+
+                        };
+                        //});
                         break;
                     }
                 case nameof(Stop):
                     {
-                        cts.Cancel();
+                        
                         break;
                     }
                 case nameof(Capture_Screen):
@@ -345,7 +465,7 @@ namespace AutoFlow
                     {
                         Step1Window SW = new Step1Window();
                         SW.Left = this.Left + (this.Width- SW.Width)/2;
-                        SW.Top= this.Top + this.Height/2;
+                        SW.Top= this.Top + this.Height/1.7;
                         SW.Show();
                         break;
                     }
@@ -358,6 +478,41 @@ namespace AutoFlow
         {
             switch ((sender as Button).Name)
             {
+                case nameof(Open_Setting_File_Path):
+                    {
+                        OpenFileDialog open_setting_file_path = new OpenFileDialog();
+                        open_setting_file_path.Title = "選擇檔案";
+                        open_setting_file_path.Filter = "文本檔案 (*.json)|*.json|所有檔案 (*.*)|*.*";
+                        if (open_setting_file_path.ShowDialog()==true)
+                        {
+                            Setting_File_Location.Text = open_setting_file_path.FileName;
+                        }
+                        break;
+                    }
+                case nameof(Open_VSM_Folder):
+                    {
+                        System.Windows.Forms.FolderBrowserDialog open_vsm_folder_path = new System.Windows.Forms.FolderBrowserDialog();
+                        open_vsm_folder_path.Description = "選擇vsm檔資料夾";
+                        open_vsm_folder_path.ShowDialog();
+                        Setting_File_Location.Text = open_vsm_folder_path.SelectedPath;
+                        break;
+                    }
+                case nameof(Open_Dat_Folder):
+                    {
+                        System.Windows.Forms.FolderBrowserDialog open_dat_folder_path = new System.Windows.Forms.FolderBrowserDialog();
+                        open_dat_folder_path.Description = "選擇dat檔資料夾";
+                        open_dat_folder_path.ShowDialog();
+                        VSM_File_Location.Text = open_dat_folder_path.SelectedPath;
+                        break;
+                    }
+                case nameof(Open_Xlsx_Folder):
+                    {
+                        System.Windows.Forms.FolderBrowserDialog open_xlsx_folder_path = new System.Windows.Forms.FolderBrowserDialog();
+                        open_xlsx_folder_path.Description = "選擇xlsx檔資料夾";
+                        open_xlsx_folder_path.ShowDialog();
+                        Xlsx_File_Location.Text = open_xlsx_folder_path.SelectedPath;
+                        break;
+                    }
                 case nameof(Save_Config):
                     {
                         SaveConfig();

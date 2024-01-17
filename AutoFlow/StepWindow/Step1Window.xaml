@@ -5,15 +5,44 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutoFlow.StepWindow"
         mc:Ignorable="d"
-        Title="Step1Window" Height="450" Width="700" Background="#FFE6F0FF" Loaded="Window_Loaded" Icon="/Icon/Deepwise.ico">
+        Title="Step1Window" Height="450" Width="600" Background="#FFE6F0FF" Loaded="Window_Loaded" Icon="/Icon/Deepwise.ico">
     <Grid>
-        <WrapPanel Orientation="Horizontal" Margin="36,43,448,38">
-            <RadioButton x:Name="VSM" Content="點選vsm檔" HorizontalAlignment="Left" Margin="10,8,0,0" VerticalAlignment="Top" Checked="VSM_Checked"/>
-            <TextBox x:Name="VSM_Text" Style="{StaticResource BaseTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="100" Height="30" Margin="10,0,0,0"/>
-            <RadioButton x:Name="DTCS" Content="點選DTCS" HorizontalAlignment="Left" Margin="10,15,0,0" VerticalAlignment="Top" Checked="DTCS_Checked"/>
-            <TextBox x:Name="DTCS_Text" Style="{StaticResource BaseTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="100" Height="30" Margin="13,7,0,0"/>
-
+        <WrapPanel Orientation="Horizontal" Margin="36,11,147,15">
+            <RadioButton x:Name="Open" Content="點選資料夾" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" Checked="Open_Checked"/>
+            <TextBox x:Name="Open_Text" Style="{StaticResource BaseTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="100" Height="30" Margin="14,13,0,0"/>
+            <RadioButton x:Name="ChoosePath" Content="選擇路徑" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" Checked="ChoosePath_Checked"/>
+            <TextBox x:Name="ChoosePath_Text" Style="{StaticResource BaseTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="100" Height="30" Margin="14,13,0,0"/>
+            <RadioButton x:Name="VSM" Content="點選vsm檔" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" Checked="VSM_Checked"/>
+            <TextBox x:Name="VSM_Text" Style="{StaticResource BaseTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="100" Height="30" Margin="10,13,0,0"/>
+            <RadioButton x:Name="VSMType" Content="點選存檔類型" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" Checked="VSMType_Checked"/>
+            <TextBox x:Name="VSMType_Text" Style="{StaticResource BaseTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="100" Height="30" Margin="10,13,0,0"/>
+            <RadioButton x:Name="InputVSM" Content="輸入vsm檔名" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" Checked="InputVSM_Checked"/>
+            <TextBox x:Name="InputVSM_Text" Style="{StaticResource BaseTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="100" Height="30" Margin="10,13,0,0"/>
+            <RadioButton x:Name="TurnOn" Content="點選開啟" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" Checked="TurnOn_Checked"/>
+            <TextBox x:Name="TurnOn_Text" Style="{StaticResource BaseTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="100" Height="30" Margin="26,13,0,0"/>
+            <RadioButton x:Name="View" Content="點選View" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" Checked="View_Checked"/>
+            <TextBox x:Name="View_Text" Style="{StaticResource BaseTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="100" Height="30" Margin="17,13,0,0"/>
+            <RadioButton x:Name="Display" Content="點選Display" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" Checked="Display_Checked"/>
+            <TextBox x:Name="Display_Text" Style="{StaticResource BaseTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="100" Height="30" Margin="17,13,0,0"/>
+            <RadioButton x:Name="OnePane" Content="點選1Pane" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" Checked="OnePane_Checked"/>
+            <TextBox x:Name="OnePane_Text" Style="{StaticResource BaseTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="100" Height="30" Margin="10,13,0,0"/>
+            <RadioButton x:Name="Magnification" Content="點選放大" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" Checked="Magnification_Checked"/>
+            <TextBox x:Name="Magnification_Text" Style="{StaticResource BaseTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="100" Height="30" Margin="26,13,0,0"/>
+            <RadioButton x:Name="DTCS" Content="點選DTCS" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" Checked="DTCS_Checked"/>
+            <TextBox x:Name="DTCS_Text" Style="{StaticResource BaseTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="100" Height="30" Margin="19,13,0,0"/>
+            <RadioButton x:Name="OK" Content="點選OK" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" Checked="OK_Checked"/>
+            <TextBox x:Name="OK_Text" Style="{StaticResource BaseTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="100" Height="30" Margin="19,13,0,0"/>
+            <RadioButton x:Name="Save" Content="點選Save" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" Checked="Save_Checked"/>
+            <TextBox x:Name="Save_Text" Style="{StaticResource BaseTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="100" Height="30" Margin="17,13,0,0"/>
+            <RadioButton x:Name="InputDat" Content="輸入dat檔名" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" Checked="InputDat_Checked"/>
+            <TextBox x:Name="InputDat_Text" Style="{StaticResource BaseTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="100" Height="30" Margin="10,13,0,0"/>
+            <RadioButton x:Name="Archive" Content="點選存檔" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" Checked="Archive_Checked"/>
+            <TextBox x:Name="Archive_Text" Style="{StaticResource BaseTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="100" Height="30" Margin="20,13,0,0"/>
+            <RadioButton x:Name="DatType" Content="點選存檔類型" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" Checked="DatType_Checked"/>
+            <TextBox x:Name="DatType_Text" Style="{StaticResource BaseTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="100" Height="30" Margin="2,13,0,0"/>
+            <RadioButton x:Name="CloseVDSW" Content="關閉VDSW" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" Checked="CloseVDSW_Checked"/>
+            <TextBox x:Name="CloseVDSW_Text" Style="{StaticResource BaseTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="100" Height="30" Margin="14,13,0,0"/>
         </WrapPanel>
-        <Button x:Name="Save_Config" Style="{StaticResource CircleButton}" Margin="442,239,163,100" Content="儲存參數" Click="Save_Config_Click"/>
+        <Button x:Name="Save_Config" Style="{StaticResource CircleButton}" Margin="468,174,19,148" Content="儲存參數" Click="Save_Config_Click"/>
     </Grid>
 </Window>
