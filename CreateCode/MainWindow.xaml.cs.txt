@@ -1,0 +1,126 @@
+Step1Data.CheckSendValueEventHandler1 += (val) =>
+{
+ if (val == true)
+{
+ Step1Data.Step1_data1 = ConvertCoordStr(_downPoint, Display_Image);
+}
+};
+Step1Data.CheckSendValueEventHandler2 += (val) =>
+{
+ if (val == true)
+{
+ Step1Data.Step1_data2 = ConvertCoordStr(_downPoint, Display_Image);
+}
+};
+Step1Data.CheckSendValueEventHandler3 += (val) =>
+{
+ if (val == true)
+{
+ Step1Data.Step1_data3 = ConvertCoordStr(_downPoint, Display_Image);
+}
+};
+Step1Data.CheckSendValueEventHandler4 += (val) =>
+{
+ if (val == true)
+{
+ Step1Data.Step1_data4 = ConvertCoordStr(_downPoint, Display_Image);
+}
+};
+Step1Data.CheckSendValueEventHandler5 += (val) =>
+{
+ if (val == true)
+{
+ Step1Data.Step1_data5 = ConvertCoordStr(_downPoint, Display_Image);
+}
+};
+Step1Data.CheckSendValueEventHandler6 += (val) =>
+{
+ if (val == true)
+{
+ Step1Data.Step1_data6 = ConvertCoordStr(_downPoint, Display_Image);
+}
+};
+Step1Data.CheckSendValueEventHandler7 += (val) =>
+{
+ if (val == true)
+{
+ Step1Data.Step1_data7 = ConvertCoordStr(_downPoint, Display_Image);
+}
+};
+Step1Data.CheckSendValueEventHandler8 += (val) =>
+{
+ if (val == true)
+{
+ Step1Data.Step1_data8 = ConvertCoordStr(_downPoint, Display_Image);
+}
+};
+Step1Data.CheckSendValueEventHandler9 += (val) =>
+{
+ if (val == true)
+{
+ Step1Data.Step1_data9 = ConvertCoordStr(_downPoint, Display_Image);
+}
+};
+Step1Data.CheckSendValueEventHandler10 += (val) =>
+{
+ if (val == true)
+{
+ Step1Data.Step1_data10 = ConvertCoordStr(_downPoint, Display_Image);
+}
+};
+Step1Data.CheckSendValueEventHandler11 += (val) =>
+{
+ if (val == true)
+{
+ Step1Data.Step1_data11 = ConvertCoordStr(_downPoint, Display_Image);
+}
+};
+Step1Data.CheckSendValueEventHandler12 += (val) =>
+{
+ if (val == true)
+{
+ Step1Data.Step1_data12 = ConvertCoordStr(_downPoint, Display_Image);
+}
+};
+Step1Data.CheckSendValueEventHandler13 += (val) =>
+{
+ if (val == true)
+{
+ Step1Data.Step1_data13 = ConvertCoordStr(_downPoint, Display_Image);
+}
+};
+Step1Data.CheckSendValueEventHandler14 += (val) =>
+{
+ if (val == true)
+{
+ Step1Data.Step1_data14 = ConvertCoordStr(_downPoint, Display_Image);
+}
+};
+Step1Data.CheckSendValueEventHandler15 += (val) =>
+{
+ if (val == true)
+{
+ Step1Data.Step1_data15 = ConvertCoordStr(_downPoint, Display_Image);
+}
+};
+Step1Data.CheckSendValueEventHandler16 += (val) =>
+{
+ if (val == true)
+{
+ Step1Data.Step1_data16 = ConvertCoordStr(_downPoint, Display_Image);
+}
+};
+Step1Data.CheckSendValueEventHandler17 += (val) =>
+{
+ if (val == true)
+{
+ Step1Data.Step1_data17 = ConvertCoordStr(_downPoint, Display_Image);
+}
+};
+Step1Data.CheckSendValueEventHandler18 += (val) =>
+{
+ if (val == true)
+{
+ Step1Data.Step1_data18 = ConvertCoordStr(_downPoint, Display_Image);
+}
+};

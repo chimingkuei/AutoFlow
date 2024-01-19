@@ -261,6 +261,7 @@ namespace AutoFlow
         }
         #endregion
 
+        #region Coordinate Format Conversion
         private string ConvertCoordStr(System.Windows.Point point , System.Windows.Controls.Image display_image)
         {
             if (point!=new System.Windows.Point(0,0))
@@ -280,6 +281,13 @@ namespace AutoFlow
             Match match = Regex.Match(coord_str, @"\((\d+),(\d+)\)");  
             return new System.Drawing.Point(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
         }
+
+        private Tuple<string, System.Drawing.Point> ConvertWaferCoordStr(string coord_str)
+        {
+            string wafer_coord = "_X" + ConvertCoordXY(coord_str.Split(',')[0]).X.ToString() + "Y" + ConvertCoordXY(coord_str.Split(',')[0]).Y.ToString();
+            return new Tuple<string, System.Drawing.Point>(wafer_coord, ConvertCoordXY(coord_str.Split(',')[1]));
+        }
+        #endregion
 
         private void CheckSendValueInit()
         {
@@ -428,7 +436,6 @@ namespace AutoFlow
         Core Do = new Core();
         ExcelHandler EH = new ExcelHandler();
         BaseLogRecord Logger = new BaseLogRecord();
-        CancellationTokenSource cts;
         private bool _started;
         private System.Windows.Point _downPoint;
         #endregion
@@ -442,8 +449,6 @@ namespace AutoFlow
                     {
                         List<AutoFlow.StepWindow.Parameter> Step1Parameter_info = Step1Config.Load();
                         List<WaferPointParameter> WaferPointParameter_info = WaferPoint.Load();
-                        //Task.Run(() =>
-                        //{
                         string[] vsm_file = Do.GetFilename(TextBoxDispatcherGetValue(VSM_File_Location), "*.vsm");
                         for (int file = 0; file < vsm_file.Length; file++)
                         {
@@ -461,19 +466,18 @@ namespace AutoFlow
                             Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Magnification_Text_val));
                             foreach (var point in WaferPointParameter_info[0].WaferPoint_val)
                             {
-                                Do.SimulateLeftMouseDoubleClick(ConvertCoordXY(point));
+                                Do.SimulateLeftMouseDoubleClick(ConvertWaferCoordStr(point).Item2);
                                 Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].DTCS_Text_val));
                                 Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].OK_Text_val));
                                 Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Save_Text_val));
                                 Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Dat_Text_val));
                                 Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].DatType_Text_val));
                                 Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].InputDat_Text_val));
-                                System.Windows.Forms.SendKeys.SendWait(System.IO.Path.GetFileNameWithoutExtension(vsm_file[file])+"_X0Y0");
+                                System.Windows.Forms.SendKeys.SendWait(System.IO.Path.GetFileNameWithoutExtension(vsm_file[file])+ ConvertWaferCoordStr(point).Item1);
                                 Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Archive_Text_val));
                                 Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].CloseVDSW_Text_val));
                             }
                         };
-                        //});
                         break;
                     }
                 case nameof(Stop):
