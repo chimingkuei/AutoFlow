@@ -33,9 +33,10 @@ namespace AutoFlow.StepWindow
         public string DTCS_Text_val { get; set; }
         public string OK_Text_val { get; set; }
         public string Save_Text_val { get; set; }
+        public string Dat_Text_val { get; set; }
+        public string DatType_Text_val { get; set; }
         public string InputDat_Text_val { get; set; }
         public string Archive_Text_val { get; set; }
-        public string DatType_Text_val { get; set; }
         public string CloseVDSW_Text_val { get; set; }
     }
 
@@ -64,9 +65,10 @@ namespace AutoFlow.StepWindow
             DTCS_Text.Text = Parameter_info[0].DTCS_Text_val;
             OK_Text.Text = Parameter_info[0].OK_Text_val;
             Save_Text.Text = Parameter_info[0].Save_Text_val;
+            Dat_Text.Text = Parameter_info[0].Dat_Text_val;
+            DatType_Text.Text = Parameter_info[0].DatType_Text_val;
             InputDat_Text.Text = Parameter_info[0].InputDat_Text_val;
             Archive_Text.Text = Parameter_info[0].Archive_Text_val;
-            DatType_Text.Text = Parameter_info[0].DatType_Text_val;
             CloseVDSW_Text.Text =  Parameter_info[0].CloseVDSW_Text_val;
         }
 
@@ -88,9 +90,10 @@ namespace AutoFlow.StepWindow
                     DTCS_Text_val=DTCS_Text.Text,
                     OK_Text_val=OK_Text.Text,
                     Save_Text_val=Save_Text.Text,
+                    Dat_Text_val=Dat_Text.Text,
+                    DatType_Text_val=DatType_Text.Text,
                     InputDat_Text_val=InputDat_Text.Text,
                     Archive_Text_val=Archive_Text.Text,
-                    DatType_Text_val=DatType_Text.Text,
                     CloseVDSW_Text_val=CloseVDSW_Text.Text
                    }
             };
@@ -154,17 +157,21 @@ namespace AutoFlow.StepWindow
             };
             Step1Data.SendValueEventHandler14 += (val) =>
             {
-                InputDat_Text.Text = val;
+                Dat_Text.Text = val;
             };
             Step1Data.SendValueEventHandler15 += (val) =>
             {
-                Archive_Text.Text = val;
+                DatType_Text.Text = val;
             };
             Step1Data.SendValueEventHandler16 += (val) =>
             {
-                DatType_Text.Text = val;
+                InputDat_Text.Text = val;
             };
             Step1Data.SendValueEventHandler17 += (val) =>
+            {
+                Archive_Text.Text = val;
+            };
+            Step1Data.SendValueEventHandler18 += (val) =>
             {
                 CloseVDSW_Text.Text = val;
             };
@@ -249,27 +256,30 @@ namespace AutoFlow.StepWindow
         {
             Step1Data.Step1_bool13 = true;
         }
-
-        private void InputDat_Checked(object sender, RoutedEventArgs e)
+        private void Dat_Checked(object sender, RoutedEventArgs e)
         {
             Step1Data.Step1_bool14 = true;
         }
-
-        private void Archive_Checked(object sender, RoutedEventArgs e)
+        private void DatType_Checked(object sender, RoutedEventArgs e)
         {
             Step1Data.Step1_bool15 = true;
         }
 
-        private void DatType_Checked(object sender, RoutedEventArgs e)
+        private void InputDat_Checked(object sender, RoutedEventArgs e)
         {
             Step1Data.Step1_bool16 = true;
         }
 
-        private void CloseVDSW_Checked(object sender, RoutedEventArgs e)
+        private void Archive_Checked(object sender, RoutedEventArgs e)
         {
             Step1Data.Step1_bool17 = true;
         }
 
-        
+        private void CloseVDSW_Checked(object sender, RoutedEventArgs e)
+        {
+            Step1Data.Step1_bool18 = true;
+        }
+
+       
     }
 }

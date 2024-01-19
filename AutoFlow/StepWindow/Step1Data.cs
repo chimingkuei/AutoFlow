@@ -26,6 +26,7 @@ namespace AutoFlow.StepWindow
         static public event SendValueEventHandler SendValueEventHandler15;
         static public event SendValueEventHandler SendValueEventHandler16;
         static public event SendValueEventHandler SendValueEventHandler17;
+        static public event SendValueEventHandler SendValueEventHandler18;
         static private string data1;
         static private string data2;
         static private string data3;
@@ -43,6 +44,7 @@ namespace AutoFlow.StepWindow
         static private string data15;
         static private string data16;
         static private string data17;
+        static private string data18;
         static public string Step1_data1
         {
             get
@@ -247,7 +249,18 @@ namespace AutoFlow.StepWindow
                 SendValueEventHandler17(data17);
             }
         }
-
+        static public string Step1_data18
+        {
+            get
+            {
+                return data18;
+            }
+            set
+            {
+                data18 = value;
+                SendValueEventHandler18(data18);
+            }
+        }
         public delegate void CheckSendValueEventHandler(bool e);
         static public event CheckSendValueEventHandler CheckSendValueEventHandler1;
         static public event CheckSendValueEventHandler CheckSendValueEventHandler2;
@@ -266,6 +279,7 @@ namespace AutoFlow.StepWindow
         static public event CheckSendValueEventHandler CheckSendValueEventHandler15;
         static public event CheckSendValueEventHandler CheckSendValueEventHandler16;
         static public event CheckSendValueEventHandler CheckSendValueEventHandler17;
+        static public event CheckSendValueEventHandler CheckSendValueEventHandler18;
         static private bool bool1;
         static private bool bool2;
         static private bool bool3;
@@ -283,6 +297,7 @@ namespace AutoFlow.StepWindow
         static private bool bool15;
         static private bool bool16;
         static private bool bool17;
+        static private bool bool18;
         static public bool Step1_bool1
         {
             get
@@ -485,6 +500,18 @@ namespace AutoFlow.StepWindow
             {
                 bool17 = value;
                 CheckSendValueEventHandler17(bool17);
+            }
+        }
+        static public bool Step1_bool18
+        {
+            get
+            {
+                return bool18;
+            }
+            set
+            {
+                bool18 = value;
+                CheckSendValueEventHandler18(bool18);
             }
         }
     }

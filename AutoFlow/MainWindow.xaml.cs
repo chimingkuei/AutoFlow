@@ -33,6 +33,7 @@ using AutoFlow.StepWindow;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using Microsoft.Win32;
+using System.Net.NetworkInformation;
 
 namespace AutoFlow
 {
@@ -48,7 +49,10 @@ namespace AutoFlow
         public string Xlsx_File_Location_val { get; set; }
         public string Wafer_Type_val { get; set; }
     }
-
+    public class WaferPointParameter
+    {
+        public List<string> WaferPoint_val { get; set; }
+    }
     public partial class MainWindow : System.Windows.Window
     {
         
@@ -398,6 +402,13 @@ namespace AutoFlow
                     Step1Data.Step1_data17 = ConvertCoordStr(_downPoint, Display_Image);
                 }
             };
+            Step1Data.CheckSendValueEventHandler18 += (val) =>
+            {
+                if (val == true)
+                {
+                    Step1Data.Step1_data18 = ConvertCoordStr(_downPoint, Display_Image);
+                }
+            };
         }
         #endregion
 
@@ -413,6 +424,7 @@ namespace AutoFlow
         }
         BaseConfig<Parameter> Config = new BaseConfig<Parameter>();
         BaseConfig<AutoFlow.StepWindow.Parameter> Step1Config = new BaseConfig<AutoFlow.StepWindow.Parameter>(@"Step1Data.json");
+        BaseConfig<WaferPointParameter> WaferPoint = new BaseConfig<WaferPointParameter>(@"WaferPoint.json");
         Core Do = new Core();
         ExcelHandler EH = new ExcelHandler();
         BaseLogRecord Logger = new BaseLogRecord();
@@ -429,6 +441,7 @@ namespace AutoFlow
                 case nameof(Start):
                     {
                         List<AutoFlow.StepWindow.Parameter> Step1Parameter_info = Step1Config.Load();
+                        List<WaferPointParameter> WaferPointParameter_info = WaferPoint.Load();
                         //Task.Run(() =>
                         //{
                         string[] vsm_file = Do.GetFilename(TextBoxDispatcherGetValue(VSM_File_Location), "*.vsm");
@@ -446,14 +459,25 @@ namespace AutoFlow
                             Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Display_Text_val));
                             Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].OnePane_Text_val));
                             Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Magnification_Text_val));
-
+                            foreach (var point in WaferPointParameter_info[0].WaferPoint_val)
+                            {
+                                Do.SimulateLeftMouseDoubleClick(ConvertCoordXY(point));
+                                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].DTCS_Text_val));
+                                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].OK_Text_val));
+                                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Save_Text_val));
+                                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Dat_Text_val));
+                                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].DatType_Text_val));
+                                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].InputDat_Text_val));
+                                System.Windows.Forms.SendKeys.SendWait(System.IO.Path.GetFileNameWithoutExtension(vsm_file[file])+"_X0Y0");
+                                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Archive_Text_val));
+                                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].CloseVDSW_Text_val));
+                            }
                         };
                         //});
                         break;
                     }
                 case nameof(Stop):
                     {
-                        
                         break;
                     }
                 case nameof(Capture_Screen):
