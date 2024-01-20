@@ -39,9 +39,6 @@ namespace AutoFlow
 {
     public class Parameter
     {
-        public string Window_Name_val { get; set; }
-        public string Coordinate_X_val { get; set; }
-        public string Coordinate_Y_val { get; set; }
         public List<System.Drawing.Point> click_points { get; set; }
         public string Setting_File_Location_val { get; set; }
         public string VSM_File_Location_val { get; set; }
@@ -77,7 +74,9 @@ namespace AutoFlow
         #region NotifyIcon
         private System.Windows.Forms.NotifyIcon notifyIcon = null;
         System.Windows.Forms.ContextMenu nIconMenu = new System.Windows.Forms.ContextMenu();
-        System.Windows.Forms.MenuItem nIconMenuItem = new System.Windows.Forms.MenuItem();
+        System.Windows.Forms.MenuItem nIconMenuItem1 = new System.Windows.Forms.MenuItem();
+        System.Windows.Forms.MenuItem nIconMenuItem2 = new System.Windows.Forms.MenuItem();
+        System.Windows.Forms.MenuItem nIconMenuItem3 = new System.Windows.Forms.MenuItem();
         private void InitialTray()
         {
             notifyIcon = new System.Windows.Forms.NotifyIcon();
@@ -86,11 +85,14 @@ namespace AutoFlow
             notifyIcon.Visible = true;
             notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(notifyIcon_MouseClick);
             this.StateChanged += new EventHandler(WPFUI_StateChanged);
-            //小圖示選單
-            nIconMenuItem.Index = 0;
-            nIconMenuItem.Text = "結束";
-            nIconMenuItem.Click += new System.EventHandler(nIconMenuItem0_Click);
-            nIconMenu.MenuItems.Add(nIconMenuItem);
+            nIconMenuItem2.Index = 0;
+            nIconMenuItem2.Text = "擷取螢幕";
+            nIconMenuItem2.Click += new System.EventHandler(nIconMenuItem2_Click);
+            nIconMenu.MenuItems.Add(nIconMenuItem2);
+            nIconMenuItem3.Index = 0;
+            nIconMenuItem3.Text = "自動點位抓取參數頁面";
+            nIconMenuItem3.Click += new System.EventHandler(nIconMenuItem3_Click);
+            nIconMenu.MenuItems.Add(nIconMenuItem3);
             notifyIcon.ContextMenu = nIconMenu;
         }
         private void notifyIcon_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -117,9 +119,13 @@ namespace AutoFlow
                 this.Visibility = Visibility.Hidden;
             }
         }
-        private void nIconMenuItem0_Click(object sender, System.EventArgs e)
+        private void nIconMenuItem2_Click(object sender, System.EventArgs e)
         {
-            System.Windows.Application.Current.Shutdown();
+            Do.CaptureScreen(Display_Image);
+        }
+        private void nIconMenuItem3_Click(object sender, System.EventArgs e)
+        {
+            OpenStep1Window();
         }
         #endregion
 
@@ -155,9 +161,6 @@ namespace AutoFlow
         private void LoadConfig()
         {
             List<Parameter> Parameter_info = Config.Load();
-            Window_Name.Text = Parameter_info[0].Window_Name_val;
-            Coordinate_X.Text = Parameter_info[0].Coordinate_X_val;
-            Coordinate_Y.Text = Parameter_info[0].Coordinate_Y_val;
             Setting_File_Location.Text = Parameter_info[0].Setting_File_Location_val;
             VSM_File_Location.Text = Parameter_info[0].VSM_File_Location_val;
             Dat_File_Location.Text = Parameter_info[0].Dat_File_Location_val;
@@ -170,9 +173,6 @@ namespace AutoFlow
             List<Parameter> Parameter_config = new List<Parameter>()
             {
                 new Parameter() {
-                    Window_Name_val = Window_Name.Text,
-                    Coordinate_X_val = Coordinate_X.Text,
-                    Coordinate_Y_val = Coordinate_Y.Text,
                     click_points = pointlist,
                     Setting_File_Location_val = Setting_File_Location.Text,
                     VSM_File_Location_val = VSM_File_Location.Text,
@@ -286,6 +286,16 @@ namespace AutoFlow
         {
             string wafer_coord = "_X" + ConvertCoordXY(coord_str.Split(',')[0]).X.ToString() + "Y" + ConvertCoordXY(coord_str.Split(',')[0]).Y.ToString();
             return new Tuple<string, System.Drawing.Point>(wafer_coord, ConvertCoordXY(coord_str.Split(',')[1]));
+        }
+        #endregion
+
+        #region Action
+        private void OpenStep1Window()
+        {
+            Step1Window SW = new Step1Window();
+            SW.Left = this.Left + (this.Width - SW.Width) / 2;
+            SW.Top = this.Top + this.Height / 1.7;
+            SW.Show();
         }
         #endregion
 
@@ -487,10 +497,7 @@ namespace AutoFlow
                     }
                 case nameof(Step1):
                     {
-                        Step1Window SW = new Step1Window();
-                        SW.Left = this.Left + (this.Width- SW.Width)/2;
-                        SW.Top= this.Top + this.Height/1.7;
-                        SW.Show();
+                        OpenStep1Window();
                         break;
                     }
             }

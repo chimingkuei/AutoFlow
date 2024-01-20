@@ -37,52 +37,43 @@
             </TabItem>
         </TabControl>
         <Image x:Name="Logo" Height="113" Margin="751,517,6,0" VerticalAlignment="Top" Source="Icon/DeepWise.png"/>
-        <TabControl HorizontalAlignment="Left" Margin="5,3,0,0" VerticalAlignment="Top" Height="478" Width="978" Background="#FFE6F0FF">
+        <TabControl HorizontalAlignment="Center" VerticalAlignment="Top" Height="478" Width="899" Background="#FFE6F0FF">
             <TabItem Header="主畫面" Style="{StaticResource BaseTabcontrol}">
                 <Grid>
                     <Image Name="Display_Image" MouseLeftButtonDown="AddPointButtonDown" MouseLeftButtonUp="AddPointButtonUp" 
-                           MouseRightButtonDown="DeletePointButtonDown" MouseRightButtonUp="DeletePointButtonUp" Margin="10,16,231,15"/>
-                    <Border BorderBrush="Black" BorderThickness="1" Opacity="1" Margin="10,16,231,15">
+                           MouseRightButtonDown="DeletePointButtonDown" MouseRightButtonUp="DeletePointButtonUp" Margin="11,16,142,15"/>
+                    <Border BorderBrush="Black" BorderThickness="1" Opacity="1" Margin="11,16,142,15">
                         <Canvas x:Name="Canvas" Margin="0,0,0,0"/>
                     </Border>
-                    <WrapPanel Orientation="Horizontal" Margin="753,16,105,18">
-                        <Button x:Name="Start" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="7,0,0,0" Content="開始" Click="Main_Btn_Click"/>
-                        <Button x:Name="Capture_Screen" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="7,0,0,0" Content="擷取螢幕" Click="Main_Btn_Click"/>
-                        <Button x:Name="Step1" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="7,0,0,0" Click="Main_Btn_Click">
-                        <TextBlock TextAlignment="Center">
+                    <WrapPanel Orientation="Horizontal" Margin="760,16,9,18">
+                        <Button x:Name="Start" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="12,0,0,0" Content="開始" Click="Main_Btn_Click"/>
+                        <Button x:Name="Capture_Screen" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="12,0,0,0" Content="擷取螢幕" Click="Main_Btn_Click"/>
+                        <Button x:Name="Step1" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="12,0,0,0" Click="Main_Btn_Click">
+                            <TextBlock TextAlignment="Center">
                             自動點位抓取
                             <LineBreak/>
                             參數頁面
-                        </TextBlock>
-                    </Button>
+                            </TextBlock>
+                        </Button>
                     </WrapPanel>
                 </Grid>
             </TabItem>
             <TabItem Header="參數畫面" Style="{StaticResource BaseTabcontrol}">
                 <Grid>
-                    <ComboBox Style="{StaticResource AdvancedComboBox}" Name="Wafer_Type" HorizontalAlignment="Left" Margin="124,32,0,366" Width="160" IsSynchronizedWithCurrentItem="True" FontSize="18">
+                    <ComboBox Style="{StaticResource AdvancedComboBox}" Name="Wafer_Type" HorizontalAlignment="Left" Margin="124,35,0,378" Width="115" IsSynchronizedWithCurrentItem="True" FontSize="18">
                         <ComboBoxItem IsSelected="True">6吋晶圓</ComboBoxItem>
                         <ComboBoxItem>4吋晶圓</ComboBoxItem>
                         <ComboBoxItem>3吋晶圓</ComboBoxItem>
                     </ComboBox>
-                    <Button x:Name="Open_Setting_File_Path" Style="{StaticResource BaseButton}" Margin="18,144,812,245" Content="開啟Setting檔路徑" FontSize="18" Background="DodgerBlue" Click="Parameter_Btn_Click"/>
-                    <TextBox x:Name="Setting_File_Location" Style="{StaticResource SettingBaseTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="32" Margin="174,158,447,256"/>
-                    <Button x:Name="Open_VSM_Folder" Style="{StaticResource BaseButton}" Margin="19,214,811,175" Content="開啟vsm檔資料夾" FontSize="18" Background="DodgerBlue" Click="Parameter_Btn_Click"/>
-                    <TextBox x:Name="VSM_File_Location" Style="{StaticResource VSMBaseTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="32" Margin="175,229,446,185"/>
-                    <Button x:Name="Open_Dat_Folder" Style="{StaticResource BaseButton}" Margin="15,280,815,109" Content="開啟dat檔資料夾" FontSize="18" Background="DodgerBlue" Click="Parameter_Btn_Click"/>
-                    <TextBox x:Name="Dat_File_Location" Style="{StaticResource DatBaseTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="32" Margin="175,292,446,122"/>
-                    <Button x:Name="Open_Xlsx_Folder" Style="{StaticResource BaseButton}" Margin="17,352,813,37" Content="開啟xlsx檔資料夾" FontSize="18" Background="DodgerBlue" Click="Parameter_Btn_Click"/>
-                    <TextBox x:Name="Xlsx_File_Location" Style="{StaticResource XlsxBaseTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="32" Margin="179,362,442,52"/>
-                    <WrapPanel Orientation="Horizontal" Margin="533,44,13,172">
-                        <Label x:Name="Window_Name_Label" Content="Window Name:" FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="69,34,0,0"/>
-                        <TextBox x:Name="Window_Name" Style="{StaticResource WindowNameTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="150" Height="32" Margin="0,34,0,0"></TextBox>
-                        <Label x:Name="Coordinate_X_Label" Content="Coordinate X:" FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="84,34,0,0"/>
-                        <TextBox x:Name="Coordinate_X" Style="{StaticResource XTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="150" Height="32" Margin="0,34,0,0"></TextBox>
-                        <Label x:Name="Coordinate_Y_Label" Content="Coordinate Y:" FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="84,34,0,0"/>
-                        <TextBox x:Name="Coordinate_Y" Style="{StaticResource YTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="150" Height="32" Margin="0,34,0,0"></TextBox>
-                    </WrapPanel>
-                    <Button x:Name="Save_Config" Style="{StaticResource BaseButton}" Margin="684,290,146,100" Content="Save Config" FontSize="18" Background="DodgerBlue" Click="Parameter_Btn_Click"/>
-
+                    <Button x:Name="Open_Setting_File_Path" Style="{StaticResource FileButtonStyle}" Margin="78,97,768,301" FontSize="18" Click="Parameter_Btn_Click"/>
+                    <TextBox x:Name="Setting_File_Location" Style="{StaticResource SettingBaseTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="32" Margin="144,106,477,308"/>
+                    <Button x:Name="Open_VSM_Folder" Style="{StaticResource FolderButtonStyle}" Margin="76,154,774,242" FontSize="18" Background="#FFE6F0FF" BorderThickness="0" Click="Parameter_Btn_Click"/>
+                    <TextBox x:Name="VSM_File_Location" Style="{StaticResource VSMBaseTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="32" Margin="143,164,478,250"/>
+                    <Button x:Name="Open_Dat_Folder" Style="{StaticResource FolderButtonStyle}" Margin="76,221,774,175" FontSize="18" Background="#FFE6F0FF" BorderThickness="0" Click="Parameter_Btn_Click"/>
+                    <TextBox x:Name="Dat_File_Location" Style="{StaticResource DatBaseTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="32" Margin="144,229,477,185"/>
+                    <Button x:Name="Open_Xlsx_Folder" Style="{StaticResource FolderButtonStyle}" Margin="75,279,775,117" FontSize="18" Background="#FFE6F0FF" BorderThickness="0" Click="Parameter_Btn_Click"/>
+                    <TextBox x:Name="Xlsx_File_Location" Style="{StaticResource XlsxBaseTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="32" Margin="142,292,479,122"/>
+                    <Button x:Name="Save_Config" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="456,174,337,172" Content="儲存參數" Click="Parameter_Btn_Click"/>
                 </Grid>
             </TabItem>
         </TabControl>
