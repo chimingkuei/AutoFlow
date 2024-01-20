@@ -8,6 +8,21 @@
         ResizeMode="CanMinimize"
         Title="Wafer點位" Height="450" Width="600" Background="#FFE6F0FF" Icon="/Icon/Deepwise.ico">
     <Grid>
-        <Button x:Name="Save_Config" Style="{StaticResource CircleButton}" Margin="466,177,34,157" Content="儲存參數"/>
+        <Button x:Name="Open_WaferPoint_Csv_Path" Style="{StaticResource FileButtonStyle}" FontSize="18" Margin="64,71,476,302"/>
+        <TextBox x:Name="WaferPoint_Csv_Path" Style="{StaticResource XTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="114,75,75,309"/>
+        <Button x:Name="Save_Config" Style="{StaticResource CircleButton}" Margin="402,222,98,111">
+            <TextBlock TextAlignment="Center">
+                CSV轉換晶圓
+                <LineBreak/>
+                 點位json
+            </TextBlock>
+        </Button>
+        <GroupBox Style="{StaticResource BaseGroupBox}" Margin="88,163,223,59" Header="點位鼠標測試" FontSize="22" Foreground="Black" Background="Teal">
+            <Grid Margin="-10,-7,-9,-11">
+                <TextBox x:Name="CoordX" Style="{StaticResource XTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="32,26,147,95"/>
+                <TextBox x:Name="CoordY" Style="{StaticResource YTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="32,87,147,35"/>
+                <Button x:Name="Move_Mouse" Style="{StaticResource CircleButton}" Margin="154,31,32,39" Content="移動滑鼠" FontSize="12"/>
+            </Grid>
+        </GroupBox>
     </Grid>
 </Window>

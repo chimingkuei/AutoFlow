@@ -72,7 +72,7 @@
                         <ComboBoxItem>4吋晶圓</ComboBoxItem>
                         <ComboBoxItem>3吋晶圓</ComboBoxItem>
                     </ComboBox>
-                    <WrapPanel Orientation="Horizontal" Margin="52,94,463,82.14">
+                    <WrapPanel Orientation="Horizontal" Margin="52,108,463,68">
                         <Button x:Name="Open_Setting_File_Path" Style="{StaticResource FileButtonStyle}" Margin="52,13.2,0,0" FontSize="18" Height="51" Width="54" Click="Parameter_Btn_Click"/>
                         <TextBox x:Name="Setting_File_Location" Style="{StaticResource SettingBaseTextBox}" Margin="10,15.4,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="32" Width="210"/>
                         <Button x:Name="Open_VSM_Folder" Style="{StaticResource FolderButtonStyle}" Margin="52,13.2,0,0" FontSize="18" Background="#FFE6F0FF" BorderThickness="0" Height="51" Width="54" Click="Parameter_Btn_Click"/>
