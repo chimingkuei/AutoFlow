@@ -77,7 +77,7 @@ namespace AutoFlow
         #region NotifyIcon
         private System.Windows.Forms.NotifyIcon notifyIcon = null;
         System.Windows.Forms.ContextMenu nIconMenu = new System.Windows.Forms.ContextMenu();
-        System.Windows.Forms.MenuItem nIconMenuItem1 = new System.Windows.Forms.MenuItem();
+        System.Windows.Forms.MenuItem nIconMenuItem = new System.Windows.Forms.MenuItem();
         private void InitialTray()
         {
             notifyIcon = new System.Windows.Forms.NotifyIcon();
@@ -87,10 +87,10 @@ namespace AutoFlow
             notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(notifyIcon_MouseClick);
             this.StateChanged += new EventHandler(WPFUI_StateChanged);
             //小圖示選單
-            nIconMenuItem1.Index = 0;
-            nIconMenuItem1.Text = "結束";
-            nIconMenuItem1.Click += new System.EventHandler(nIconMenuItem1_Click);
-            nIconMenu.MenuItems.Add(nIconMenuItem1);
+            nIconMenuItem.Index = 0;
+            nIconMenuItem.Text = "結束";
+            nIconMenuItem.Click += new System.EventHandler(nIconMenuItem0_Click);
+            nIconMenu.MenuItems.Add(nIconMenuItem);
             notifyIcon.ContextMenu = nIconMenu;
         }
         private void notifyIcon_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -117,7 +117,7 @@ namespace AutoFlow
                 this.Visibility = Visibility.Hidden;
             }
         }
-        private void nIconMenuItem1_Click(object sender, System.EventArgs e)
+        private void nIconMenuItem0_Click(object sender, System.EventArgs e)
         {
             System.Windows.Application.Current.Shutdown();
         }
@@ -478,10 +478,6 @@ namespace AutoFlow
                                 Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].CloseVDSW_Text_val));
                             }
                         };
-                        break;
-                    }
-                case nameof(Stop):
-                    {
                         break;
                     }
                 case nameof(Capture_Screen):

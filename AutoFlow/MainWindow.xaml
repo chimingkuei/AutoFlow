@@ -8,9 +8,9 @@
         mc:Ignorable="d"
         Closing="WindowClosing" 
         ResizeMode="CanMinimize"
-        Title="AutoFlow" Height="700" Width="1000" Background="#FF3E6FB3" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+        Title="AutoFlow" Height="670" Width="900" Background="#FF3E6FB3" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
     <Grid>
-        <TabControl x:Name="Log" HorizontalAlignment="Left" Height="172" Margin="5,485,0,0" VerticalAlignment="Top" Width="790" Background="#FFE6F0FF">
+        <TabControl x:Name="Log" HorizontalAlignment="Left" Height="140" Margin="5,485,0,0" VerticalAlignment="Top" Width="745" Background="#FFE6F0FF">
             <TabControl.Resources>
                 <Style TargetType="RichTextBox">
                     <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
@@ -36,7 +36,7 @@
                 <RichTextBox x:Name="richTextBoxDebug" Background="#FF4396BF"/>
             </TabItem>
         </TabControl>
-        <Image x:Name="Logo" Height="142" Margin="814,514,21,0" VerticalAlignment="Top" Width="159" Source="Icon/DeepWise.png"/>
+        <Image x:Name="Logo" Height="113" Margin="751,517,6,0" VerticalAlignment="Top" Source="Icon/DeepWise.png"/>
         <TabControl HorizontalAlignment="Left" Margin="5,3,0,0" VerticalAlignment="Top" Height="478" Width="978" Background="#FFE6F0FF">
             <TabItem Header="主畫面" Style="{StaticResource BaseTabcontrol}">
                 <Grid>
@@ -45,10 +45,17 @@
                     <Border BorderBrush="Black" BorderThickness="1" Opacity="1" Margin="10,16,231,15">
                         <Canvas x:Name="Canvas" Margin="0,0,0,0"/>
                     </Border>
-                    <Button x:Name="Start" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="762,26,110,320" Click="Main_Btn_Click">Start</Button>
-                    <Button x:Name="Stop" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="762,139,110,207" Click="Main_Btn_Click">Stop</Button>
-                    <Button x:Name="Capture_Screen" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="762,260,110,86" Content="Capture Screen" Click="Main_Btn_Click"/>
-                    <Button x:Name="Step1" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="860,13,-8,313" Content="步驟1" Click="Main_Btn_Click"/>
+                    <WrapPanel Orientation="Horizontal" Margin="753,16,105,18">
+                        <Button x:Name="Start" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="7,0,0,0" Content="開始" Click="Main_Btn_Click"/>
+                        <Button x:Name="Capture_Screen" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="7,0,0,0" Content="擷取螢幕" Click="Main_Btn_Click"/>
+                        <Button x:Name="Step1" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="7,0,0,0" Click="Main_Btn_Click">
+                        <TextBlock TextAlignment="Center">
+                            自動點位抓取
+                            <LineBreak/>
+                            參數頁面
+                        </TextBlock>
+                    </Button>
+                    </WrapPanel>
                 </Grid>
             </TabItem>
             <TabItem Header="參數畫面" Style="{StaticResource BaseTabcontrol}">
