@@ -24,6 +24,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Interop;
 using static AutoFlow.MainWindow;
 using Newtonsoft.Json.Linq;
+using System.Diagnostics;
 
 namespace AutoFlow
 {
@@ -190,6 +191,17 @@ namespace AutoFlow
         public string[] GetFilename(string folderPath, string filetype)
         {
             return Directory.GetFiles(folderPath, filetype);
+        }
+
+        public void RunSoftware(string softwarepath)
+        {
+            ProcessStartInfo startInfo = new ProcessStartInfo
+            {
+                FileName = softwarepath,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            Process.Start(startInfo);
         }
     }
 

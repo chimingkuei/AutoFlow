@@ -1,7 +1,7 @@
 ﻿AutoFlow
 
 
-exe
+winexe
 C#
 .cs
 D:\Chimingkuei\repos\Project\AutoFlow\AutoFlow\obj\x64\Debug\
@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 D:\Chimingkuei\repos\Project\AutoFlow\AutoFlow\App.xaml
-101746361356
+11-893703289
 4755472595
-11305219904
+12-1267294275
 3964914342
-MainWindow.xaml;StepWindow\Step1Window.xaml;UI\ButtonStyles.xaml;UI\CheckBoxStyles.xaml;UI\ComboBoxStyles.xaml;UI\GroupBoxStyles.xaml;UI\RadioButtonStyles.xaml;UI\SliderStyles.xaml;UI\TabControlStyles.xaml;UI\TextBoxStyles.xaml;
+MainWindow.xaml;StepWindow\Step1Window.xaml;StepWindow\WaferWindow.xaml;UI\ButtonStyles.xaml;UI\CheckBoxStyles.xaml;UI\ComboBoxStyles.xaml;UI\GroupBoxStyles.xaml;UI\RadioButtonStyles.xaml;UI\SliderStyles.xaml;UI\TabControlStyles.xaml;UI\TextBoxStyles.xaml;
 
-False
+True
 

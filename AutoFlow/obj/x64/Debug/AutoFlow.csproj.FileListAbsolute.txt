@@ -71,3 +71,5 @@ D:\Chimingkuei\repos\Project\AutoFlow\AutoFlow\obj\x64\Debug\AutoFlow.exe
 D:\Chimingkuei\repos\Project\AutoFlow\AutoFlow\obj\x64\Debug\AutoFlow.pdb
 D:\Chimingkuei\repos\Project\AutoFlow\AutoFlow\obj\x64\Debug\StepWindow\Step1Window.g.cs
 D:\Chimingkuei\repos\Project\AutoFlow\AutoFlow\obj\x64\Debug\StepWindow\Step1Window.baml
+D:\Chimingkuei\repos\Project\AutoFlow\AutoFlow\obj\x64\Debug\StepWindow\WaferWindow.g.cs
+D:\Chimingkuei\repos\Project\AutoFlow\AutoFlow\obj\x64\Debug\StepWindow\WaferWindow.baml

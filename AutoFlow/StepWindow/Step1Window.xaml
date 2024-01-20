@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutoFlow.StepWindow"
         mc:Ignorable="d"
+        ResizeMode="CanMinimize"
         Title="自動點位抓取" Height="450" Width="600" Background="#FFE6F0FF" Loaded="Window_Loaded" Icon="/Icon/Deepwise.ico">
     <Grid>
         <WrapPanel Orientation="Horizontal" Margin="15,11,129,15">

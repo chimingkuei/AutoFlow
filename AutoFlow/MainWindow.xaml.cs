@@ -77,6 +77,7 @@ namespace AutoFlow
         System.Windows.Forms.MenuItem nIconMenuItem1 = new System.Windows.Forms.MenuItem();
         System.Windows.Forms.MenuItem nIconMenuItem2 = new System.Windows.Forms.MenuItem();
         System.Windows.Forms.MenuItem nIconMenuItem3 = new System.Windows.Forms.MenuItem();
+        System.Windows.Forms.MenuItem nIconMenuItem4 = new System.Windows.Forms.MenuItem();
         private void InitialTray()
         {
             notifyIcon = new System.Windows.Forms.NotifyIcon();
@@ -93,6 +94,10 @@ namespace AutoFlow
             nIconMenuItem3.Text = "自動點位抓取參數頁面";
             nIconMenuItem3.Click += new System.EventHandler(nIconMenuItem3_Click);
             nIconMenu.MenuItems.Add(nIconMenuItem3);
+            nIconMenuItem4.Index = 0;
+            nIconMenuItem4.Text = "晶圓點位參數頁面";
+            nIconMenuItem4.Click += new System.EventHandler(nIconMenuItem4_Click);
+            nIconMenu.MenuItems.Add(nIconMenuItem4);
             notifyIcon.ContextMenu = nIconMenu;
         }
         private void notifyIcon_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -126,6 +131,10 @@ namespace AutoFlow
         private void nIconMenuItem3_Click(object sender, System.EventArgs e)
         {
             OpenStep1Window();
+        }
+        private void nIconMenuItem4_Click(object sender, System.EventArgs e)
+        {
+            OpenWaferWindow();
         }
         #endregion
 
@@ -179,7 +188,7 @@ namespace AutoFlow
                     Dat_File_Location_val = Dat_File_Location.Text,
                     Xlsx_File_Location_val = Xlsx_File_Location.Text,
                     Wafer_Type_val = Wafer_Type.Text
-            }
+                }
             };
             Config.Save(Parameter_config);
         }
@@ -231,8 +240,7 @@ namespace AutoFlow
             int screen_x = Convert.ToInt32(_downPoint.X / Display_Image.ActualWidth * 1920);
             int screen_y = Convert.ToInt32(_downPoint.Y / Display_Image.ActualHeight * 1080);
             pointlist.Add(new System.Drawing.Point(screen_x, screen_y));
-            Console.WriteLine($"螢幕X座標:{screen_x}");
-            Console.WriteLine($"螢幕Y座標:{screen_y}");
+            Logger.WriteLog($"螢幕(X,Y)座標:({screen_x},{screen_y})", LogLevel.General, richTextBoxGeneral);
         }
         private void RemoveDot()
         {
@@ -284,7 +292,7 @@ namespace AutoFlow
 
         private Tuple<string, System.Drawing.Point> ConvertWaferCoordStr(string coord_str)
         {
-            string wafer_coord = "_X" + ConvertCoordXY(coord_str.Split(',')[0]).X.ToString() + "Y" + ConvertCoordXY(coord_str.Split(',')[0]).Y.ToString();
+            string wafer_coord = "_X" + ConvertCoordXY(coord_str.Split(',')[0]).X.ToString() + "_Y" + ConvertCoordXY(coord_str.Split(',')[0]).Y.ToString();
             return new Tuple<string, System.Drawing.Point>(wafer_coord, ConvertCoordXY(coord_str.Split(',')[1]));
         }
         #endregion
@@ -296,6 +304,14 @@ namespace AutoFlow
             SW.Left = this.Left + (this.Width - SW.Width) / 2;
             SW.Top = this.Top + this.Height / 1.7;
             SW.Show();
+        }
+
+        private void OpenWaferWindow()
+        {
+            WaferWindow WW = new WaferWindow();
+            WW.Left = this.Left + (this.Width - WW.Width) / 2;
+            WW.Top = this.Top + this.Height / 1.7;
+            WW.Show();
         }
         #endregion
 
@@ -495,9 +511,14 @@ namespace AutoFlow
                         Do.CaptureScreen(Display_Image);
                         break;
                     }
-                case nameof(Step1):
+                case nameof(Open_Step1Window):
                     {
                         OpenStep1Window();
+                        break;
+                    }
+                case nameof(Open_Wafer_Point):
+                    {
+                        OpenWaferWindow();
                         break;
                     }
             }
