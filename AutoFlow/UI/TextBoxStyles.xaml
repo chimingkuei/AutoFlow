@@ -145,11 +145,11 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    <Style x:Key="WindowNameTextBox" TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <Style x:Key="CsvTextBox" TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
         <Style.Resources>
             <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
                 <VisualBrush.Visual>
-                    <Label Content="請輸入視窗Title!" Foreground="#FF6DC33C"/>
+                    <Label Content="請輸入晶圓點位csv檔位置!" Foreground="#FF6DC33C"/>
                 </VisualBrush.Visual>
             </VisualBrush>
         </Style.Resources>

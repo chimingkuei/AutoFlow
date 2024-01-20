@@ -25,6 +25,7 @@ using System.Windows.Interop;
 using static AutoFlow.MainWindow;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
+using Newtonsoft.Json;
 
 namespace AutoFlow
 {
@@ -398,6 +399,27 @@ namespace AutoFlow
             return dataListChunks;
         }
 
-        
+        public List<string> CSVToWaferPointJson(string csvfilepath)
+        {
+            List<string> data = new List<string>();
+            if (File.Exists(csvfilepath))
+            {
+                using (StreamReader reader = new StreamReader(csvfilepath))
+                {
+                    reader.ReadLine();
+                    while (!reader.EndOfStream)
+                    {
+                        string line = reader.ReadLine();
+                        string[] fields = line.Split(',');
+                        data.Add("(" + fields[0] + "," + fields[1] + ")" + "(" + fields[2] + "," + fields[3] + ")");
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("CSV檔案不存在");
+            }
+            return data;
+        }
     }
 }
