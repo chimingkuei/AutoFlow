@@ -10,11 +10,18 @@
     <Grid>
         <Button x:Name="Open_WaferPoint_Csv_Path" Style="{StaticResource FileButtonStyle}" FontSize="18" Margin="64,71,476,302" Click="Main_Btn_Click"/>
         <TextBox x:Name="WaferPoint_Csv_Path" Style="{StaticResource CsvTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="114,75,75,309"/>
-        <Button x:Name="Csv_To_WaferPoint_Json" Style="{StaticResource CircleButton}" Margin="402,222,98,111" Click="Main_Btn_Click">
+        <Button x:Name="Convert_Screen_Coordinate" Style="{StaticResource CircleButton}" Margin="406,157,94,176" Click="Main_Btn_Click">
             <TextBlock TextAlignment="Center">
-                CSV轉換晶圓
+                 晶圓點位換算
                 <LineBreak/>
-                 點位json
+                 螢幕座標
+            </TextBlock>
+        </Button>
+        <Button x:Name="Convert_WaferPoint_Json" Style="{StaticResource CircleButton}" Margin="406,280,94,53" Click="Main_Btn_Click">
+            <TextBlock TextAlignment="Center">
+                 轉換晶圓
+                <LineBreak/>
+                 點位記錄檔
             </TextBlock>
         </Button>
         <GroupBox Style="{StaticResource BaseGroupBox}" Margin="88,163,223,59" Header="點位鼠標測試" FontSize="22" Foreground="Black" Background="Teal">

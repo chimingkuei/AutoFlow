@@ -46,10 +46,6 @@ namespace AutoFlow
         public string Xlsx_File_Location_val { get; set; }
         public string Wafer_Type_val { get; set; }
     }
-    public class WaferPointParameter
-    {
-        public List<string> WaferPoint_val { get; set; }
-    }
     public partial class MainWindow : System.Windows.Window
     {
         
@@ -456,9 +452,9 @@ namespace AutoFlow
             EH.datagap = 256;
             CheckSendValueInit();
         }
-        BaseConfig<Parameter> Config = new BaseConfig<Parameter>();
-        BaseConfig<AutoFlow.StepWindow.Parameter> Step1Config = new BaseConfig<AutoFlow.StepWindow.Parameter>(@"Step1Data.json");
-        BaseConfig<WaferPointParameter> WaferPoint = new BaseConfig<WaferPointParameter>(@"WaferPoint.json");
+        BaseConfig<Parameter> Config = new BaseConfig<Parameter>(@"Config\Config.json");
+        BaseConfig<AutoFlow.StepWindow.Step1Parameter> Step1Config = new BaseConfig<AutoFlow.StepWindow.Step1Parameter>(@"Config\Step1Data.json");
+        BaseConfig<AutoFlow.StepWindow.WaferPointParameter> WaferPointConfig = new BaseConfig<AutoFlow.StepWindow.WaferPointParameter>(@"Config\WaferPoint.json");
         Core Do = new Core();
         ExcelHandler EH = new ExcelHandler();
         BaseLogRecord Logger = new BaseLogRecord();
@@ -473,8 +469,8 @@ namespace AutoFlow
             {
                 case nameof(Start):
                     {
-                        List<AutoFlow.StepWindow.Parameter> Step1Parameter_info = Step1Config.Load();
-                        List<WaferPointParameter> WaferPointParameter_info = WaferPoint.Load();
+                        List<AutoFlow.StepWindow.Step1Parameter> Step1Parameter_info = Step1Config.Load();
+                        List<AutoFlow.StepWindow.WaferPointParameter> WaferPointParameter_info = WaferPointConfig.Load();
                         string[] vsm_file = Do.GetFilename(TextBoxDispatcherGetValue(VSM_File_Location), "*.vsm");
                         for (int file = 0; file < vsm_file.Length; file++)
                         {

@@ -18,7 +18,7 @@ using System.Windows.Shapes;
 
 namespace AutoFlow.StepWindow
 {
-    public class Parameter
+    public class Step1Parameter
     {
         public string Open_Text_val { get; set; }
         public string ChoosePath_Text_val { get; set; }
@@ -51,7 +51,7 @@ namespace AutoFlow.StepWindow
         #region Config
         private void LoadConfig()
         {
-            List<Parameter> Parameter_info = Config.Load();
+            List<Step1Parameter> Parameter_info = Step1Config.Load();
             Open_Text.Text = Parameter_info[0].Open_Text_val;
             ChoosePath_Text.Text = Parameter_info[0].ChoosePath_Text_val;
             VSM_Text.Text = Parameter_info[0].VSM_Text_val;
@@ -74,9 +74,9 @@ namespace AutoFlow.StepWindow
 
         private void SaveConfig()
         {
-            List<Parameter> Parameter_config = new List<Parameter>()
+            List<Step1Parameter> Parameter_config = new List<Step1Parameter>()
             {
-                new Parameter() {
+                new Step1Parameter() {
                     Open_Text_val=Open_Text.Text,
                     ChoosePath_Text_val=ChoosePath_Text.Text,
                     VSM_Text_val=VSM_Text.Text,
@@ -97,7 +97,7 @@ namespace AutoFlow.StepWindow
                     CloseVDSW_Text_val=CloseVDSW_Text.Text
                    }
             };
-            Config.Save(Parameter_config);
+            Step1Config.Save(Parameter_config);
         }
         #endregion
 
@@ -184,7 +184,7 @@ namespace AutoFlow.StepWindow
             LoadConfig();
             CheckSendValueInit();
         }
-        BaseConfig<Parameter> Config = new BaseConfig<Parameter>(@"Step1Data.json");
+        BaseConfig<Step1Parameter> Step1Config = new BaseConfig<Step1Parameter>(@"Config\Step1Data.json");
         #endregion
 
         private void Save_Config_Click(object sender, RoutedEventArgs e)

@@ -399,7 +399,7 @@ namespace AutoFlow
             return dataListChunks;
         }
 
-        public List<string> CSVToWaferPointJson(string csvfilepath)
+        public List<string> ConvertWaferPointJsonFormat(string csvfilepath)
         {
             List<string> data = new List<string>();
             if (File.Exists(csvfilepath))
@@ -411,7 +411,7 @@ namespace AutoFlow
                     {
                         string line = reader.ReadLine();
                         string[] fields = line.Split(',');
-                        data.Add("(" + fields[0] + "," + fields[1] + ")" + "(" + fields[2] + "," + fields[3] + ")");
+                        data.Add("(" + fields[0] + "," + fields[1] + ")" + "," + "(" + fields[2] + "," + fields[3] + ")");
                     }
                 }
             }

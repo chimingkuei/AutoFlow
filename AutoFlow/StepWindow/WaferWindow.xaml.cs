@@ -29,6 +29,7 @@ namespace AutoFlow.StepWindow
         }
 
         #region Function
+        #region Config
         private void LoadConfig()
         {
             List<WaferPointParameter> WaferPointParameter_info = WaferPoint.Load();
@@ -47,6 +48,7 @@ namespace AutoFlow.StepWindow
             WaferPoint.Save(WaferPointParameter_config);
         }
         #endregion
+        #endregion
 
         #region Parameter and Init
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -55,8 +57,8 @@ namespace AutoFlow.StepWindow
         }
         Core Do = new Core();
         ExcelHandler EH = new ExcelHandler();
-        BaseConfig<WaferPointParameter> WaferPoint = new BaseConfig<WaferPointParameter>(@"WaferPointTest.json");
-        private List<string> Temp { get; set; } = null;
+        BaseConfig<WaferPointParameter> WaferPoint = new BaseConfig<WaferPointParameter>(@"Config\WaferPoint.json");
+        private List<string> Temp;
         #endregion
 
         #region WaferWindow Screen
@@ -82,13 +84,17 @@ namespace AutoFlow.StepWindow
                         Do.SimulateLeftMouseClick(new System.Drawing.Point(x, y));
                         break;
                     }
-                case nameof(Csv_To_WaferPoint_Json):
+                case nameof(Convert_Screen_Coordinate):
                     {
-                        Temp = EH.CSVToWaferPointJson(@"D:\Chimingkuei\repos\Project\AutoFlow\AutoFlow\bin\x64\Debug\Wafer click coordinate position.csv");
+                        
+                        break;
+                    }
+                case nameof(Convert_WaferPoint_Json):
+                    {
+                        Temp = EH.ConvertWaferPointJsonFormat(WaferPoint_Csv_Path.Text);
                         SaveConfig();
                         break;
                     }
-
             }
         }
         #endregion
