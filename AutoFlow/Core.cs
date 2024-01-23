@@ -210,67 +210,6 @@ namespace AutoFlow
     {
         public string waferID { get; set; }
         public int datagap { get; set; }
-        public void CreateXlsx(string filepath, string sheetname)
-        {
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            // 新建一個 Excel 檔案
-            var excelFile = new ExcelPackage();
-            // 在 Excel 檔案中建立一個工作表
-            var worksheet = excelFile.Workbook.Worksheets.Add(sheetname);
-            // 在工作表中新增一些資料
-            // example:
-            worksheet.Cells["A1"].Value = "姓名";
-            // 儲存 Excel 檔案
-            try
-            {
-                excelFile.SaveAs(new FileInfo(filepath));
-            }
-            catch
-            {
-                Console.WriteLine(filepath + " file is opened! Please close that file.");
-            }
-        }
-
-        public void ReadXlsx(string filepath)
-        {
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            // 路徑到Excel文件
-            var fileInfo = new FileInfo(filepath);
-            // 使用ExcelPackage讀取Excel文件
-            using (var package = new ExcelPackage(fileInfo))
-            {
-                // 取得第一個工作表
-                var worksheet = package.Workbook.Worksheets[0];
-                // 讀取單元格的值
-                // example:
-                //var value = worksheet.Cells[1, 1].Value;
-            }
-        }
-
-        public void ModifyXlsx(string filepath)
-        {
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            // 路徑到Excel文件
-            var fileInfo = new FileInfo(filepath);
-            // 使用ExcelPackage讀取Excel文件
-            using (var package = new ExcelPackage(fileInfo))
-            {
-                // 取得第一個工作表
-                var worksheet = package.Workbook.Worksheets[0];
-                // 修改單元格的值
-                // example:
-                //worksheet.Cells[1, 1].Value = "Hello, world!";
-                // 保存Excel文件
-                try
-                {
-                    package.Save();
-                }
-                catch
-                {
-                    Console.WriteLine(filepath + " file is opened! Please close that file.");
-                }
-            }
-        }
 
         private Dictionary<string, int> GetTupleExtremum(List<List<Tuple<double, double>>> lists)
         {
@@ -399,25 +338,86 @@ namespace AutoFlow
             return dataListChunks;
         }
 
-        public List<string> ConvertWaferPointJsonFormat(string csvfilepath)
+        public string ConvertWaferPointJsonFormat(string[] fields)
+        {
+            return "(" + fields[0] + "," + fields[1] + ")" + "," + "(" + fields[2] + "," + fields[3] + ")";
+        }
+
+        public List<string> ReadCsv(string csvfilepath, Func<string[], string> fun)
         {
             List<string> data = new List<string>();
-            if (File.Exists(csvfilepath))
+            if (!string.IsNullOrEmpty(csvfilepath))
             {
-                using (StreamReader reader = new StreamReader(csvfilepath))
+                if (File.Exists(csvfilepath))
                 {
-                    reader.ReadLine();
-                    while (!reader.EndOfStream)
+                    using (StreamReader reader = new StreamReader(csvfilepath))
                     {
-                        string line = reader.ReadLine();
-                        string[] fields = line.Split(',');
-                        data.Add("(" + fields[0] + "," + fields[1] + ")" + "," + "(" + fields[2] + "," + fields[3] + ")");
+                        reader.ReadLine();
+                        while (!reader.EndOfStream)
+                        {
+                            string line = reader.ReadLine();
+                            string[] fields = line.Split(',');
+                            data.Add(fun(fields));
+                        }
                     }
+                }
+                else
+                {
+                    System.Windows.MessageBox.Show("晶圓點位csv檔不存在!", "警告", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 }
             }
             else
             {
-                Console.WriteLine("CSV檔案不存在");
+                System.Windows.MessageBox.Show("請輸入晶圓點位csv檔位置!", "警告", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            }
+            return data;
+        }
+
+        public List<string> ConvertScreenCoordinate(string csvfilepath, Tuple<int, int> origin_screen_index)
+        {
+            List<string> data = new List<string>();
+            data.Add("X,Y,Screen X,Screen Y");
+            if (!string.IsNullOrEmpty(csvfilepath))
+            {
+                if (File.Exists(csvfilepath))
+                {
+                    using (StreamReader reader = new StreamReader(csvfilepath))
+                    {
+                        reader.ReadLine();
+                        while (!reader.EndOfStream)
+                        {
+                            string line = reader.ReadLine();
+                            string[] fields = line.Split(',');
+                            string x = Math.Round(origin_screen_index.Item1 + Convert.ToInt32(fields[0]) * 5.2).ToString();
+                            string y = Math.Round(origin_screen_index.Item2 - Convert.ToInt32(fields[1]) * 5.2).ToString();
+                            data.Add(fields[0] + "," + fields[1] + "," + x + "," + y);
+                        }
+                    }
+                    string[] columnData = data.ToArray();
+                    using (StreamWriter writer = new StreamWriter(csvfilepath))
+                    {
+                        for (int i = 0; i < columnData.Length; i++)
+                        {
+                            string line = columnData[i];
+                            if (i < columnData.Length - 1)
+                            {
+                                writer.WriteLine(line);
+                            }
+                            else
+                            {
+                                writer.Write(line);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    System.Windows.MessageBox.Show("晶圓點位csv檔不存在!", "警告", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                }
+            }
+            else
+            {
+                System.Windows.MessageBox.Show("請輸入晶圓點位csv檔位置!", "警告", MessageBoxButton.YesNo, MessageBoxImage.Warning);
             }
             return data;
         }

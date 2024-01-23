@@ -184,7 +184,7 @@ namespace AutoFlow.StepWindow
             LoadConfig();
             CheckSendValueInit();
         }
-        BaseConfig<Step1Parameter> Step1Config = new BaseConfig<Step1Parameter>(@"Config\Step1Data.json");
+        BaseConfig<Step1Parameter> Step1Config = new BaseConfig<Step1Parameter>(@"Config\Step1Config.json");
         #endregion
 
         private void Save_Config_Click(object sender, RoutedEventArgs e)

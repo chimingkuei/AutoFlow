@@ -597,5 +597,9 @@ namespace AutoFlow
         }
         #endregion
 
+        private void Wafer_Type_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }

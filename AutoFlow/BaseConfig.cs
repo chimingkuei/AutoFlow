@@ -49,9 +49,17 @@ namespace AutoFlow
         public void Save(List<T> Record, int replaceindex, bool Encryption = false)
         {
             string jsonData = JsonConvert.SerializeObject(Record);
-            string[] contentarray = File.ReadAllText(Path).Trim('[').Trim(']').Split(',');
-            contentarray[replaceindex] = jsonData.Trim('[').Trim(']');
-            string content = "[" + string.Join(",", contentarray) + "]";
+            string[] contentarray = (File.ReadAllText(Path).Trim('[').Trim(']')).Split(new string[] { "}," }, StringSplitOptions.None);
+            contentarray[replaceindex] = jsonData.Trim('[').Trim(']').Trim('}');
+            string content = null;
+            if (replaceindex == contentarray.Length - 1)
+            {
+                content = "[" + (string.Join("},", contentarray) + "}") + "]";
+            }
+            else
+            {
+                content = "[" + string.Join("},", contentarray) + "]";
+            }
             if (Encryption)
             {
                 string jsonData_RSAEncrypt = RSAEncrypt(content);
