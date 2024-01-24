@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using OpenCvSharp.Flann;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,13 +49,16 @@ namespace AutoFlow.StepWindow
             WaferPoint.Save(WaferPointParameter_config);
         }
 
-        private void LoadWaferConfig()
+        private void LoadWaferConfig(int group_num, int index)
         {
-            List<WaferParameter> WaferParameter_info = Wafer.Load();
-            WaferPoint_Csv_Path.Text = WaferParameter_info[0].WaferPoint_Csv_Path_val;
-            CoordX.Text = WaferParameter_info[0].CoordX_val;
-            CoordY.Text = WaferParameter_info[0].CoordY_val;
-            Origin.Text = WaferParameter_info[0].Origin_val;
+            List<WaferParameter> WaferParameter_info = Wafer.Load(group_num, index);
+            if (WaferParameter_info != null)
+            {
+                WaferPoint_Csv_Path.Text = WaferParameter_info[0].WaferPoint_Csv_Path_val;
+                CoordX.Text = WaferParameter_info[0].CoordX_val;
+                CoordY.Text = WaferParameter_info[0].CoordY_val;
+                Origin.Text = WaferParameter_info[0].Origin_val;
+            }
         }
 
         private void SaveWaferConfig(int index)
@@ -82,13 +86,14 @@ namespace AutoFlow.StepWindow
         #region Parameter and Init
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //LoadWaferConfig();
+            LoadWaferConfig(3, 0);
         }
         Core Do = new Core();
         ExcelHandler EH = new ExcelHandler();
         BaseConfig<WaferPointParameter> WaferPoint = new BaseConfig<WaferPointParameter>(@"Config\WaferPoint.json");
         BaseConfig<WaferParameter> Wafer = new BaseConfig<WaferParameter>(@"Config\WaferConfig.json");
         private List<string> Temp;
+        BaseConfig<Parameter> Config = new BaseConfig<Parameter>(@"Config\Config.json");
         #endregion
 
         #region WaferWindow Screen
@@ -149,7 +154,25 @@ namespace AutoFlow.StepWindow
                     }
                 case nameof(Save_Config):
                     {
-                        SaveWaferConfig(0);
+                        List<AutoFlow.Parameter> Parameter_info = Config.Load();
+                        switch (Parameter_info[0].Wafer_Type_val)
+                        {
+                            case "6吋晶圓":
+                                {
+                                    SaveWaferConfig(0);
+                                    break;
+                                }
+                            case "4吋晶圓":
+                                {
+                                    SaveWaferConfig(1);
+                                    break;
+                                }
+                            case "3吋晶圓":
+                                {
+                                    SaveWaferConfig(2);
+                                    break;
+                                }
+                        }
                         break;
                     }
             }

@@ -67,7 +67,7 @@
             </TabItem>
             <TabItem Header="參數畫面" Style="{StaticResource BaseTabcontrol}">
                 <Grid>
-                    <ComboBox Style="{StaticResource AdvancedComboBox}" Name="Wafer_Type" HorizontalAlignment="Left" Width="106" FontSize="18" Margin="196,50,0,359">
+                    <ComboBox Style="{StaticResource AdvancedComboBox}" Name="Wafer_Type" HorizontalAlignment="Left" Width="106" FontSize="18" Margin="196,50,0,359" SelectionChanged="Wafer_Type_SelectionChanged">
                         <ComboBoxItem IsSelected="True">6吋晶圓</ComboBoxItem>
                         <ComboBoxItem>4吋晶圓</ComboBoxItem>
                         <ComboBoxItem>3吋晶圓</ComboBoxItem>

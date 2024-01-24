@@ -1,1 +1,1 @@
-多組參數Config初始化
+ComboBox.SelectedIndexChanged 尺吋晶圓更換，立即生效

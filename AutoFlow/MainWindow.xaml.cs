@@ -166,11 +166,14 @@ namespace AutoFlow
         private void LoadConfig()
         {
             List<Parameter> Parameter_info = Config.Load();
-            Setting_File_Location.Text = Parameter_info[0].Setting_File_Location_val;
-            VSM_File_Location.Text = Parameter_info[0].VSM_File_Location_val;
-            Dat_File_Location.Text = Parameter_info[0].Dat_File_Location_val;
-            Xlsx_File_Location.Text = Parameter_info[0].Xlsx_File_Location_val;
-            Wafer_Type.Text = Parameter_info[0].Wafer_Type_val;
+            if (Parameter_info != null)
+            {
+                Setting_File_Location.Text = Parameter_info[0].Setting_File_Location_val;
+                VSM_File_Location.Text = Parameter_info[0].VSM_File_Location_val;
+                Dat_File_Location.Text = Parameter_info[0].Dat_File_Location_val;
+                Xlsx_File_Location.Text = Parameter_info[0].Xlsx_File_Location_val;
+                Wafer_Type.Text = Parameter_info[0].Wafer_Type_val;
+            }
         }
 
         private void SaveConfig()
@@ -451,6 +454,7 @@ namespace AutoFlow
             //Do.CloseCapsLock();
             EH.datagap = 256;
             CheckSendValueInit();
+            Wafer_Type_state = true;
         }
         BaseConfig<Parameter> Config = new BaseConfig<Parameter>(@"Config\Config.json");
         BaseConfig<AutoFlow.StepWindow.Step1Parameter> Step1Config = new BaseConfig<AutoFlow.StepWindow.Step1Parameter>(@"Config\Step1Data.json");
@@ -460,6 +464,7 @@ namespace AutoFlow
         BaseLogRecord Logger = new BaseLogRecord();
         private bool _started;
         private System.Windows.Point _downPoint;
+        private bool Wafer_Type_state = false;
         #endregion
 
         #region Main Screen
@@ -595,11 +600,18 @@ namespace AutoFlow
         {
             _started = false;
         }
+
+
+
+
         #endregion
 
         private void Wafer_Type_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            if (Wafer_Type_state)
+            {
+                
+            }
         }
     }
 }

@@ -3,9 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting.Contexts;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls;
 using System.Windows;
 
 namespace AutoFlow
@@ -30,10 +32,10 @@ namespace AutoFlow
         { 
         }
 
-        public void Save(List<T> Record, bool Encryption=false)
+        public void Save(List<T> record, bool encryption=false)
         {
-            string jsonData = JsonConvert.SerializeObject(Record);
-            if (Encryption)
+            string jsonData = JsonConvert.SerializeObject(record);
+            if (encryption)
             {
                 string jsonData_RSAEncrypt = RSAEncrypt(jsonData);
                 File.WriteAllText(Path, jsonData_RSAEncrypt);
@@ -45,14 +47,14 @@ namespace AutoFlow
             
         }
 
-        // 同參數多組設定
-        public void Save(List<T> Record, int replaceindex, bool Encryption = false)
+        // 多組同參數儲存
+        public void Save(List<T> record, int replace_index, bool encryption = false)
         {
-            string jsonData = JsonConvert.SerializeObject(Record);
+            string jsonData = JsonConvert.SerializeObject(record);
             string[] contentarray = (File.ReadAllText(Path).Trim('[').Trim(']')).Split(new string[] { "}," }, StringSplitOptions.None);
-            contentarray[replaceindex] = jsonData.Trim('[').Trim(']').Trim('}');
+            contentarray[replace_index] = jsonData.Trim('[').Trim(']').Trim('}');
             string content = null;
-            if (replaceindex == contentarray.Length - 1)
+            if (replace_index == contentarray.Length - 1)
             {
                 content = "[" + (string.Join("},", contentarray) + "}") + "]";
             }
@@ -60,7 +62,7 @@ namespace AutoFlow
             {
                 content = "[" + string.Join("},", contentarray) + "]";
             }
-            if (Encryption)
+            if (encryption)
             {
                 string jsonData_RSAEncrypt = RSAEncrypt(content);
                 File.WriteAllText(Path, jsonData_RSAEncrypt);
@@ -71,13 +73,13 @@ namespace AutoFlow
             }
         }
 
-        public List<T> Load(bool Encryption = false)
+        public List<T> Load(bool encryption = false)
         {
             List<T> jsonData = null;
-            try
+            if(File.Exists(Path))
             {
                 string Record = File.ReadAllText(Path);
-                if (Encryption)
+                if (encryption)
                 {
                     string Record_RSADecrypt = RSADecrypt(Record);
                     jsonData = JsonConvert.DeserializeObject<List<T>>(Record_RSADecrypt);
@@ -88,9 +90,45 @@ namespace AutoFlow
                     jsonData = JsonConvert.DeserializeObject<List<T>>(Record);
                 }
             }
-            catch
+            else
             {
-                MessageBox.Show("請檢查參數檔案是否存在!", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+                string jsonEmpty = "[{}]";
+                File.WriteAllText(Path, jsonEmpty);
+            }
+            return jsonData;
+        }
+
+        // 多組同參數Load一組
+        public List<T> Load(int group_num, int index, bool encryption = false)
+        {
+            List<T> jsonData = null;
+            if (File.Exists(Path))
+            {
+                string Record = null;
+                string[] contentarray = (File.ReadAllText(Path).Trim('[').Trim(']')).Split(new string[] { "}," }, StringSplitOptions.None);
+                if (index == contentarray.Length - 1)
+                {
+                    Record = "[" + contentarray[index] + "]";
+                }
+                else
+                {
+                    Record = "[" + contentarray[index] + "}]";
+                }
+                if (encryption)
+                {
+                    string Record_RSADecrypt = RSADecrypt(Record);
+                    jsonData = JsonConvert.DeserializeObject<List<T>>(Record_RSADecrypt);
+
+                }
+                else
+                {
+                    jsonData = JsonConvert.DeserializeObject<List<T>>(Record);
+                }
+            }
+            else
+            {
+                string jsonEmpty = "[" + string.Join(",", Enumerable.Repeat("{}", group_num)) + "]";
+                File.WriteAllText(Path, jsonEmpty);
             }
             return jsonData;
         }

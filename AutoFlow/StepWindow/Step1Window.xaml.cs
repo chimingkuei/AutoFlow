@@ -52,24 +52,27 @@ namespace AutoFlow.StepWindow
         private void LoadConfig()
         {
             List<Step1Parameter> Parameter_info = Step1Config.Load();
-            Open_Text.Text = Parameter_info[0].Open_Text_val;
-            ChoosePath_Text.Text = Parameter_info[0].ChoosePath_Text_val;
-            VSM_Text.Text = Parameter_info[0].VSM_Text_val;
-            VSMType_Text.Text = Parameter_info[0].VSMType_Text_val;
-            InputVSM_Text.Text = Parameter_info[0].InputVSM_Text_val;
-            TurnOn_Text.Text = Parameter_info[0].TurnOn_Text_val;
-            View_Text.Text = Parameter_info[0].View_Text_val;
-            Display_Text.Text = Parameter_info[0].Display_Text_val;
-            OnePane_Text.Text = Parameter_info[0].OnePane_Text_val;
-            Magnification_Text.Text = Parameter_info[0].Magnification_Text_val;
-            DTCS_Text.Text = Parameter_info[0].DTCS_Text_val;
-            OK_Text.Text = Parameter_info[0].OK_Text_val;
-            Save_Text.Text = Parameter_info[0].Save_Text_val;
-            Dat_Text.Text = Parameter_info[0].Dat_Text_val;
-            DatType_Text.Text = Parameter_info[0].DatType_Text_val;
-            InputDat_Text.Text = Parameter_info[0].InputDat_Text_val;
-            Archive_Text.Text = Parameter_info[0].Archive_Text_val;
-            CloseVDSW_Text.Text =  Parameter_info[0].CloseVDSW_Text_val;
+            if (Parameter_info != null)
+            {
+                Open_Text.Text = Parameter_info[0].Open_Text_val;
+                ChoosePath_Text.Text = Parameter_info[0].ChoosePath_Text_val;
+                VSM_Text.Text = Parameter_info[0].VSM_Text_val;
+                VSMType_Text.Text = Parameter_info[0].VSMType_Text_val;
+                InputVSM_Text.Text = Parameter_info[0].InputVSM_Text_val;
+                TurnOn_Text.Text = Parameter_info[0].TurnOn_Text_val;
+                View_Text.Text = Parameter_info[0].View_Text_val;
+                Display_Text.Text = Parameter_info[0].Display_Text_val;
+                OnePane_Text.Text = Parameter_info[0].OnePane_Text_val;
+                Magnification_Text.Text = Parameter_info[0].Magnification_Text_val;
+                DTCS_Text.Text = Parameter_info[0].DTCS_Text_val;
+                OK_Text.Text = Parameter_info[0].OK_Text_val;
+                Save_Text.Text = Parameter_info[0].Save_Text_val;
+                Dat_Text.Text = Parameter_info[0].Dat_Text_val;
+                DatType_Text.Text = Parameter_info[0].DatType_Text_val;
+                InputDat_Text.Text = Parameter_info[0].InputDat_Text_val;
+                Archive_Text.Text = Parameter_info[0].Archive_Text_val;
+                CloseVDSW_Text.Text = Parameter_info[0].CloseVDSW_Text_val;
+            }
         }
 
         private void SaveConfig()
@@ -191,67 +194,54 @@ namespace AutoFlow.StepWindow
         {
             SaveConfig();
         }
-
         private void Open_Checked(object sender, RoutedEventArgs e)
         {
             Step1Data.Step1_bool1 = true;
         }
-
         private void ChoosePath_Checked(object sender, RoutedEventArgs e)
         {
             Step1Data.Step1_bool2 = true;
         }
-
         private void VSM_Checked(object sender, RoutedEventArgs e)
         {
             Step1Data.Step1_bool3 = true;
         }
-
         private void VSMType_Checked(object sender, RoutedEventArgs e)
         {
             Step1Data.Step1_bool4 = true;
         }
-
         private void InputVSM_Checked(object sender, RoutedEventArgs e)
         {
             Step1Data.Step1_bool5 = true;
         }
-
         private void TurnOn_Checked(object sender, RoutedEventArgs e)
         {
             Step1Data.Step1_bool6 = true;
         }
-
         private void View_Checked(object sender, RoutedEventArgs e)
         {
             Step1Data.Step1_bool7 = true;
         }
-
         private void Display_Checked(object sender, RoutedEventArgs e)
         {
             Step1Data.Step1_bool8 = true;
         }
-
         private void OnePane_Checked(object sender, RoutedEventArgs e)
         {
             Step1Data.Step1_bool9 = true;
         }
-
         private void Magnification_Checked(object sender, RoutedEventArgs e)
         {
             Step1Data.Step1_bool10 = true;
         }
-
         private void DTCS_Checked(object sender, RoutedEventArgs e)
         {
             Step1Data.Step1_bool11 = true;
         }
-
         private void OK_Checked(object sender, RoutedEventArgs e)
         {
             Step1Data.Step1_bool12 = true;
         }
-
         private void Save_Checked(object sender, RoutedEventArgs e)
         {
             Step1Data.Step1_bool13 = true;
@@ -264,17 +254,14 @@ namespace AutoFlow.StepWindow
         {
             Step1Data.Step1_bool15 = true;
         }
-
         private void InputDat_Checked(object sender, RoutedEventArgs e)
         {
             Step1Data.Step1_bool16 = true;
         }
-
         private void Archive_Checked(object sender, RoutedEventArgs e)
         {
             Step1Data.Step1_bool17 = true;
         }
-
         private void CloseVDSW_Checked(object sender, RoutedEventArgs e)
         {
             Step1Data.Step1_bool18 = true;
