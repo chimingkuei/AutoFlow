@@ -60,7 +60,13 @@ namespace AutoFlow
             return SetForegroundWindow(hWnd);
         }
 
-        public void SimulateLeftMouseClick(System.Drawing.Point pos, string annotation=null)
+        public void SimulateInputText(string keys, string annotation = null)
+        {
+            System.Windows.Forms.SendKeys.SendWait(keys);
+        }
+
+        #region Mouse Action
+        public void SimulateLeftMouseClick(System.Drawing.Point pos, string annotation = null)
         {
             SetCursorPos(pos.X, pos.Y);
             mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, IntPtr.Zero);
@@ -99,11 +105,7 @@ namespace AutoFlow
             Thread.Sleep(100);
             mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, IntPtr.Zero);
         }
-
-        public void SimulateInputText(string keys, string annotation = null)
-        {
-            System.Windows.Forms.SendKeys.SendWait(keys);
-        }
+        #endregion
 
         #region Close Caps Lock
         [DllImport("user32.dll")]
@@ -208,6 +210,30 @@ namespace AutoFlow
                 CreateNoWindow = true
             };
             Process.Start(startInfo);
+        }
+
+        public void MoveDatFile(string sourceDirectory, string targetDirectory)
+        {
+            string[] datFiles = Directory.GetFiles(sourceDirectory, "*.dat");
+            foreach (string datFile in datFiles)
+            {
+                string fileName = System.IO.Path.GetFileName(datFile);
+                string targetPath = System.IO.Path.Combine(targetDirectory, fileName);
+                File.Move(datFile, targetPath);
+            }
+        }
+
+        public void CheckCSV(string csvfile1, string csvfile2)
+        {
+            while (true)
+            {
+                if (File.Exists(csvfile1) & File.Exists(csvfile2))
+                {
+                    break; 
+                }
+                Thread.Sleep(1000);
+            }
+
         }
     }
 
