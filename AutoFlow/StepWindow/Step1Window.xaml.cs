@@ -49,9 +49,9 @@ namespace AutoFlow.StepWindow
 
         #region Function
         #region Config
-        private void LoadConfig()
+        private void LoadConfig(int group_num, int index)
         {
-            List<Step1Parameter> Parameter_info = Step1Config.Load();
+            List<Step1Parameter> Parameter_info = Step1Config.Load(group_num, index);
             if (Parameter_info != null)
             {
                 Open_Text.Text = Parameter_info[0].Open_Text_val;
@@ -75,7 +75,7 @@ namespace AutoFlow.StepWindow
             }
         }
 
-        private void SaveConfig()
+        private void SaveConfig(int index)
         {
             List<Step1Parameter> Parameter_config = new List<Step1Parameter>()
             {
@@ -100,7 +100,53 @@ namespace AutoFlow.StepWindow
                     CloseVDSW_Text_val=CloseVDSW_Text.Text
                    }
             };
-            Step1Config.Save(Parameter_config);
+            Step1Config.Save(Parameter_config, index);
+        }
+
+        private void OperateSaveConfig(Action<int> saveconfig)
+        {
+            List<AutoFlow.Parameter> Parameter_info = Config.Load();
+            switch (Parameter_info[0].Wafer_Type_val)
+            {
+                case "6吋晶圓":
+                    {
+                        saveconfig(0);
+                        break;
+                    }
+                case "4吋晶圓":
+                    {
+                        saveconfig(1);
+                        break;
+                    }
+                case "3吋晶圓":
+                    {
+                        saveconfig(2);
+                        break;
+                    }
+            }
+        }
+
+        private void OperateLoadConfig(int group_num, Action<int, int> loadconfig)
+        {
+            List<AutoFlow.Parameter> Parameter_info = Config.Load();
+            switch (Parameter_info[0].Wafer_Type_val)
+            {
+                case "6吋晶圓":
+                    {
+                        loadconfig(group_num, 0);
+                        break;
+                    }
+                case "4吋晶圓":
+                    {
+                        loadconfig(group_num, 1);
+                        break;
+                    }
+                case "3吋晶圓":
+                    {
+                        loadconfig(group_num, 2);
+                        break;
+                    }
+            }
         }
         #endregion
 
@@ -184,15 +230,16 @@ namespace AutoFlow.StepWindow
         #region Parameter and Init
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            LoadConfig();
+            OperateLoadConfig(3, LoadConfig);
             CheckSendValueInit();
         }
         BaseConfig<Step1Parameter> Step1Config = new BaseConfig<Step1Parameter>(@"Config\Step1Config.json");
+        BaseConfig<Parameter> Config = new BaseConfig<Parameter>(@"Config\Config.json");
         #endregion
 
         private void Save_Config_Click(object sender, RoutedEventArgs e)
         {
-            SaveConfig();
+            OperateSaveConfig(SaveConfig);
         }
         private void Open_Checked(object sender, RoutedEventArgs e)
         {

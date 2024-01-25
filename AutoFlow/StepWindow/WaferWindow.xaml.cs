@@ -38,7 +38,7 @@ namespace AutoFlow.StepWindow
 
         #region Function
         #region Config
-        private void SaveWaferPointConfig()
+        private void SaveWaferPointConfig(int index)
         {
             List<WaferPointParameter> WaferPointParameter_config = new List<WaferPointParameter>()
             {
@@ -46,7 +46,7 @@ namespace AutoFlow.StepWindow
                                           WaferPoint_val = Temp
                 }
             };
-            WaferPoint.Save(WaferPointParameter_config);
+            WaferPoint.Save(WaferPointParameter_config, index);
         }
 
         private void LoadWaferConfig(int group_num, int index)
@@ -74,6 +74,52 @@ namespace AutoFlow.StepWindow
             };
             Wafer.Save(WaferParameter_config, index);
         }
+
+        private void OperateLoadConfig(int group_num, Action<int, int> loadconfig)
+        {
+            List<AutoFlow.Parameter> Parameter_info = Config.Load();
+            switch (Parameter_info[0].Wafer_Type_val)
+            {
+                case "6吋晶圓":
+                    {
+                        loadconfig(group_num, 0);
+                        break;
+                    }
+                case "4吋晶圓":
+                    {
+                        loadconfig(group_num, 1);
+                        break;
+                    }
+                case "3吋晶圓":
+                    {
+                        loadconfig(group_num, 2);
+                        break;
+                    }
+            }
+        }
+
+        private void OperateSaveConfig(Action<int> saveconfig)
+        {
+            List<AutoFlow.Parameter> Parameter_info = Config.Load();
+            switch (Parameter_info[0].Wafer_Type_val)
+            {
+                case "6吋晶圓":
+                    {
+                        saveconfig(0);
+                        break;
+                    }
+                case "4吋晶圓":
+                    {
+                        saveconfig(1);
+                        break;
+                    }
+                case "3吋晶圓":
+                    {
+                        saveconfig(2);
+                        break;
+                    }
+            }
+        }
         #endregion
 
         private System.Drawing.Point ConvertCoordXY(string coord_str)
@@ -86,7 +132,7 @@ namespace AutoFlow.StepWindow
         #region Parameter and Init
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            LoadWaferConfig(3, 0);
+            OperateLoadConfig(3, LoadWaferConfig);
         }
         Core Do = new Core();
         ExcelHandler EH = new ExcelHandler();
@@ -149,30 +195,12 @@ namespace AutoFlow.StepWindow
                 case nameof(Convert_WaferPoint_Json):
                     {
                         Temp = EH.ReadCsv(WaferPoint_Csv_Path.Text, EH.ConvertWaferPointJsonFormat);
-                        SaveWaferPointConfig();
+                        OperateSaveConfig(SaveWaferPointConfig);
                         break;
                     }
                 case nameof(Save_Config):
                     {
-                        List<AutoFlow.Parameter> Parameter_info = Config.Load();
-                        switch (Parameter_info[0].Wafer_Type_val)
-                        {
-                            case "6吋晶圓":
-                                {
-                                    SaveWaferConfig(0);
-                                    break;
-                                }
-                            case "4吋晶圓":
-                                {
-                                    SaveWaferConfig(1);
-                                    break;
-                                }
-                            case "3吋晶圓":
-                                {
-                                    SaveWaferConfig(2);
-                                    break;
-                                }
-                        }
+                        OperateSaveConfig(SaveWaferConfig);
                         break;
                     }
             }

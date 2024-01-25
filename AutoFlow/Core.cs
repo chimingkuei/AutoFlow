@@ -60,7 +60,7 @@ namespace AutoFlow
             return SetForegroundWindow(hWnd);
         }
 
-        public void SimulateLeftMouseClick(System.Drawing.Point pos)
+        public void SimulateLeftMouseClick(System.Drawing.Point pos, string annotation=null)
         {
             SetCursorPos(pos.X, pos.Y);
             mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, IntPtr.Zero);
@@ -68,7 +68,7 @@ namespace AutoFlow
             mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, IntPtr.Zero);
         }
 
-        public void SimulateLeftMouseDoubleClick(System.Drawing.Point pos)
+        public void SimulateLeftMouseDoubleClick(System.Drawing.Point pos, string annotation = null)
         {
             SetCursorPos(pos.X, pos.Y);
             mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, IntPtr.Zero);
@@ -80,7 +80,7 @@ namespace AutoFlow
             mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, IntPtr.Zero);
         }
 
-        public void SimulateRightMouseClick(System.Drawing.Point pos)
+        public void SimulateRightMouseClick(System.Drawing.Point pos, string annotation = null)
         {
             SetCursorPos(pos.X, pos.Y);
             mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, IntPtr.Zero);
@@ -88,7 +88,7 @@ namespace AutoFlow
             mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, IntPtr.Zero);
         }
 
-        public void SimulateRightMouseDoubleClick(System.Drawing.Point pos)
+        public void SimulateRightMouseDoubleClick(System.Drawing.Point pos, string annotation = null)
         {
             SetCursorPos(pos.X, pos.Y);
             mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, IntPtr.Zero);
@@ -98,6 +98,11 @@ namespace AutoFlow
             mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, IntPtr.Zero);
             Thread.Sleep(100);
             mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, IntPtr.Zero);
+        }
+
+        public void SimulateInputText(string keys, string annotation = null)
+        {
+            System.Windows.Forms.SendKeys.SendWait(keys);
         }
 
         #region Close Caps Lock
@@ -363,12 +368,12 @@ namespace AutoFlow
                 }
                 else
                 {
-                    System.Windows.MessageBox.Show("晶圓點位csv檔不存在!", "警告", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                    System.Windows.MessageBox.Show("晶圓點位csv檔不存在!", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
             else
             {
-                System.Windows.MessageBox.Show("請輸入晶圓點位csv檔位置!", "警告", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                System.Windows.MessageBox.Show("請輸入晶圓點位csv檔位置!", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             return data;
         }
@@ -412,12 +417,12 @@ namespace AutoFlow
                 }
                 else
                 {
-                    System.Windows.MessageBox.Show("晶圓點位csv檔不存在!", "警告", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                    System.Windows.MessageBox.Show("晶圓點位csv檔不存在!", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
             else
             {
-                System.Windows.MessageBox.Show("請輸入晶圓點位csv檔位置!", "警告", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                System.Windows.MessageBox.Show("請輸入晶圓點位csv檔位置!", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             return data;
         }
