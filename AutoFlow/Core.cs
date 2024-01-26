@@ -240,7 +240,6 @@ namespace AutoFlow
     class ExcelHandler
     {
         public string waferID { get; set; }
-        public int datagap { get; set; }
 
         private Dictionary<string, int> GetTupleExtremum(List<List<Tuple<double, double>>> lists)
         {
@@ -283,14 +282,48 @@ namespace AutoFlow
             return false;
         }
 
-        private string GetRange(string field, int list_index)
+        public List<List<Tuple<double, double>>> CSVToList(string csvfilepath, Tuple<int, int, int> index)
         {
-            return field + (list_index * datagap + 1).ToString() + ":" + field + ((list_index + 1) * datagap).ToString();
-        }
-
-        private string GetCell(string field, int list_index, int cell_index)
-        {
-            return field + (list_index * datagap + 1 + cell_index).ToString();
+            List<List<Tuple<double, double>>> dataListChunks = new List<List<Tuple<double, double>>>();
+            if (File.Exists(csvfilepath))
+            {
+                using (StreamReader reader = new StreamReader(csvfilepath))
+                {
+                    // 跳過標題行
+                    reader.ReadLine();
+                    List<Tuple<double, double>> currentChunk = new List<Tuple<double, double>>();
+                    string tmp = "0";
+                    while (!reader.EndOfStream)
+                    {
+                        string line = reader.ReadLine();
+                        string[] fields = line.Split(',');
+                        if (fields[index.Item1] == tmp)
+                        {
+                            Tuple<double, double> rowData = new Tuple<double, double>(Convert.ToDouble(fields[index.Item2]), Convert.ToDouble(fields[index.Item3]));
+                            currentChunk.Add(rowData);
+                        }
+                        else
+                        {
+                            Tuple<double, double> rowData = new Tuple<double, double>(Convert.ToDouble(fields[index.Item2]), Convert.ToDouble(fields[index.Item3]));
+                            currentChunk.Add(rowData);
+                            dataListChunks.Add(currentChunk);
+                            tmp = fields[index.Item1];
+                            currentChunk = new List<Tuple<double, double>>();
+                        }
+                    }
+                    dataListChunks.Add(currentChunk);
+                }
+                #region For debug
+                //foreach (var chunk in dataListChunks)
+                //{
+                //    foreach (var tuple in chunk)
+                //    {
+                //        Console.WriteLine($"({tuple.Item1}, {tuple.Item2})");
+                //    }
+                //}
+                #endregion
+            }
+            return dataListChunks;
         }
 
         // The name of chart can't be repeated.(ScatterPlot)
@@ -300,29 +333,36 @@ namespace AutoFlow
             using (var package = new ExcelPackage())
             {
                 var worksheet = package.Workbook.Worksheets.Add(sheetname);
-                for (int list_index = 0; list_index < lists.Count / 2; list_index++)
+                int cell_y = 0;
+                for (int list_index = 0; list_index < lists.Count; list_index += 2)
                 {
                     string chartname = "ScatterPlot" + list_index.ToString();
                     if (!CheckChartName(worksheet, chartname))
                     {
                         ExcelChart chart = worksheet.Drawings.AddChart(chartname, eChartType.XYScatterLinesNoMarkers);
-                        SetChartStyle(chart, new Tuple<int, int, int, int>(list_index * datagap, 0, list_index + 5, 0), lists);
+                        SetChartStyle(chart, new Tuple<int, int, int, int>(cell_y, 0, list_index + 5, 0), lists);
                         // Set X and Y axis data ranges
-                        for (int cell_index = 0; cell_index < datagap; cell_index++)
+                        int tag0_count = lists[list_index].Count;
+                        int tag1_count = lists[list_index + 1].Count;
+                        for (int cell_index = 0; cell_index < tag0_count; cell_index++)
                         {
-                            worksheet.Cells[GetCell("A", list_index, cell_index)].Value = lists[list_index][cell_index].Item1;
-                            worksheet.Cells[GetCell("B", list_index, cell_index)].Value = lists[list_index][cell_index].Item2;
-                            worksheet.Cells[GetCell("C", list_index, cell_index)].Value = lists[(lists.Count + 1) / 2 + list_index][cell_index].Item1;
-                            worksheet.Cells[GetCell("D", list_index, cell_index)].Value = lists[(lists.Count + 1) / 2 + list_index][cell_index].Item2;
+                            worksheet.Cells["A" + (cell_y + cell_index + 1).ToString()].Value = lists[list_index][cell_index].Item1;
+                            worksheet.Cells["B" + (cell_y + cell_index + 1).ToString()].Value = lists[list_index][cell_index].Item2;
                         }
-                        var ARange = worksheet.Cells[GetRange("A", list_index)];
-                        var BRange = worksheet.Cells[GetRange("B", list_index)];
-                        var CRange = worksheet.Cells[GetRange("C", list_index)];
-                        var DRange = worksheet.Cells[GetRange("D", list_index)];
-                        var series1 = (ExcelScatterChartSerie)chart.Series.Add(BRange, ARange);
-                        var series2 = (ExcelScatterChartSerie)chart.Series.Add(DRange, CRange);
-                        series1.Header = "0-量測";
-                        series2.Header = "模擬";
+                        for (int cell_index = 0; cell_index < tag1_count; cell_index++)
+                        {
+                            worksheet.Cells["A" + (cell_y + tag0_count + cell_index + 1).ToString()].Value = lists[list_index + 1][cell_index].Item1;
+                            worksheet.Cells["B" + (cell_y + tag0_count + cell_index + 1).ToString()].Value = lists[list_index + 1][cell_index].Item2;
+                        }
+                        var measurementA = worksheet.Cells["A" + (cell_y + 1).ToString() + ":" + "A" + (cell_y + tag0_count + 1).ToString()];
+                        var measurementB = worksheet.Cells["B" + (cell_y + 1).ToString() + ":" + "B" + (cell_y + tag0_count + 1).ToString()];
+                        var simulationA = worksheet.Cells["A" + (cell_y + tag0_count + 1).ToString() + ":" + "A" + (cell_y + tag0_count + tag1_count + 1).ToString()];
+                        var simulationB = worksheet.Cells["B" + (cell_y + tag0_count + 1).ToString() + ":" + "B" + (cell_y + tag0_count + tag1_count + 1).ToString()];
+                        var measurementseries = (ExcelScatterChartSerie)chart.Series.Add(measurementB, measurementA);
+                        var simulationseries = (ExcelScatterChartSerie)chart.Series.Add(simulationB, simulationA);
+                        measurementseries.Header = "0-量測";
+                        simulationseries.Header = "模擬";
+                        cell_y += tag0_count + tag1_count;
                     }
                 }
                 try
@@ -335,38 +375,6 @@ namespace AutoFlow
                 }
 
             }
-        }
-
-        public List<List<Tuple<double, double>>> CSVToList(string csvfilepath, Tuple<int, int> index)
-        {
-            List<List<Tuple<double, double>>> dataListChunks = new List<List<Tuple<double, double>>>();
-            if (File.Exists(csvfilepath))
-            {
-                using (StreamReader reader = new StreamReader(csvfilepath))
-                {
-                    // 跳過標題行（如果有的話）
-                    reader.ReadLine();
-                    List<Tuple<double, double>> currentChunk = new List<Tuple<double, double>>();
-                    while (!reader.EndOfStream)
-                    {
-                        string line = reader.ReadLine();
-                        string[] fields = line.Split(',');
-                        Tuple<double, double> rowData = new Tuple<double, double> (Convert.ToDouble(fields[index.Item1]), Convert.ToDouble(fields[index.Item2]));
-                        currentChunk.Add(rowData);
-                        // 如果已經累積chunkSize筆資料，將它添加到主List中，重新創建新的List
-                        if (currentChunk.Count == datagap)
-                        {
-                            dataListChunks.Add(currentChunk);
-                            currentChunk = new List<Tuple<double, double>>();
-                        }
-                    }
-                }
-            }
-            else
-            {
-                Console.WriteLine("CSV檔案不存在");
-            }
-            return dataListChunks;
         }
 
         public string ConvertWaferPointJsonFormat(string[] fields)
@@ -452,5 +460,7 @@ namespace AutoFlow
             }
             return data;
         }
+
+
     }
 }

@@ -473,7 +473,6 @@ namespace AutoFlow
             LoadConfig();
             //Do.LoadEIM();
             //Do.CloseCapsLock();
-            EH.datagap = 256;
             CheckSendValueInit();
             Model_Type_state = true;
         }
@@ -542,7 +541,9 @@ namespace AutoFlow
                     }
                 case nameof(Open_Wafer_Point):
                     {
-                        OpenWaferWindow();
+                        //OpenWaferWindow();
+                        //List<List<Tuple<double, double>>> Test = EH.CSVToList(@"D:\Chimingkuei\repos\Project\AutoFlow\Document\output_waveform.csv", new Tuple<int, int, int>(0,2,3));
+                        //EH.WaveToScatterChart(@"D:\Chimingkuei\repos\Project\AutoFlow\Document\Test.xlsx", "test", Test);
                         break;
                     }
             }
