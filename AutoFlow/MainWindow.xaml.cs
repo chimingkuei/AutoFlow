@@ -543,7 +543,7 @@ namespace AutoFlow
                     {
                         //OpenWaferWindow();
                         //List<List<Tuple<double, double>>> Test = EH.CSVToList(@"D:\Chimingkuei\repos\Project\AutoFlow\Document\output_waveform.csv", new Tuple<int, int, int>(0,2,3));
-                        //EH.WaveToScatterChart(@"D:\Chimingkuei\repos\Project\AutoFlow\Document\Test.xlsx", "test", Test);
+                        //EH.WaveToScatterChart(@"D:\Chimingkuei\repos\Project\AutoFlow\Document\output_waveform.xlsx", "test", Test);
                         break;
                     }
             }
