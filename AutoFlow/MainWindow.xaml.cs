@@ -541,9 +541,7 @@ namespace AutoFlow
                     }
                 case nameof(Open_Wafer_Point):
                     {
-                        //OpenWaferWindow();
-                        //List<List<Tuple<double, double>>> Test = EH.CSVToList(@"D:\Chimingkuei\repos\Project\AutoFlow\Document\output_waveform.csv", new Tuple<int, int, int>(0,2,3));
-                        //EH.WaveToScatterChart(@"D:\Chimingkuei\repos\Project\AutoFlow\Document\output_waveform.xlsx", "test", Test);
+                        OpenWaferWindow();
                         break;
                     }
             }
@@ -593,7 +591,7 @@ namespace AutoFlow
                 case nameof(Save_Config):
                     {
                         SaveConfig();
-                        Logger.WriteLog("Save the config.", LogLevel.General, richTextBoxGeneral);
+                        Logger.WriteLog("儲存參數!", LogLevel.General, richTextBoxGeneral);
                         break;
                     }
             }
@@ -652,7 +650,6 @@ namespace AutoFlow
             
             }
         }
-
         #endregion
     }
 }
