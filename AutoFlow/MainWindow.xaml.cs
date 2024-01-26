@@ -475,7 +475,7 @@ namespace AutoFlow
             //Do.CloseCapsLock();
             EH.datagap = 256;
             CheckSendValueInit();
-            Wafer_Type_state = true;
+            Model_Type_state = true;
         }
         BaseConfig<Parameter> Config = new BaseConfig<Parameter>(@"Config\Config.json");
         BaseConfig<AutoFlow.StepWindow.Step1Parameter> Step1Config = new BaseConfig<AutoFlow.StepWindow.Step1Parameter>(@"Config\Step1Data.json");
@@ -485,9 +485,9 @@ namespace AutoFlow
         BaseLogRecord Logger = new BaseLogRecord();
         private bool _started;
         private System.Windows.Point _downPoint;
-        private bool Wafer_Type_state = false;
         private static Step1Window SWInstance;
         private static WaferWindow WWInstance;
+        private bool Model_Type_state = false;
         #endregion
 
         #region Main Screen
@@ -629,12 +629,29 @@ namespace AutoFlow
 
         #endregion
 
+        #region Combobox SelectionChanged
         private void Wafer_Type_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (Wafer_Type_state)
+
+        }
+
+        private void Model_Type_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (Model_Type_state)
             {
+                if (!string.IsNullOrEmpty(Setting_File_Location.Text))
+                {
+                    Do.CheckModel(Setting_File_Location.Text, Model_Type.Text);
+                }
+                else
+                {
+                    MessageBox.Show("請輸入setting檔案位置!", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
                 
+            
             }
         }
+
+        #endregion
     }
 }
