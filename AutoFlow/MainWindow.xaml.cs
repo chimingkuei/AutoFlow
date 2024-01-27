@@ -640,7 +640,14 @@ namespace AutoFlow
             {
                 if (!string.IsNullOrEmpty(Setting_File_Location.Text))
                 {
-                    Do.CheckModel(Setting_File_Location.Text, Model_Type.Text);
+                    if (File.Exists(Setting_File_Location.Text))
+                    {
+                        Do.CheckModel(Setting_File_Location.Text, Model_Type.Text);
+                    }
+                    else
+                    {
+                        MessageBox.Show("setting檔案不存在!", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
                 }
                 else
                 {
