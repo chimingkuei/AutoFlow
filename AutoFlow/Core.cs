@@ -213,13 +213,13 @@ namespace AutoFlow
             Process.Start(startInfo);
         }
 
-        public void MoveDatFile(string sourceDirectory, string targetDirectory)
+        public void MoveFile(string sourceDirectory, string targetDirectory, string type)
         {
-            string[] datFiles = Directory.GetFiles(sourceDirectory, "*.dat");
+            string[] datFiles = Directory.GetFiles(sourceDirectory, type);
             foreach (string datFile in datFiles)
             {
-                string fileName = System.IO.Path.GetFileName(datFile);
-                string targetPath = System.IO.Path.Combine(targetDirectory, fileName);
+                string fileName = Path.GetFileName(datFile);
+                string targetPath = Path.Combine(targetDirectory, fileName);
                 File.Move(datFile, targetPath);
             }
         }
@@ -228,7 +228,7 @@ namespace AutoFlow
         {
             while (true)
             {
-                if (File.Exists(csvfile1) & File.Exists(csvfile2))
+                if (File.Exists(csvfile1) && File.Exists(csvfile2))
                 {
                     break; 
                 }

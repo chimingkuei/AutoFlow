@@ -41,8 +41,8 @@ namespace AutoFlow
     {
         public List<System.Drawing.Point> click_points { get; set; }
         public string Setting_File_Location_val { get; set; }
+        public string Ref_Fit_Location_val { get; set; }
         public string VSM_File_Location_val { get; set; }
-        public string Dat_File_Location_val { get; set; }
         public string Xlsx_File_Location_val { get; set; }
         public string Wafer_Type_val { get; set; }
     }
@@ -169,8 +169,8 @@ namespace AutoFlow
             if (Parameter_info != null)
             {
                 Setting_File_Location.Text = Parameter_info[0].Setting_File_Location_val;
+                Ref_Fit_Location.Text = Parameter_info[0].Ref_Fit_Location_val;
                 VSM_File_Location.Text = Parameter_info[0].VSM_File_Location_val;
-                Dat_File_Location.Text = Parameter_info[0].Dat_File_Location_val;
                 Xlsx_File_Location.Text = Parameter_info[0].Xlsx_File_Location_val;
                 Wafer_Type.Text = Parameter_info[0].Wafer_Type_val;
             }
@@ -183,8 +183,8 @@ namespace AutoFlow
                 new Parameter() {
                     click_points = pointlist,
                     Setting_File_Location_val = Setting_File_Location.Text,
+                    Ref_Fit_Location_val = Ref_Fit_Location.Text,
                     VSM_File_Location_val = VSM_File_Location.Text,
-                    Dat_File_Location_val = Dat_File_Location.Text,
                     Xlsx_File_Location_val = Xlsx_File_Location.Text,
                     Wafer_Type_val = Wafer_Type.Text
                 }
@@ -526,6 +526,12 @@ namespace AutoFlow
                                 Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Archive_Text_val), "點選存檔");
                                 Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].CloseVDSW_Text_val), "關閉VDSW");
                             }
+                            Do.MoveFile(VSM_File_Location.Text, System.IO.Path.Combine(Ref_Fit_Location.Text, "sample_spectrum"), "*dat");
+                            Do.RunSoftware(Ref_Fit_Location.Text);
+                            Do.CheckCSV(System.IO.Path.Combine(Ref_Fit_Location.Text, "output_waveform.csv"), System.IO.Path.Combine(Ref_Fit_Location.Text, "output_parameters.csv"));
+                            EH.WaveToScatterChart(System.IO.Path.Combine(Ref_Fit_Location.Text, "output_waveform.csv"), System.IO.Path.Combine(Xlsx_File_Location.Text, "output_waveform.xlsx"));
+                            Do.MoveFile(System.IO.Path.Combine(Ref_Fit_Location.Text, "output_waveform.csv"), Xlsx_File_Location.Text, "*csv");
+
                         };
                         break;
                     }
@@ -572,12 +578,12 @@ namespace AutoFlow
                         Setting_File_Location.Text = open_vsm_folder_path.SelectedPath;
                         break;
                     }
-                case nameof(Open_Dat_Folder):
+                case nameof(Open_Ref_Fit_Folder):
                     {
-                        System.Windows.Forms.FolderBrowserDialog open_dat_folder_path = new System.Windows.Forms.FolderBrowserDialog();
-                        open_dat_folder_path.Description = "選擇dat檔資料夾";
-                        open_dat_folder_path.ShowDialog();
-                        VSM_File_Location.Text = open_dat_folder_path.SelectedPath;
+                        System.Windows.Forms.FolderBrowserDialog open_vsm_folder_path = new System.Windows.Forms.FolderBrowserDialog();
+                        open_vsm_folder_path.Description = "選擇Ref-Fit軟體資料夾";
+                        open_vsm_folder_path.ShowDialog();
+                        Ref_Fit_Location.Text = open_vsm_folder_path.SelectedPath;
                         break;
                     }
                 case nameof(Open_Xlsx_Folder):

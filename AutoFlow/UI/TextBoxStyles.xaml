@@ -87,11 +87,11 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    <Style x:Key="DatBaseTextBox" TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <Style x:Key="XlsxBaseTextBox" TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
         <Style.Resources>
             <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
                 <VisualBrush.Visual>
-                    <Label Content="請輸入dat檔資料夾!" Foreground="#FF6DC33C"/>
+                    <Label Content="請輸入xlsx檔資料夾!" Foreground="#FF6DC33C"/>
                 </VisualBrush.Visual>
             </VisualBrush>
         </Style.Resources>
@@ -116,11 +116,11 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    <Style x:Key="XlsxBaseTextBox" TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <Style x:Key="RefFitBaseTextBox" TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
         <Style.Resources>
             <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
                 <VisualBrush.Visual>
-                    <Label Content="請輸入xlsx檔資料夾!" Foreground="#FF6DC33C"/>
+                    <Label Content="請輸入Ref-Fit軟體資料夾!" Foreground="#FF6DC33C"/>
                 </VisualBrush.Visual>
             </VisualBrush>
         </Style.Resources>

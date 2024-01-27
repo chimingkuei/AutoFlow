@@ -67,27 +67,27 @@
             </TabItem>
             <TabItem Header="參數畫面" Style="{StaticResource BaseTabcontrol}">
                 <Grid>
-                    <ComboBox Style="{StaticResource AdvancedComboBox}" Name="Wafer_Type" HorizontalAlignment="Left" Width="106" FontSize="18" Margin="573,114,0,295" SelectionChanged="Wafer_Type_SelectionChanged">
+                    <ComboBox Style="{StaticResource AdvancedComboBox}" Name="Wafer_Type" HorizontalAlignment="Left" Width="106" FontSize="18" Margin="575,113,0,295" SelectionChanged="Wafer_Type_SelectionChanged">
                         <ComboBoxItem IsSelected="True">6吋晶圓</ComboBoxItem>
                         <ComboBoxItem>4吋晶圓</ComboBoxItem>
                         <ComboBoxItem>3吋晶圓</ComboBoxItem>
                     </ComboBox>
-                    <ComboBox Style="{StaticResource AdvancedComboBox}" Name="Model_Type" HorizontalAlignment="Left" Width="106" FontSize="18" Margin="574,188,0,221" SelectionChanged="Model_Type_SelectionChanged">
+                    <ComboBox Style="{StaticResource AdvancedComboBox}" Name="Model_Type" HorizontalAlignment="Left" Width="106" FontSize="18" Margin="577,187,0,221" SelectionChanged="Model_Type_SelectionChanged">
                         <ComboBoxItem IsSelected="True">D3-18</ComboBoxItem>
                         <ComboBoxItem>D3-19</ComboBoxItem>
                         <ComboBoxItem>D4-1</ComboBoxItem>
                     </ComboBox>
-                    <WrapPanel Orientation="Horizontal" Margin="110,97,405,69">
-                        <Button x:Name="Open_Setting_File_Path" Style="{StaticResource FileButtonStyle}" Margin="52,13.2,0,0" FontSize="18" Height="51" Width="54" Click="Parameter_Btn_Click"/>
+                    <WrapPanel Orientation="Horizontal" Margin="135,92,420,68">
+                        <Button x:Name="Open_Setting_File_Path" Style="{StaticResource FileButtonStyle}" Margin="32,13.2,0,0" FontSize="18" Height="51" Width="54" Click="Parameter_Btn_Click"/>
                         <TextBox x:Name="Setting_File_Location" Style="{StaticResource SettingBaseTextBox}" Margin="10,15.4,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="32" Width="210"/>
-                        <Button x:Name="Open_VSM_Folder" Style="{StaticResource FolderButtonStyle}" Margin="52,13.2,0,0" FontSize="18" Background="#FFE6F0FF" BorderThickness="0" Height="51" Width="54" Click="Parameter_Btn_Click"/>
+                        <Button x:Name="Open_Ref_Fit_Folder" Style="{StaticResource FolderButtonStyle}" Margin="32,13.2,0,0" FontSize="18" Background="#FFE6F0FF" BorderThickness="0" Height="51" Width="54" Click="Parameter_Btn_Click"/>
+                        <TextBox x:Name="Ref_Fit_Location" Style="{StaticResource RefFitBaseTextBox}"  Margin="10,25.4,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="32" Width="210"/>
+                        <Button x:Name="Open_VSM_Folder" Style="{StaticResource FolderButtonStyle}" Margin="32,13.2,0,0" FontSize="18" Background="#FFE6F0FF" BorderThickness="0" Height="51" Width="54" Click="Parameter_Btn_Click"/>
                         <TextBox x:Name="VSM_File_Location" Style="{StaticResource VSMBaseTextBox}"  Margin="10,25.4,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="32" Width="210"/>
-                        <Button x:Name="Open_Dat_Folder" Style="{StaticResource FolderButtonStyle}" Margin="52,13.2,0,0" FontSize="18" Background="#FFE6F0FF" BorderThickness="0" Height="51" Width="54" Click="Parameter_Btn_Click"/>
-                        <TextBox x:Name="Dat_File_Location" Style="{StaticResource DatBaseTextBox}" Margin="10,25.4,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="32" Width="210"/>
-                        <Button x:Name="Open_Xlsx_Folder" Style="{StaticResource FolderButtonStyle}" Margin="52,13.2,0,0" FontSize="18" Background="#FFE6F0FF" BorderThickness="0" Height="51" Width="54" Click="Parameter_Btn_Click"/>
+                        <Button x:Name="Open_Xlsx_Folder" Style="{StaticResource FolderButtonStyle}" Margin="32,13.2,0,0" FontSize="18" Background="#FFE6F0FF" BorderThickness="0" Height="51" Width="54" Click="Parameter_Btn_Click"/>
                         <TextBox x:Name="Xlsx_File_Location" Style="{StaticResource XlsxBaseTextBox}"  Margin="10,25.4,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="32" Width="210"/>
                     </WrapPanel>
-                    <Button x:Name="Save_Config" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="581,263,212,83" Content="儲存參數" Click="Parameter_Btn_Click"/>
+                    <Button x:Name="Save_Config" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="581,266,212,80" Content="儲存參數" Click="Parameter_Btn_Click" RenderTransformOrigin="-0.567,0.384"/>
                 </Grid>
             </TabItem>
         </TabControl>
