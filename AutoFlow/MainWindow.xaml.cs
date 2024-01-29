@@ -291,8 +291,9 @@ namespace AutoFlow
 
         private Tuple<string, System.Drawing.Point> ConvertWaferCoordStr(string coord_str)
         {
-            string wafer_coord = "_X" + ConvertCoordXY(coord_str.Split(',')[0]).X.ToString() + "_Y" + ConvertCoordXY(coord_str.Split(',')[0]).Y.ToString();
-            return new Tuple<string, System.Drawing.Point>(wafer_coord, ConvertCoordXY(coord_str.Split(',')[1]));
+            string wafer_coord = "_X" + coord_str.Split(',')[0].Trim('(') + "_Y" + coord_str.Split(',')[1].Trim(')');
+            string wafer_screen_coord = "\"" + coord_str.Split(',')[2] + "," + coord_str.Split(',')[3] + "\"";
+            return new Tuple<string, System.Drawing.Point>(wafer_coord, ConvertCoordXY(wafer_screen_coord));
         }
         #endregion
 
@@ -463,6 +464,20 @@ namespace AutoFlow
                     Step1Data.Step1_data18 = ConvertCoordStr(_downPoint, Display_Image);
                 }
             };
+            Step1Data.CheckSendValueEventHandler19 += (val) =>
+            {
+                if (val == true)
+                {
+                    Step1Data.Step1_data19 = ConvertCoordStr(_downPoint, Display_Image);
+                }
+            };
+            Step1Data.CheckSendValueEventHandler20 += (val) =>
+            {
+                if (val == true)
+                {
+                    Step1Data.Step1_data20 = ConvertCoordStr(_downPoint, Display_Image);
+                }
+            };
         }
         #endregion
 
@@ -477,7 +492,7 @@ namespace AutoFlow
             Model_Type_state = true;
         }
         BaseConfig<Parameter> Config = new BaseConfig<Parameter>(@"Config\Config.json");
-        BaseConfig<AutoFlow.StepWindow.Step1Parameter> Step1Config = new BaseConfig<AutoFlow.StepWindow.Step1Parameter>(@"Config\Step1Data.json");
+        BaseConfig<AutoFlow.StepWindow.Step1Parameter> Step1Config = new BaseConfig<AutoFlow.StepWindow.Step1Parameter>(@"Config\Step1Config.json");
         BaseConfig<AutoFlow.StepWindow.WaferPointParameter> WaferPointConfig = new BaseConfig<AutoFlow.StepWindow.WaferPointParameter>(@"Config\WaferPoint.json");
         Core Do = new Core();
         ExcelHandler EH = new ExcelHandler();
@@ -496,23 +511,24 @@ namespace AutoFlow
             {
                 case nameof(Start):
                     {
-                        List<AutoFlow.StepWindow.Step1Parameter> Step1Parameter_info = Step1Config.Load();
-                        List<AutoFlow.StepWindow.WaferPointParameter> WaferPointParameter_info = WaferPointConfig.Load();
+                        List<AutoFlow.StepWindow.Step1Parameter> Step1Parameter_info = Step1Config.Load(3, 0);
+                        List<AutoFlow.StepWindow.WaferPointParameter> WaferPointParameter_info = WaferPointConfig.Load(3, 0);
                         string[] vsm_file = Do.GetFilename(TextBoxDispatcherGetValue(VSM_File_Location), "*.vsm");
                         for (int file = 0; file < vsm_file.Length; file++)
                         {
                             Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Open_Text_val), "點選資料夾圖示");
-                            Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].ChoosePath_Text_val), "選擇路徑");
+                            Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].ChooseVSMPath_Text_val), "選擇vsm路徑");
                             Do.SimulateInputText(TextBoxDispatcherGetValue(VSM_File_Location), "輸入vsm檔路徑");
                             Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].VSM_Text_val), "點選開啟檔案類型欄位");
                             Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].VSMType_Text_val), "選擇開檔類型vsm");
-                            Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].InputVSM_Text_val),"點選輸入vsm檔欄位");
+                            Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].InputVSM_Text_val), "點選輸入vsm檔欄位");
                             Do.SimulateInputText(System.IO.Path.GetFileName(vsm_file[file]), "輸入vsm檔名");
                             Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].TurnOn_Text_val), "點選開啟");
                             Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].View_Text_val), "點選view");
                             Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Display_Text_val), "點選Display");
                             Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].OnePane_Text_val), "點選1Pane");
                             Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Magnification_Text_val), "點選放大");
+                            Thread.Sleep(3000);
                             foreach (var point in WaferPointParameter_info[0].WaferPoint_val)
                             {
                                 Do.SimulateLeftMouseDoubleClick(ConvertWaferCoordStr(point).Item2, "點選Wafer點位");
@@ -525,12 +541,16 @@ namespace AutoFlow
                                 Do.SimulateInputText(System.IO.Path.GetFileNameWithoutExtension(vsm_file[file]) + ConvertWaferCoordStr(point).Item1, "輸入dat檔名");
                                 Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Archive_Text_val), "點選存檔");
                                 Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].CloseVDSW_Text_val), "關閉VDSW");
+                                Thread.Sleep(500);
                             }
+                            Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].CloseWafer_Text_val), "關閉Wafer");
                             Do.MoveFile(VSM_File_Location.Text, System.IO.Path.Combine(Ref_Fit_Location.Text, "sample_spectrum"), "*dat");
                             Do.RunSoftware(Ref_Fit_Location.Text);
-                            Do.CheckCSV(System.IO.Path.Combine(Ref_Fit_Location.Text, "output_waveform.csv"), System.IO.Path.Combine(Ref_Fit_Location.Text, "output_parameters.csv"));
-                            EH.WaveToScatterChart(System.IO.Path.Combine(Ref_Fit_Location.Text, "output_waveform.csv"), System.IO.Path.Combine(Xlsx_File_Location.Text, "output_waveform.xlsx"));
-                            Do.MoveFile(System.IO.Path.Combine(Ref_Fit_Location.Text, "output_waveform.csv"), Xlsx_File_Location.Text, "*csv");
+                            if (Do.CheckCSV(System.IO.Path.Combine(Ref_Fit_Location.Text, "output_waveform.csv"), System.IO.Path.Combine(Ref_Fit_Location.Text, "output_parameters.csv")))
+                            {
+                                EH.WaveToScatterChart(System.IO.Path.Combine(Ref_Fit_Location.Text, "output_waveform.csv"), System.IO.Path.Combine(Xlsx_File_Location.Text, "output_waveform.xlsx"));
+                            }
+                            //Do.MoveFile(System.IO.Path.Combine(Ref_Fit_Location.Text, "output_waveform.csv"), Xlsx_File_Location.Text, "*csv");
 
                         };
                         break;
@@ -648,7 +668,8 @@ namespace AutoFlow
                 {
                     if (File.Exists(Setting_File_Location.Text))
                     {
-                        Do.CheckModel(Setting_File_Location.Text, Model_Type.Text);
+                        string stringToRemove = "System.Windows.Controls.ComboBoxItem: ";
+                        Do.CheckModel(Setting_File_Location.Text, Model_Type.SelectedValue.ToString().Replace(stringToRemove, ""));
                     }
                     else
                     {
@@ -659,10 +680,11 @@ namespace AutoFlow
                 {
                     MessageBox.Show("請輸入setting檔案位置!", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
-                
-            
+
+
             }
         }
         #endregion
+
     }
 }

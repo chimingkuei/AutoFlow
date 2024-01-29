@@ -1,7 +1,7 @@
 public class Parameter
 {
  public string Open_Text_val { get; set; }
- public string ChoosePath_Text_val { get; set; }
+ public string ChooseVSMPath_Text_val { get; set; }
  public string VSM_Text_val { get; set; }
  public string VSMType_Text_val { get; set; }
  public string InputVSM_Text_val { get; set; }
@@ -13,17 +13,19 @@ public class Parameter
  public string DTCS_Text_val { get; set; }
  public string OK_Text_val { get; set; }
  public string Save_Text_val { get; set; }
+ public string ChooseDatPath_Text_val { get; set; }
  public string Dat_Text_val { get; set; }
  public string DatType_Text_val { get; set; }
  public string InputDat_Text_val { get; set; }
  public string Archive_Text_val { get; set; }
  public string CloseVDSW_Text_val { get; set; }
+ public string CloseWafer_Text_val { get; set; }
 }
 private void LoadConfig()
 {
  List<Parameter> Parameter_info = Config.Load();
  Open_Text.Text = Parameter_info[0].Open_Text_val
- ChoosePath_Text.Text = Parameter_info[0].ChoosePath_Text_val
+ ChooseVSMPath_Text.Text = Parameter_info[0].ChooseVSMPath_Text_val
  VSM_Text.Text = Parameter_info[0].VSM_Text_val
  VSMType_Text.Text = Parameter_info[0].VSMType_Text_val
  InputVSM_Text.Text = Parameter_info[0].InputVSM_Text_val
@@ -35,11 +37,13 @@ private void LoadConfig()
  DTCS_Text.Text = Parameter_info[0].DTCS_Text_val
  OK_Text.Text = Parameter_info[0].OK_Text_val
  Save_Text.Text = Parameter_info[0].Save_Text_val
+ ChooseDatPath_Text.Text = Parameter_info[0].ChooseDatPath_Text_val
  Dat_Text.Text = Parameter_info[0].Dat_Text_val
  DatType_Text.Text = Parameter_info[0].DatType_Text_val
  InputDat_Text.Text = Parameter_info[0].InputDat_Text_val
  Archive_Text.Text = Parameter_info[0].Archive_Text_val
  CloseVDSW_Text.Text = Parameter_info[0].CloseVDSW_Text_val
+ CloseWafer_Text.Text = Parameter_info[0].CloseWafer_Text_val
 }
 private void SaveConfig()
 {
@@ -47,7 +51,7 @@ private void SaveConfig()
  {
   new Parameter() {
  Open_Text_val = Open_Text.Text,
- ChoosePath_Text_val = ChoosePath_Text.Text,
+ ChooseVSMPath_Text_val = ChooseVSMPath_Text.Text,
  VSM_Text_val = VSM_Text.Text,
  VSMType_Text_val = VSMType_Text.Text,
  InputVSM_Text_val = InputVSM_Text.Text,
@@ -59,11 +63,13 @@ private void SaveConfig()
  DTCS_Text_val = DTCS_Text.Text,
  OK_Text_val = OK_Text.Text,
  Save_Text_val = Save_Text.Text,
+ ChooseDatPath_Text_val = ChooseDatPath_Text.Text,
  Dat_Text_val = Dat_Text.Text,
  DatType_Text_val = DatType_Text.Text,
  InputDat_Text_val = InputDat_Text.Text,
  Archive_Text_val = Archive_Text.Text,
  CloseVDSW_Text_val = CloseVDSW_Text.Text,
+ CloseWafer_Text_val = CloseWafer_Text.Text,
  }
 };
 Config.Save(Parameter_config);
@@ -72,7 +78,7 @@ private void Open_Checked(object sender, RoutedEventArgs e)
 {
 Step1Data.Step1_bool1 = true;
 }
-private void ChoosePath_Checked(object sender, RoutedEventArgs e)
+private void ChooseVSMPath_Checked(object sender, RoutedEventArgs e)
 {
 Step1Data.Step1_bool2 = true;
 }
@@ -120,23 +126,31 @@ private void Save_Checked(object sender, RoutedEventArgs e)
 {
 Step1Data.Step1_bool13 = true;
 }
-private void Dat_Checked(object sender, RoutedEventArgs e)
+private void ChooseDatPath_Checked(object sender, RoutedEventArgs e)
 {
 Step1Data.Step1_bool14 = true;
 }
-private void DatType_Checked(object sender, RoutedEventArgs e)
+private void Dat_Checked(object sender, RoutedEventArgs e)
 {
 Step1Data.Step1_bool15 = true;
 }
-private void InputDat_Checked(object sender, RoutedEventArgs e)
+private void DatType_Checked(object sender, RoutedEventArgs e)
 {
 Step1Data.Step1_bool16 = true;
 }
-private void Archive_Checked(object sender, RoutedEventArgs e)
+private void InputDat_Checked(object sender, RoutedEventArgs e)
 {
 Step1Data.Step1_bool17 = true;
 }
-private void CloseVDSW_Checked(object sender, RoutedEventArgs e)
+private void Archive_Checked(object sender, RoutedEventArgs e)
 {
 Step1Data.Step1_bool18 = true;
+}
+private void CloseVDSW_Checked(object sender, RoutedEventArgs e)
+{
+Step1Data.Step1_bool19 = true;
+}
+private void CloseWafer_Checked(object sender, RoutedEventArgs e)
+{
+Step1Data.Step1_bool20 = true;
 }

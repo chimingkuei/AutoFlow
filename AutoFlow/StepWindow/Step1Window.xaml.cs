@@ -21,7 +21,7 @@ namespace AutoFlow.StepWindow
     public class Step1Parameter
     {
         public string Open_Text_val { get; set; }
-        public string ChoosePath_Text_val { get; set; }
+        public string ChooseVSMPath_Text_val { get; set; }
         public string VSM_Text_val { get; set; }
         public string VSMType_Text_val { get; set; }
         public string InputVSM_Text_val { get; set; }
@@ -33,11 +33,13 @@ namespace AutoFlow.StepWindow
         public string DTCS_Text_val { get; set; }
         public string OK_Text_val { get; set; }
         public string Save_Text_val { get; set; }
+        public string ChooseDatPath_Text_val { get; set; }
         public string Dat_Text_val { get; set; }
         public string DatType_Text_val { get; set; }
         public string InputDat_Text_val { get; set; }
         public string Archive_Text_val { get; set; }
         public string CloseVDSW_Text_val { get; set; }
+        public string CloseWafer_Text_val { get; set; }
     }
 
     public partial class Step1Window : Window
@@ -55,10 +57,10 @@ namespace AutoFlow.StepWindow
             if (Parameter_info != null)
             {
                 Open_Text.Text = Parameter_info[0].Open_Text_val;
-                ChoosePath_Text.Text = Parameter_info[0].ChoosePath_Text_val;
+                ChooseVSMPath_Text.Text = Parameter_info[0].ChooseVSMPath_Text_val;
                 VSM_Text.Text = Parameter_info[0].VSM_Text_val;
                 VSMType_Text.Text = Parameter_info[0].VSMType_Text_val;
-                InputVSM_Text.Text = Parameter_info[0].InputVSM_Text_val;
+                InputVSM_Text.Text = Parameter_info[0].InputVSM_Text_val; ;
                 TurnOn_Text.Text = Parameter_info[0].TurnOn_Text_val;
                 View_Text.Text = Parameter_info[0].View_Text_val;
                 Display_Text.Text = Parameter_info[0].Display_Text_val;
@@ -67,11 +69,13 @@ namespace AutoFlow.StepWindow
                 DTCS_Text.Text = Parameter_info[0].DTCS_Text_val;
                 OK_Text.Text = Parameter_info[0].OK_Text_val;
                 Save_Text.Text = Parameter_info[0].Save_Text_val;
+                ChooseDatPath_Text.Text = Parameter_info[0].ChooseDatPath_Text_val;
                 Dat_Text.Text = Parameter_info[0].Dat_Text_val;
                 DatType_Text.Text = Parameter_info[0].DatType_Text_val;
                 InputDat_Text.Text = Parameter_info[0].InputDat_Text_val;
                 Archive_Text.Text = Parameter_info[0].Archive_Text_val;
                 CloseVDSW_Text.Text = Parameter_info[0].CloseVDSW_Text_val;
+                CloseWafer_Text.Text = Parameter_info[0].CloseWafer_Text_val;
             }
         }
 
@@ -80,25 +84,27 @@ namespace AutoFlow.StepWindow
             List<Step1Parameter> Parameter_config = new List<Step1Parameter>()
             {
                 new Step1Parameter() {
-                    Open_Text_val=Open_Text.Text,
-                    ChoosePath_Text_val=ChoosePath_Text.Text,
-                    VSM_Text_val=VSM_Text.Text,
-                    VSMType_Text_val=VSMType_Text.Text,
-                    InputVSM_Text_val=InputVSM_Text.Text,
-                    TurnOn_Text_val=TurnOn_Text.Text,
-                    View_Text_val=View_Text.Text,
-                    Display_Text_val=Display_Text.Text,
-                    OnePane_Text_val=OnePane_Text.Text,
-                    Magnification_Text_val=Magnification_Text.Text,
-                    DTCS_Text_val=DTCS_Text.Text,
-                    OK_Text_val=OK_Text.Text,
-                    Save_Text_val=Save_Text.Text,
-                    Dat_Text_val=Dat_Text.Text,
-                    DatType_Text_val=DatType_Text.Text,
-                    InputDat_Text_val=InputDat_Text.Text,
-                    Archive_Text_val=Archive_Text.Text,
-                    CloseVDSW_Text_val=CloseVDSW_Text.Text
-                   }
+                   Open_Text_val = Open_Text.Text,
+                   ChooseVSMPath_Text_val = ChooseVSMPath_Text.Text,
+                   VSM_Text_val = VSM_Text.Text,
+                   VSMType_Text_val = VSMType_Text.Text,
+                   InputVSM_Text_val = InputVSM_Text.Text,
+                   TurnOn_Text_val = TurnOn_Text.Text,
+                   View_Text_val = View_Text.Text,
+                   Display_Text_val = Display_Text.Text,
+                   OnePane_Text_val = OnePane_Text.Text,
+                   Magnification_Text_val = Magnification_Text.Text,
+                   DTCS_Text_val = DTCS_Text.Text,
+                   OK_Text_val = OK_Text.Text,
+                   Save_Text_val = Save_Text.Text,
+                   ChooseDatPath_Text_val = ChooseDatPath_Text.Text,
+                   Dat_Text_val = Dat_Text.Text,
+                   DatType_Text_val = DatType_Text.Text,
+                   InputDat_Text_val = InputDat_Text.Text,
+                   Archive_Text_val = Archive_Text.Text,
+                   CloseVDSW_Text_val = CloseVDSW_Text.Text,
+                   CloseWafer_Text_val = CloseWafer_Text.Text
+                }
             };
             Step1Config.Save(Parameter_config, index);
         }
@@ -152,13 +158,14 @@ namespace AutoFlow.StepWindow
 
         private void CheckSendValueInit()
         {
+            
             Step1Data.SendValueEventHandler1 += (val) =>
             {
                 Open_Text.Text = val;
             };
             Step1Data.SendValueEventHandler2 += (val) =>
             {
-                ChoosePath_Text.Text = val;
+                ChooseVSMPath_Text.Text = val;
             };
             Step1Data.SendValueEventHandler3 += (val) =>
             {
@@ -206,23 +213,31 @@ namespace AutoFlow.StepWindow
             };
             Step1Data.SendValueEventHandler14 += (val) =>
             {
-                Dat_Text.Text = val;
+                ChooseDatPath_Text.Text = val;
             };
             Step1Data.SendValueEventHandler15 += (val) =>
             {
-                DatType_Text.Text = val;
+                Dat_Text.Text = val;
             };
             Step1Data.SendValueEventHandler16 += (val) =>
             {
-                InputDat_Text.Text = val;
+                DatType_Text.Text = val;
             };
             Step1Data.SendValueEventHandler17 += (val) =>
             {
-                Archive_Text.Text = val;
+                InputDat_Text.Text = val;
             };
             Step1Data.SendValueEventHandler18 += (val) =>
             {
+                Archive_Text.Text = val;
+            };
+            Step1Data.SendValueEventHandler19 += (val) =>
+            {
                 CloseVDSW_Text.Text = val;
+            };
+            Step1Data.SendValueEventHandler20 += (val) =>
+            {
+                CloseWafer_Text.Text = val;
             };
         }
         #endregion
@@ -237,15 +252,12 @@ namespace AutoFlow.StepWindow
         BaseConfig<Parameter> Config = new BaseConfig<Parameter>(@"Config\Config.json");
         #endregion
 
-        private void Save_Config_Click(object sender, RoutedEventArgs e)
-        {
-            OperateSaveConfig(SaveConfig);
-        }
+        #region CheckedEvent
         private void Open_Checked(object sender, RoutedEventArgs e)
         {
             Step1Data.Step1_bool1 = true;
         }
-        private void ChoosePath_Checked(object sender, RoutedEventArgs e)
+        private void ChooseVSMPath_Checked(object sender, RoutedEventArgs e)
         {
             Step1Data.Step1_bool2 = true;
         }
@@ -293,27 +305,39 @@ namespace AutoFlow.StepWindow
         {
             Step1Data.Step1_bool13 = true;
         }
-        private void Dat_Checked(object sender, RoutedEventArgs e)
+        private void ChooseDatPath_Checked(object sender, RoutedEventArgs e)
         {
             Step1Data.Step1_bool14 = true;
         }
-        private void DatType_Checked(object sender, RoutedEventArgs e)
+        private void Dat_Checked(object sender, RoutedEventArgs e)
         {
             Step1Data.Step1_bool15 = true;
         }
-        private void InputDat_Checked(object sender, RoutedEventArgs e)
+        private void DatType_Checked(object sender, RoutedEventArgs e)
         {
             Step1Data.Step1_bool16 = true;
         }
-        private void Archive_Checked(object sender, RoutedEventArgs e)
+        private void InputDat_Checked(object sender, RoutedEventArgs e)
         {
             Step1Data.Step1_bool17 = true;
         }
-        private void CloseVDSW_Checked(object sender, RoutedEventArgs e)
+        private void Archive_Checked(object sender, RoutedEventArgs e)
         {
             Step1Data.Step1_bool18 = true;
         }
+        private void CloseVDSW_Checked(object sender, RoutedEventArgs e)
+        {
+            Step1Data.Step1_bool19 = true;
+        }
+        private void CloseWafer_Checked(object sender, RoutedEventArgs e)
+        {
+            Step1Data.Step1_bool20 = true;
+        }
+        #endregion
 
-       
+        private void Save_Config_Click(object sender, RoutedEventArgs e)
+        {
+            OperateSaveConfig(SaveConfig);
+        }
     }
 }

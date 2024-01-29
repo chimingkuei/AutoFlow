@@ -57,8 +57,8 @@ namespace AutoFlow
             BackupRemove();
             string jsonData = JsonConvert.SerializeObject(record);
             string[] contentArray = File.ReadAllText(config_path).Trim('[', ']').Split(new string[] { "}," }, StringSplitOptions.None);
-            contentArray[replace_index] = jsonData.Trim('[', ']');
-            string content = $"[{string.Join("},", contentArray)}{(replace_index == contentArray.Length - 1 ? "}" : "}]")}";
+            contentArray[replace_index] = jsonData.Trim('[', ']', '}');
+            string content = (replace_index == contentArray.Length - 1) ? "[" + string.Join("},", contentArray) + "}]" : "[" + string.Join("},", contentArray) + "]";
             string encryptedContent = encryption ? RSAEncrypt(content) : content;
             File.WriteAllText(config_path, encryptedContent);
         }
@@ -87,7 +87,7 @@ namespace AutoFlow
             if (File.Exists(config_path))
             {
                 string[] contentArray = File.ReadAllText(config_path).Trim('[', ']').Split(new string[] { "}," }, StringSplitOptions.None);
-                string formattedRecord = "[" + (index == contentArray.Length - 1 ? contentArray[index] : contentArray[index] + "}]");
+                string formattedRecord = (index == contentArray.Length - 1) ? "[" + contentArray[index] + "]" : "[" + contentArray[index] + "}]";
                 string decryptedRecord = encryption ? RSADecrypt(formattedRecord) : formattedRecord;
                 jsonData = JsonConvert.DeserializeObject<List<T>>(decryptedRecord);
             }

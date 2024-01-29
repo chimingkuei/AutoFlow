@@ -184,17 +184,10 @@ namespace AutoFlow
 
         public void CheckModel(string filePath, string model)
         {
-            string jsonData = File.ReadAllText(filePath);
-            JArray jsonArray = JArray.Parse(jsonData);
-            foreach (JObject item in jsonArray.Children<JObject>())
-            {
-                JProperty designProperty = item.Property("design");
-                if (designProperty != null)
-                {
-                    designProperty.Value = model;
-                }
-            }
-            File.WriteAllText(filePath, jsonArray.ToString());
+            string jsonContent = File.ReadAllText(filePath);
+            JObject jsonObject = JObject.Parse(jsonContent);
+            jsonObject["design"] = model;
+            File.WriteAllText(filePath, jsonObject.ToString());
         }
 
         public string[] GetFilename(string folderPath, string filetype)
@@ -204,13 +197,21 @@ namespace AutoFlow
 
         public void RunSoftware(string softwarepath)
         {
-            ProcessStartInfo startInfo = new ProcessStartInfo
-            {
-                FileName = softwarepath,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
-            Process.Start(startInfo);
+            //ProcessStartInfo startInfo = new ProcessStartInfo
+            //{
+            //    FileName = softwarepath,
+            //    UseShellExecute = false,
+            //    Arguments = @"D:\RefFit\"
+            //};
+            //Process.Start(startInfo);
+            Process process = new Process();
+            process.StartInfo.FileName = "cmd.exe";
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.RedirectStandardInput = true;
+            process.Start();
+            process.StandardInput.WriteLine("cd D:\\RefFit");
+            process.StandardInput.WriteLine("run_RefFitTool.exe");
+            process.Close();
         }
 
         public void MoveFile(string sourceDirectory, string targetDirectory, string type)
@@ -224,17 +225,19 @@ namespace AutoFlow
             }
         }
 
-        public void CheckCSV(string csvfile1, string csvfile2)
+        public bool CheckCSV(string csvfile1, string csvfile2)
         {
+            bool state = false;
             while (true)
             {
                 if (File.Exists(csvfile1) && File.Exists(csvfile2))
                 {
-                    break; 
+                    state = true;
+                    break;
                 }
                 Thread.Sleep(1000);
             }
-
+            return state;
         }
     }
 
@@ -367,7 +370,7 @@ namespace AutoFlow
                     if (!CheckChartName(worksheet, chartname))
                     {
                         ExcelChart chart = worksheet.Drawings.AddChart(chartname, eChartType.XYScatterLinesNoMarkers);
-                        SetChartStyle(chart, new Tuple<int, int, int, int>(cell_y, 0, list_index + 5, 0), lists);
+                        SetChartStyle(chart, new Tuple<int, int, int, int>(cell_y, 0, 5, 0), lists);
                         int tag0_count = lists[list_index].Count;
                         int tag1_count = lists[list_index + 1].Count;
                         WhiteCells(worksheet, lists, tag0_count, cell_y, list_index);

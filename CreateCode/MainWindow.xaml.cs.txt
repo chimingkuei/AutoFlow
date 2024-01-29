@@ -124,3 +124,17 @@ Step1Data.CheckSendValueEventHandler18 += (val) =>
  Step1Data.Step1_data18 = ConvertCoordStr(_downPoint, Display_Image);
 }
 };
+Step1Data.CheckSendValueEventHandler19 += (val) =>
+{
+ if (val == true)
+{
+ Step1Data.Step1_data19 = ConvertCoordStr(_downPoint, Display_Image);
+}
+};
+Step1Data.CheckSendValueEventHandler20 += (val) =>
+{
+ if (val == true)
+{
+ Step1Data.Step1_data20 = ConvertCoordStr(_downPoint, Display_Image);
+}
+};

@@ -1,0 +1,1 @@
+Step1Window.xaml.cs增加CheckSendValueInit()

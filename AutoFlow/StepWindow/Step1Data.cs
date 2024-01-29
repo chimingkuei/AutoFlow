@@ -9,6 +9,7 @@ namespace AutoFlow.StepWindow
     class Step1Data
     {
         public delegate void SendValueEventHandler(string e);
+        #region SendValueEventHandler
         static public event SendValueEventHandler SendValueEventHandler1;
         static public event SendValueEventHandler SendValueEventHandler2;
         static public event SendValueEventHandler SendValueEventHandler3;
@@ -27,6 +28,10 @@ namespace AutoFlow.StepWindow
         static public event SendValueEventHandler SendValueEventHandler16;
         static public event SendValueEventHandler SendValueEventHandler17;
         static public event SendValueEventHandler SendValueEventHandler18;
+        static public event SendValueEventHandler SendValueEventHandler19;
+        static public event SendValueEventHandler SendValueEventHandler20;
+        #endregion
+        #region data
         static private string data1;
         static private string data2;
         static private string data3;
@@ -45,6 +50,10 @@ namespace AutoFlow.StepWindow
         static private string data16;
         static private string data17;
         static private string data18;
+        static private string data19;
+        static private string data20;
+        #endregion
+        #region Step1_data
         static public string Step1_data1
         {
             get
@@ -261,7 +270,33 @@ namespace AutoFlow.StepWindow
                 SendValueEventHandler18(data18);
             }
         }
+        static public string Step1_data19
+        {
+            get
+            {
+                return data19;
+            }
+            set
+            {
+                data19 = value;
+                SendValueEventHandler19(data19);
+            }
+        }
+        static public string Step1_data20
+        {
+            get
+            {
+                return data20;
+            }
+            set
+            {
+                data20 = value;
+                SendValueEventHandler20(data20);
+            }
+        }
+        #endregion
         public delegate void CheckSendValueEventHandler(bool e);
+        #region CheckSendValueEventHandler
         static public event CheckSendValueEventHandler CheckSendValueEventHandler1;
         static public event CheckSendValueEventHandler CheckSendValueEventHandler2;
         static public event CheckSendValueEventHandler CheckSendValueEventHandler3;
@@ -280,6 +315,10 @@ namespace AutoFlow.StepWindow
         static public event CheckSendValueEventHandler CheckSendValueEventHandler16;
         static public event CheckSendValueEventHandler CheckSendValueEventHandler17;
         static public event CheckSendValueEventHandler CheckSendValueEventHandler18;
+        static public event CheckSendValueEventHandler CheckSendValueEventHandler19;
+        static public event CheckSendValueEventHandler CheckSendValueEventHandler20;
+        #endregion
+        #region bool
         static private bool bool1;
         static private bool bool2;
         static private bool bool3;
@@ -298,6 +337,10 @@ namespace AutoFlow.StepWindow
         static private bool bool16;
         static private bool bool17;
         static private bool bool18;
+        static private bool bool19;
+        static private bool bool20;
+        #endregion
+        #region Step1_bool
         static public bool Step1_bool1
         {
             get
@@ -514,5 +557,30 @@ namespace AutoFlow.StepWindow
                 CheckSendValueEventHandler18(bool18);
             }
         }
+        static public bool Step1_bool19
+        {
+            get
+            {
+                return bool19;
+            }
+            set
+            {
+                bool19 = value;
+                CheckSendValueEventHandler19(bool19);
+            }
+        }
+        static public bool Step1_bool20
+        {
+            get
+            {
+                return bool20;
+            }
+            set
+            {
+                bool20 = value;
+                CheckSendValueEventHandler20(bool20);
+            }
+        }
+        #endregion
     }
 }
