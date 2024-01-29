@@ -190,11 +190,6 @@ namespace AutoFlow
             File.WriteAllText(filePath, jsonObject.ToString());
         }
 
-        public string[] GetFilename(string folderPath, string filetype)
-        {
-            return Directory.GetFiles(folderPath, filetype);
-        }
-
         public void RunSoftware(string softwarepath)
         {
             //ProcessStartInfo startInfo = new ProcessStartInfo
@@ -214,6 +209,12 @@ namespace AutoFlow
             process.Close();
         }
 
+        #region IO作業
+        public string[] GetFilename(string folderPath, string filetype)
+        {
+            return Directory.GetFiles(folderPath, filetype);
+        }
+
         public void MoveFile(string sourceDirectory, string targetDirectory, string type)
         {
             string[] datFiles = Directory.GetFiles(sourceDirectory, type);
@@ -222,6 +223,15 @@ namespace AutoFlow
                 string fileName = Path.GetFileName(datFile);
                 string targetPath = Path.Combine(targetDirectory, fileName);
                 File.Move(datFile, targetPath);
+            }
+        }
+
+        public void DeleteFile(string sourceDirectory, string type)
+        {
+            string[] datFiles = Directory.GetFiles(sourceDirectory, type);
+            foreach (string datFile in datFiles)
+            {
+                File.Delete(datFile);
             }
         }
 
@@ -239,6 +249,7 @@ namespace AutoFlow
             }
             return state;
         }
+        #endregion
     }
 
     class ExcelHandler
