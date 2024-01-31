@@ -294,6 +294,21 @@ namespace AutoFlow
                 cross1list.Remove(cross1list[cross1list.Count - 1]);
                 cross2list.Remove(cross2list[cross2list.Count - 1]);
                 pointlist.Remove(pointlist[pointlist.Count - 1]);
+                if (pointlist.Count - 1 == -1)
+                {
+                    _downPoint.X = 0;
+                    _downPoint.Y = 0;
+                    Logger.WriteLog("螢幕(X,Y)座標:(0,0)", LogLevel.General, richTextBoxGeneral);
+                }
+                else
+                {
+                    int screen_x = pointlist[pointlist.Count - 1].X;
+                    int screen_y = pointlist[pointlist.Count - 1].Y;
+                    _downPoint.X = Convert.ToInt32(Convert.ToDouble(screen_x) / 1920 * Display_Image.ActualWidth);
+                    _downPoint.Y = Convert.ToInt32(Convert.ToDouble(screen_y) / 1080 * Display_Image.ActualHeight);
+                    Logger.WriteLog($"螢幕(X,Y)座標:({screen_x},{screen_y})", LogLevel.General, richTextBoxGeneral);
+                }
+               
             }
         }
         private void RemoveClickPoint()
@@ -408,6 +423,7 @@ namespace AutoFlow
                 Do.RunSoftware(Ref_Fit_Location.Text);
                 if (Do.CheckCSV(Path.Combine(Ref_Fit_Location.Text, "output_waveform.csv"), Path.Combine(Ref_Fit_Location.Text, "output_parameters.csv")))
                 {
+                    EH.waferID = vsm_file[file];
                     Do.DeleteFile(Path.Combine(Ref_Fit_Location.Text, "sample_spectrum"), "*dat");
                     EH.WaveToScatterChart(Path.Combine(Ref_Fit_Location.Text, "output_waveform.csv"), Path.Combine(Xlsx_File_Location.Text, "output_waveform.xlsx"));
                 }
