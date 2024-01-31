@@ -397,6 +397,7 @@ namespace AutoFlow
                         measurementseries.Header = "0-量測";
                         simulationseries.Header = "模擬";
                         cell_y += tag0_count + tag1_count;
+                        //simulationseries.Marker.Style = eMarkerStyle.Star;
                     }
                 }
                 try
