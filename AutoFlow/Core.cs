@@ -215,13 +215,14 @@ namespace AutoFlow
             return Directory.GetFiles(folderPath, filetype);
         }
 
-        public void MoveFile(string sourceDirectory, string targetDirectory, string type)
+        public void MoveFileToUpper(string sourceDirectory, string targetDirectory, string type)
         {
             string[] datFiles = Directory.GetFiles(sourceDirectory, type);
             foreach (string datFile in datFiles)
             {
-                string fileName = Path.GetFileName(datFile);
-                string targetPath = Path.Combine(targetDirectory, fileName);
+                string fileName = Path.GetFileNameWithoutExtension(datFile);
+                string newFileName = fileName.ToUpper() + "." + type.Trim('*');
+                string targetPath = Path.Combine(targetDirectory, newFileName);
                 File.Move(datFile, targetPath);
             }
         }
@@ -309,10 +310,10 @@ namespace AutoFlow
         {
             for (int cell_index = 0; cell_index < tag_count; cell_index++)
             {
-                worksheet.Cells["A" + (cell_init + cell_index + 1).ToString()].Value = lists[list_group][cell_index].Item1;
-                worksheet.Cells["B" + (cell_init + cell_index + 1).ToString()].Value = lists[list_group][cell_index].Item2;
-                worksheet.Cells["C" + (cell_init + cell_index + 1).ToString()].Value = lists[list_group][cell_index].Item3;
-                worksheet.Cells["D" + (cell_init + cell_index + 1).ToString()].Value = lists[list_group][cell_index].Item4;
+                worksheet.Cells["A" + (cell_init + cell_index).ToString()].Value = lists[list_group][cell_index].Item1;
+                worksheet.Cells["B" + (cell_init + cell_index).ToString()].Value = lists[list_group][cell_index].Item2;
+                worksheet.Cells["C" + (cell_init + cell_index).ToString()].Value = lists[list_group][cell_index].Item3;
+                worksheet.Cells["D" + (cell_init + cell_index).ToString()].Value = lists[list_group][cell_index].Item4;
             }
         }
 
@@ -321,7 +322,7 @@ namespace AutoFlow
             return worksheet.Cells[field + (start).ToString() + ":" + field + (end).ToString()];
         }
 
-        private List<List<Tuple<string, string, double, double>>> CSVToList(string csvfilepath)
+        public List<List<Tuple<string, string, double, double>>> CSVToList(string csvfilepath)
         {
             List<List<Tuple<string, string, double, double>>> dataListChunks = new List<List<Tuple<string, string, double, double>>>();
             if (File.Exists(csvfilepath))
@@ -343,11 +344,11 @@ namespace AutoFlow
                         }
                         else
                         {
-                            Tuple<string, string, double, double> rowData = new Tuple<string, string, double, double>(fields[0], fields[1], Convert.ToDouble(fields[2]), Convert.ToDouble(fields[3]));
-                            currentChunk.Add(rowData);
                             dataListChunks.Add(currentChunk);
                             tmp = fields[0];
                             currentChunk = new List<Tuple<string, string, double, double>>();
+                            Tuple<string, string, double, double> rowData = new Tuple<string, string, double, double>(fields[0], fields[1], Convert.ToDouble(fields[2]), Convert.ToDouble(fields[3]));
+                            currentChunk.Add(rowData);
                         }
                     }
                     dataListChunks.Add(currentChunk);
@@ -355,6 +356,7 @@ namespace AutoFlow
                 #region For debug
                 //foreach (var chunk in dataListChunks)
                 //{
+                //    Console.WriteLine("--------------------------");
                 //    foreach (var tuple in chunk)
                 //    {
                 //        Console.WriteLine($"({tuple.Item1}, {tuple.Item2}, {tuple.Item3}, {tuple.Item4})");
@@ -374,7 +376,7 @@ namespace AutoFlow
             {
                 var worksheet = package.Workbook.Worksheets.Add("output_waveform");
                 FieldLabel(worksheet);
-                int cell_y = 1;
+                int cell_y = 2;
                 for (int list_index = 0; list_index < lists.Count; list_index += 2)
                 {
                     string chartname = "ScatterPlot" + list_index.ToString();
@@ -386,10 +388,10 @@ namespace AutoFlow
                         int tag1_count = lists[list_index + 1].Count;
                         WhiteCells(worksheet, lists, tag0_count, cell_y, list_index);
                         WhiteCells(worksheet, lists, tag1_count, cell_y + tag0_count, list_index + 1);
-                        var measurementA = GetRange(worksheet, "C", cell_y + 1, cell_y + tag0_count + 1);
-                        var measurementB = GetRange(worksheet, "D", cell_y + 1, cell_y + tag0_count + 1);
-                        var simulationA = GetRange(worksheet, "C", cell_y + tag0_count + 1, cell_y + tag0_count + tag1_count + 1);
-                        var simulationB = GetRange(worksheet, "D", cell_y + tag0_count + 1, cell_y + tag0_count + tag1_count + 1);
+                        var measurementA = GetRange(worksheet, "C", cell_y, cell_y + tag0_count - 1);
+                        var measurementB = GetRange(worksheet, "D", cell_y, cell_y + tag0_count - 1);
+                        var simulationA = GetRange(worksheet, "C", cell_y + tag0_count, cell_y + tag0_count + tag1_count - 1);
+                        var simulationB = GetRange(worksheet, "D", cell_y + tag0_count, cell_y + tag0_count + tag1_count - 1);
                         var measurementseries = (ExcelScatterChartSerie)chart.Series.Add(measurementB, measurementA);
                         var simulationseries = (ExcelScatterChartSerie)chart.Series.Add(simulationB, simulationA);
                         measurementseries.Header = "0-量測";

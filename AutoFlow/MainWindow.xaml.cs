@@ -34,6 +34,7 @@ using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using Microsoft.Win32;
 using System.Net.NetworkInformation;
+using Path = System.IO.Path;
 
 namespace AutoFlow
 {
@@ -82,6 +83,10 @@ namespace AutoFlow
             notifyIcon.Visible = true;
             notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(notifyIcon_MouseClick);
             this.StateChanged += new EventHandler(WPFUI_StateChanged);
+            nIconMenuItem1.Index = 0;
+            nIconMenuItem1.Text = "開始";
+            nIconMenuItem1.Click += new System.EventHandler(nIconMenuItem1_Click);
+            nIconMenu.MenuItems.Add(nIconMenuItem1);
             nIconMenuItem2.Index = 0;
             nIconMenuItem2.Text = "擷取螢幕";
             nIconMenuItem2.Click += new System.EventHandler(nIconMenuItem2_Click);
@@ -119,6 +124,10 @@ namespace AutoFlow
             {
                 this.Visibility = Visibility.Hidden;
             }
+        }
+        private void nIconMenuItem1_Click(object sender, System.EventArgs e)
+        {
+            AutoStart();
         }
         private void nIconMenuItem2_Click(object sender, System.EventArgs e)
         {
@@ -190,6 +199,32 @@ namespace AutoFlow
                 }
             };
             Config.Save(Parameter_config);
+        }
+
+        private void LoadStep1WaferConfig(int group_num)
+        {
+            List<Parameter> Parameter_info = Config.Load();
+            switch (Parameter_info[0].Wafer_Type_val)
+            {
+                case "6吋晶圓":
+                    {
+                        Step1Parameter_info = Step1Config.Load(group_num, 0);
+                        WaferPointParameter_info = WaferPointConfig.Load(group_num, 0);
+                        break;
+                    }
+                case "4吋晶圓":
+                    {
+                        Step1Parameter_info = Step1Config.Load(group_num, 1);
+                        WaferPointParameter_info = WaferPointConfig.Load(group_num, 1);
+                        break;
+                    }
+                case "3吋晶圓":
+                    {
+                        Step1Parameter_info = Step1Config.Load(group_num, 2);
+                        WaferPointParameter_info = WaferPointConfig.Load(group_num, 2);
+                        break;
+                    }
+            }
         }
         #endregion
 
@@ -333,6 +368,52 @@ namespace AutoFlow
             {
                 MessageBox.Show("已有一個晶圓點位參數頁面視窗!", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
+        }
+
+        private void AutoStart()
+        {
+            LoadStep1WaferConfig(3);
+            string[] vsm_file = Do.GetFilename(TextBoxDispatcherGetValue(VSM_File_Location), "*.vsm");
+            for (int file = 0; file < vsm_file.Length; file++)
+            {
+                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Open_Text_val), "點選資料夾圖示");
+                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].ChooseVSMPath_Text_val), "選擇vsm路徑");
+                Do.SimulateInputText(TextBoxDispatcherGetValue(VSM_File_Location), "輸入vsm檔路徑");
+                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].VSM_Text_val), "點選開啟檔案類型欄位");
+                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].VSMType_Text_val), "選擇開檔類型vsm");
+                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].InputVSM_Text_val), "點選輸入vsm檔欄位");
+                Do.SimulateInputText(Path.GetFileName(vsm_file[file]), "輸入vsm檔名");
+                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].TurnOn_Text_val), "點選開啟");
+                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].View_Text_val), "點選view");
+                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Display_Text_val), "點選Display");
+                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].OnePane_Text_val), "點選1Pane");
+                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Magnification_Text_val), "點選放大");
+                Thread.Sleep(3000);
+                foreach (var point in WaferPointParameter_info[0].WaferPoint_val)
+                {
+                    Do.SimulateLeftMouseDoubleClick(ConvertWaferCoordStr(point).Item2, "點選Wafer點位");
+                    Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].DTCS_Text_val), "點選DTCS");
+                    Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].OK_Text_val), "點選OK");
+                    Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Save_Text_val), "點選Save");
+                    Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Dat_Text_val), "點選存檔類型欄位");
+                    Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].DatType_Text_val), "選擇儲存類型dat");
+                    Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].InputDat_Text_val), "點選輸入dat檔欄位");
+                    Do.SimulateInputText(Path.GetFileNameWithoutExtension(vsm_file[file]) + ConvertWaferCoordStr(point).Item1, "輸入dat檔名");
+                    Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Archive_Text_val), "點選存檔");
+                    Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].CloseVDSW_Text_val), "關閉VDSW");
+                    Thread.Sleep(100);
+                }
+                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].CloseWafer_Text_val), "關閉Wafer");
+                Do.MoveFileToUpper(VSM_File_Location.Text, Path.Combine(Ref_Fit_Location.Text, "sample_spectrum"), "*dat");
+                Do.RunSoftware(Ref_Fit_Location.Text);
+                if (Do.CheckCSV(Path.Combine(Ref_Fit_Location.Text, "output_waveform.csv"), Path.Combine(Ref_Fit_Location.Text, "output_parameters.csv")))
+                {
+                    Do.DeleteFile(Path.Combine(Ref_Fit_Location.Text, "sample_spectrum"), "*dat");
+                    EH.WaveToScatterChart(Path.Combine(Ref_Fit_Location.Text, "output_waveform.csv"), Path.Combine(Xlsx_File_Location.Text, "output_waveform.xlsx"));
+                }
+                File.Move(Path.Combine(Ref_Fit_Location.Text, "output_waveform.csv"), Path.Combine(Xlsx_File_Location.Text, Path.GetFileNameWithoutExtension(vsm_file[file]) + "_output_waveform.csv"));
+                File.Move(Path.Combine(Ref_Fit_Location.Text, "output_parameters.csv"), Path.Combine(Xlsx_File_Location.Text, Path.GetFileNameWithoutExtension(vsm_file[file]) + "_output_parameters.csv"));
+            };
         }
         #endregion
 
@@ -502,6 +583,8 @@ namespace AutoFlow
         private static Step1Window SWInstance;
         private static WaferWindow WWInstance;
         private bool Model_Type_state = false;
+        List<AutoFlow.StepWindow.Step1Parameter> Step1Parameter_info;
+        List<AutoFlow.StepWindow.WaferPointParameter> WaferPointParameter_info;
         #endregion
 
         #region Main Screen
@@ -511,48 +594,7 @@ namespace AutoFlow
             {
                 case nameof(Start):
                     {
-                        List<AutoFlow.StepWindow.Step1Parameter> Step1Parameter_info = Step1Config.Load(3, 0);
-                        List<AutoFlow.StepWindow.WaferPointParameter> WaferPointParameter_info = WaferPointConfig.Load(3, 0);
-                        string[] vsm_file = Do.GetFilename(TextBoxDispatcherGetValue(VSM_File_Location), "*.vsm");
-                        for (int file = 0; file < vsm_file.Length; file++)
-                        {
-                            Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Open_Text_val), "點選資料夾圖示");
-                            Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].ChooseVSMPath_Text_val), "選擇vsm路徑");
-                            Do.SimulateInputText(TextBoxDispatcherGetValue(VSM_File_Location), "輸入vsm檔路徑");
-                            Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].VSM_Text_val), "點選開啟檔案類型欄位");
-                            Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].VSMType_Text_val), "選擇開檔類型vsm");
-                            Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].InputVSM_Text_val), "點選輸入vsm檔欄位");
-                            Do.SimulateInputText(System.IO.Path.GetFileName(vsm_file[file]), "輸入vsm檔名");
-                            Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].TurnOn_Text_val), "點選開啟");
-                            Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].View_Text_val), "點選view");
-                            Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Display_Text_val), "點選Display");
-                            Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].OnePane_Text_val), "點選1Pane");
-                            Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Magnification_Text_val), "點選放大");
-                            Thread.Sleep(3000);
-                            foreach (var point in WaferPointParameter_info[0].WaferPoint_val)
-                            {
-                                Do.SimulateLeftMouseDoubleClick(ConvertWaferCoordStr(point).Item2, "點選Wafer點位");
-                                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].DTCS_Text_val), "點選DTCS");
-                                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].OK_Text_val), "點選OK");
-                                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Save_Text_val), "點選Save");
-                                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Dat_Text_val), "點選存檔類型欄位");
-                                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].DatType_Text_val), "選擇儲存類型dat");
-                                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].InputDat_Text_val), "點選輸入dat檔欄位");
-                                Do.SimulateInputText(System.IO.Path.GetFileNameWithoutExtension(vsm_file[file]) + ConvertWaferCoordStr(point).Item1, "輸入dat檔名");
-                                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Archive_Text_val), "點選存檔");
-                                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].CloseVDSW_Text_val), "關閉VDSW");
-                                Thread.Sleep(500);
-                            }
-                            Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].CloseWafer_Text_val), "關閉Wafer");
-                            Do.MoveFile(VSM_File_Location.Text, System.IO.Path.Combine(Ref_Fit_Location.Text, "sample_spectrum"), "*dat");
-                            Do.RunSoftware(Ref_Fit_Location.Text);
-                            if (Do.CheckCSV(System.IO.Path.Combine(Ref_Fit_Location.Text, "output_waveform.csv"), System.IO.Path.Combine(Ref_Fit_Location.Text, "output_parameters.csv")))
-                            {
-                                EH.WaveToScatterChart(System.IO.Path.Combine(Ref_Fit_Location.Text, "output_waveform.csv"), System.IO.Path.Combine(Xlsx_File_Location.Text, "output_waveform.xlsx"));
-                            }
-                            //Do.MoveFile(System.IO.Path.Combine(Ref_Fit_Location.Text, "output_waveform.csv"), Xlsx_File_Location.Text, "*csv");
-
-                        };
+                        AutoStart();
                         break;
                     }
                 case nameof(Capture_Screen):
@@ -648,10 +690,6 @@ namespace AutoFlow
         {
             _started = false;
         }
-
-
-
-
         #endregion
 
         #region Combobox SelectionChanged
