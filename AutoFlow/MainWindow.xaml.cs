@@ -46,6 +46,11 @@ namespace AutoFlow
         public string VSM_File_Location_val { get; set; }
         public string Xlsx_File_Location_val { get; set; }
         public string Wafer_Type_val { get; set; }
+        public string Windows_Title_val { get; set; }
+        public string Windows_X_val { get; set; }
+        public string Windows_Y_val { get; set; }
+        public string Windows_Width_val { get; set; }
+        public string Windows_Height_val { get; set; }
     }
     public partial class MainWindow : System.Windows.Window
     {
@@ -182,6 +187,11 @@ namespace AutoFlow
                 VSM_File_Location.Text = Parameter_info[0].VSM_File_Location_val;
                 Xlsx_File_Location.Text = Parameter_info[0].Xlsx_File_Location_val;
                 Wafer_Type.Text = Parameter_info[0].Wafer_Type_val;
+                Windows_Title.Text = Parameter_info[0].Windows_Title_val;
+                Windows_X.Text = Parameter_info[0].Windows_X_val;
+                Windows_Y.Text = Parameter_info[0].Windows_Y_val;
+                Windows_Width.Text = Parameter_info[0].Windows_Width_val;
+                Windows_Height.Text = Parameter_info[0].Windows_Height_val;
             }
         }
 
@@ -195,8 +205,13 @@ namespace AutoFlow
                     Ref_Fit_Location_val = Ref_Fit_Location.Text,
                     VSM_File_Location_val = VSM_File_Location.Text,
                     Xlsx_File_Location_val = Xlsx_File_Location.Text,
-                    Wafer_Type_val = Wafer_Type.Text
-                }
+                    Wafer_Type_val = Wafer_Type.Text,
+                    Windows_Title_val = Windows_Title.Text,
+                    Windows_X_val = Windows_X.Text,
+                    Windows_Y_val = Windows_Y.Text,
+                    Windows_Width_val = Windows_Width.Text,
+                    Windows_Height_val =Windows_Height.Text
+                 }
             };
             Config.Save(Parameter_config);
         }
@@ -625,7 +640,9 @@ namespace AutoFlow
                     }
                 case nameof(Open_Wafer_Point):
                     {
-                        OpenWaferWindow();
+                        //OpenWaferWindow();
+                        //EH.ParameterCSVToList();
+                        EH.ParameterToScatterChart(@"D:\Chimingkuei\repos\Project\AutoFlow\Document\output_parameters.csv", @"D:\Chimingkuei\repos\Project\AutoFlow\Document\test.xlsx");
                         break;
                     }
             }
@@ -670,6 +687,15 @@ namespace AutoFlow
                         open_xlsx_folder_path.Description = "選擇xlsx檔資料夾";
                         open_xlsx_folder_path.ShowDialog();
                         Xlsx_File_Location.Text = open_xlsx_folder_path.SelectedPath;
+                        break;
+                    }
+                case nameof(Set_Windows):
+                    {
+                        int x = Convert.ToInt32(Windows_X.Text);
+                        int y = Convert.ToInt32(Windows_Y.Text);
+                        int w = Convert.ToInt32(Windows_Width.Text);
+                        int h = Convert.ToInt32(Windows_Height.Text);
+                        Do.SetWindowsPosition(Windows_Title.Text, new Tuple<int, int, int, int>(x, y, w, h));
                         break;
                     }
                 case nameof(Save_Config):

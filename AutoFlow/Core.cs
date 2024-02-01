@@ -27,6 +27,7 @@ using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using Newtonsoft.Json;
 using OpenCvSharp.Flann;
+using System.Windows.Media.TextFormatting;
 
 namespace AutoFlow
 {
@@ -65,6 +66,26 @@ namespace AutoFlow
         {
             System.Windows.Forms.SendKeys.SendWait(keys);
         }
+
+        #region Set Windows Position
+        [DllImport("user32.dll")]
+        private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+        private const int SWP_NOSIZE = 0x0001;
+        private const int SWP_NOMOVE = 0x0002;
+        
+        public void SetWindowsPosition(string windows_title, Tuple<int, int ,int, int> position)
+        {
+            IntPtr hWnd = FindWindow(null, windows_title);
+            if (hWnd != IntPtr.Zero)
+            {
+                SetWindowPos(hWnd, IntPtr.Zero, position.Item1, position.Item2, position.Item3, position.Item4, 0);
+            }
+            else
+            {
+                System.Windows.MessageBox.Show($"未找到標題{windows_title}視窗!");
+            }
+        }
+        #endregion
 
         #region Mouse Action
         public void SimulateLeftMouseClick(System.Drawing.Point pos, string annotation = null)
@@ -496,6 +517,145 @@ namespace AutoFlow
             return data;
         }
 
+        //畫output_parameters
+        private string GetFileNameWithoutExtension(string filename)
+        {
+            return Path.GetFileNameWithoutExtension(filename).Split('_')[0];
+        }
 
+        private string GetCsvB2Info(string csvfilepath)
+        {
+            using (StreamReader reader = new StreamReader(csvfilepath))
+            {
+                string headerLine = reader.ReadLine();
+                string secondLine = reader.ReadLine();
+                string line = reader.ReadLine();
+                string[] fields = line.Split(',');
+                return GetFileNameWithoutExtension(fields[1]);
+            }
+            
+        }
+
+        public List<List<Tuple<string, double, double, double>>> ParameterCSVToList(string csvfilepath)
+        {
+            List<List<Tuple<string, double, double, double>>> dataListChunks = new List<List<Tuple<string, double, double, double>>>();
+            if (File.Exists(csvfilepath))
+            {
+                string tmp = GetCsvB2Info(csvfilepath);
+                using (StreamReader reader = new StreamReader(csvfilepath))
+                {
+                    // 跳過標題行
+                    reader.ReadLine();
+                    List<Tuple<string, double, double, double>> currentChunk = new List<Tuple<string, double, double, double>>();
+                    while (!reader.EndOfStream)
+                    {
+                        string line = reader.ReadLine();
+                        string[] fields = line.Split(',');
+                        if (GetFileNameWithoutExtension(fields[1]) == tmp)
+                        {
+                            Tuple<string, double, double, double> rowData = new Tuple<string, double, double, double>(fields[1], Convert.ToDouble(fields[2]), Convert.ToDouble(fields[3]), Convert.ToDouble(fields[4]));
+                            currentChunk.Add(rowData);
+                        }
+                        else
+                        {
+                            dataListChunks.Add(currentChunk);
+                            tmp = GetFileNameWithoutExtension(fields[1]);
+                            currentChunk = new List<Tuple<string, double, double, double>>();
+                            Tuple<string, double, double, double> rowData = new Tuple<string, double, double, double>(fields[1], Convert.ToDouble(fields[2]), Convert.ToDouble(fields[3]), Convert.ToDouble(fields[4]));
+                            currentChunk.Add(rowData);
+                        }
+                    }
+                    dataListChunks.Add(currentChunk);
+                }
+                #region For debug
+                //foreach (var chunk in dataListChunks)
+                //{
+                //    Console.WriteLine("--------------------------");
+                //    foreach (var tuple in chunk)
+                //    {
+                //        Console.WriteLine($"({tuple.Item1}, {tuple.Item2}, {tuple.Item3}, {tuple.Item4})");
+                //    }
+                //}
+                #endregion
+            }
+            return dataListChunks;
+        }
+
+        private void ParameterFieldLabel(ExcelWorksheet worksheet)
+        {
+            worksheet.Cells["A1"].Value = "filename";
+            worksheet.Cells["B1"].Value = "Gp1";
+            worksheet.Cells["C1"].Value = "Gp2";
+            worksheet.Cells["D1"].Value = "Gp3";
+            worksheet.Cells["E1"].Value = "";
+            worksheet.Cells["F1"].Value = "Gp1";
+            worksheet.Cells["G1"].Value = "Gp2";
+            worksheet.Cells["H1"].Value = "Gp3";
+        }
+
+        private void ParameterSetChartStyle(ExcelChart chart, Tuple<int, int, int, int> position, List<List<Tuple<string, double, double, double>>> lists)
+        {
+            chart.SetPosition(position.Item1, position.Item2, position.Item3, position.Item4);
+            chart.SetSize(600, 400);
+            chart.Title.Text = waferID;
+            chart.Legend.Position = eLegendPosition.Right;
+            chart.XAxis.MajorGridlines.Fill.Color = Color.LightGray;
+            chart.YAxis.MajorGridlines.Fill.Color = Color.LightGray;
+        }
+
+        public void ParameterToScatterChart(string csvfilepath, string xlsxfilepath)
+        {
+            List<List<Tuple<string, double, double, double>>> lists = ParameterCSVToList(csvfilepath);
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("output_parameters");
+                ParameterFieldLabel(worksheet);
+                int cell_y = 2;
+                for (int list_index = 0; list_index < lists.Count; list_index ++)
+                {
+                    string chartname = "ScatterPlot" + list_index.ToString();
+                    if (!CheckChartName(worksheet, chartname))
+                    {
+                        ExcelChart chart = worksheet.Drawings.AddChart(chartname, eChartType.XYScatter);
+                        ParameterSetChartStyle(chart, new Tuple<int, int, int, int>(cell_y, 0, 9, 0), lists);
+                        int num = lists[list_index].Count;
+                        for (int cell_index = 0; cell_index < num; cell_index++)
+                        {
+                            worksheet.Cells["A" + (cell_y + cell_index).ToString()].Value = lists[list_index][cell_index].Item1;
+                            worksheet.Cells["B" + (cell_y + cell_index).ToString()].Value = lists[list_index][cell_index].Item2;
+                            worksheet.Cells["C" + (cell_y + cell_index).ToString()].Value = lists[list_index][cell_index].Item3;
+                            worksheet.Cells["D" + (cell_y + cell_index).ToString()].Value = lists[list_index][cell_index].Item4;
+                            worksheet.Cells["E" + (cell_y + cell_index).ToString()].Value = Path.GetFileNameWithoutExtension(lists[list_index][cell_index].Item1).Split('_')[1];
+                            worksheet.Cells["F" + (cell_y + cell_index).ToString()].Value = (lists[list_index][cell_index].Item2 - 1) * 100;
+                            worksheet.Cells["G" + (cell_y + cell_index).ToString()].Value = lists[list_index][cell_index].Item3;
+                            worksheet.Cells["H" + (cell_y + cell_index).ToString()].Value = (lists[list_index][cell_index].Item4 - 1) * 100;
+                        }
+                        //WhiteCells(worksheet, lists, tag0_count, cell_y, list_index);
+                        //WhiteCells(worksheet, lists, tag1_count, cell_y + tag0_count, list_index + 1);
+                        //var measurementA = GetRange(worksheet, "C", cell_y, cell_y + tag0_count - 1);
+                        //var measurementB = GetRange(worksheet, "D", cell_y, cell_y + tag0_count - 1);
+                        //var simulationA = GetRange(worksheet, "C", cell_y + tag0_count, cell_y + tag0_count + tag1_count - 1);
+                        //var simulationB = GetRange(worksheet, "D", cell_y + tag0_count, cell_y + tag0_count + tag1_count - 1);
+                        //var measurementseries = (ExcelScatterChartSerie)chart.Series.Add(measurementB, measurementA);
+                        //var simulationseries = (ExcelScatterChartSerie)chart.Series.Add(simulationB, simulationA);
+                        //measurementseries.Header = "0-量測";
+                        //simulationseries.Header = "模擬";
+                        //cell_y += tag0_count + tag1_count;
+                        //simulationseries.Marker.Style = eMarkerStyle.Star;
+                        cell_y += num;
+                    }
+                }
+                try
+                {
+                    package.SaveAs(new FileInfo(xlsxfilepath));
+                }
+                catch
+                {
+                    Console.WriteLine(xlsxfilepath + " file is opened! Please close that file.");
+                }
+
+            }
+        }
     }
 }
