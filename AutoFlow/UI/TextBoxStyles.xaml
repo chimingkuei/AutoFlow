@@ -261,7 +261,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    <Style x:Key="WindowsTitleTextBox" TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <Style x:Key="VSMWindowsTitleTextBox" TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
         <Style.Resources>
             <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
                 <VisualBrush.Visual>
@@ -290,7 +290,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    <Style x:Key="WindowsXTextBox" TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <Style x:Key="VSMWindowsXTextBox" TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
         <Style.Resources>
             <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
                 <VisualBrush.Visual>
@@ -319,7 +319,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    <Style x:Key="WindowsYTextBox" TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <Style x:Key="VSMWindowsYTextBox" TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
         <Style.Resources>
             <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
                 <VisualBrush.Visual>
@@ -348,7 +348,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    <Style x:Key="WindowsWidthTextBox" TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <Style x:Key="VSMWindowsWidthTextBox" TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
         <Style.Resources>
             <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
                 <VisualBrush.Visual>
@@ -377,7 +377,152 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    <Style x:Key="WindowsHeightTextBox" TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <Style x:Key="VSMWindowsHeightTextBox" TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+        <Style.Resources>
+            <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                <VisualBrush.Visual>
+                    <Label Content="請輸入視窗高度!" Foreground="#FF6DC33C"/>
+                </VisualBrush.Visual>
+            </VisualBrush>
+        </Style.Resources>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border BorderThickness="2" BorderBrush="Blue" CornerRadius="10" Background="{TemplateBinding Background}">
+                        <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center" Background="{x:Null}" BorderThickness="0" IsTabStop="False"></ScrollViewer>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+            </Trigger>
+            <Trigger Property="Text" Value="{x:Null}">
+                <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+            </Trigger>
+            <Trigger Property="IsKeyboardFocused" Value="True">
+                <Setter Property="Background" Value="White" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="DatWindowsTitleTextBox" TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+        <Style.Resources>
+            <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                <VisualBrush.Visual>
+                    <Label Content="請輸入視窗標題!" Foreground="#FF6DC33C"/>
+                </VisualBrush.Visual>
+            </VisualBrush>
+        </Style.Resources>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border BorderThickness="2" BorderBrush="Blue" CornerRadius="10" Background="{TemplateBinding Background}">
+                        <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center" Background="{x:Null}" BorderThickness="0" IsTabStop="False"></ScrollViewer>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+            </Trigger>
+            <Trigger Property="Text" Value="{x:Null}">
+                <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+            </Trigger>
+            <Trigger Property="IsKeyboardFocused" Value="True">
+                <Setter Property="Background" Value="White" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="DatWindowsXTextBox" TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+        <Style.Resources>
+            <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                <VisualBrush.Visual>
+                    <Label Content="請輸入視窗X座標!" Foreground="#FF6DC33C"/>
+                </VisualBrush.Visual>
+            </VisualBrush>
+        </Style.Resources>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border BorderThickness="2" BorderBrush="Blue" CornerRadius="10" Background="{TemplateBinding Background}">
+                        <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center" Background="{x:Null}" BorderThickness="0" IsTabStop="False"></ScrollViewer>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+            </Trigger>
+            <Trigger Property="Text" Value="{x:Null}">
+                <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+            </Trigger>
+            <Trigger Property="IsKeyboardFocused" Value="True">
+                <Setter Property="Background" Value="White" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="DatWindowsYTextBox" TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+        <Style.Resources>
+            <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                <VisualBrush.Visual>
+                    <Label Content="請輸入視窗Y座標!" Foreground="#FF6DC33C"/>
+                </VisualBrush.Visual>
+            </VisualBrush>
+        </Style.Resources>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border BorderThickness="2" BorderBrush="Blue" CornerRadius="10" Background="{TemplateBinding Background}">
+                        <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center" Background="{x:Null}" BorderThickness="0" IsTabStop="False"></ScrollViewer>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+            </Trigger>
+            <Trigger Property="Text" Value="{x:Null}">
+                <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+            </Trigger>
+            <Trigger Property="IsKeyboardFocused" Value="True">
+                <Setter Property="Background" Value="White" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="DatWindowsWidthTextBox" TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+        <Style.Resources>
+            <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                <VisualBrush.Visual>
+                    <Label Content="請輸入視窗寬度!" Foreground="#FF6DC33C"/>
+                </VisualBrush.Visual>
+            </VisualBrush>
+        </Style.Resources>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border BorderThickness="2" BorderBrush="Blue" CornerRadius="10" Background="{TemplateBinding Background}">
+                        <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center" Background="{x:Null}" BorderThickness="0" IsTabStop="False"></ScrollViewer>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+            </Trigger>
+            <Trigger Property="Text" Value="{x:Null}">
+                <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+            </Trigger>
+            <Trigger Property="IsKeyboardFocused" Value="True">
+                <Setter Property="Background" Value="White" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="DatWindowsHeightTextBox" TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
         <Style.Resources>
             <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
                 <VisualBrush.Visual>

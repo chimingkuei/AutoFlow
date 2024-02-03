@@ -46,11 +46,16 @@ namespace AutoFlow
         public string VSM_File_Location_val { get; set; }
         public string Xlsx_File_Location_val { get; set; }
         public string Wafer_Type_val { get; set; }
-        public string Windows_Title_val { get; set; }
-        public string Windows_X_val { get; set; }
-        public string Windows_Y_val { get; set; }
-        public string Windows_Width_val { get; set; }
-        public string Windows_Height_val { get; set; }
+        public string VSM_Windows_Title_val { get; set; }
+        public string VSM_Windows_X_val { get; set; }
+        public string VSM_Windows_Y_val { get; set; }
+        public string VSM_Windows_Width_val { get; set; }
+        public string VSM_Windows_Height_val { get; set; }
+        public string Dat_Windows_Title_val { get; set; }
+        public string Dat_Windows_X_val { get; set; }
+        public string Dat_Windows_Y_val { get; set; }
+        public string Dat_Windows_Width_val { get; set; }
+        public string Dat_Windows_Height_val { get; set; }
     }
     public partial class MainWindow : System.Windows.Window
     {
@@ -187,11 +192,16 @@ namespace AutoFlow
                 VSM_File_Location.Text = Parameter_info[0].VSM_File_Location_val;
                 Xlsx_File_Location.Text = Parameter_info[0].Xlsx_File_Location_val;
                 Wafer_Type.Text = Parameter_info[0].Wafer_Type_val;
-                Windows_Title.Text = Parameter_info[0].Windows_Title_val;
-                Windows_X.Text = Parameter_info[0].Windows_X_val;
-                Windows_Y.Text = Parameter_info[0].Windows_Y_val;
-                Windows_Width.Text = Parameter_info[0].Windows_Width_val;
-                Windows_Height.Text = Parameter_info[0].Windows_Height_val;
+                VSM_Windows_Title.Text = Parameter_info[0].VSM_Windows_Title_val;
+                VSM_Windows_X.Text = Parameter_info[0].VSM_Windows_X_val;
+                VSM_Windows_Y.Text = Parameter_info[0].VSM_Windows_Y_val;
+                VSM_Windows_Width.Text = Parameter_info[0].VSM_Windows_Width_val;
+                VSM_Windows_Height.Text = Parameter_info[0].VSM_Windows_Height_val;
+                Dat_Windows_Title.Text = Parameter_info[0].Dat_Windows_Title_val;
+                Dat_Windows_X.Text = Parameter_info[0].Dat_Windows_X_val;
+                Dat_Windows_Y.Text = Parameter_info[0].Dat_Windows_Y_val;
+                Dat_Windows_Width.Text = Parameter_info[0].Dat_Windows_Width_val;
+                Dat_Windows_Height.Text = Parameter_info[0].Dat_Windows_Height_val;
             }
         }
 
@@ -206,11 +216,16 @@ namespace AutoFlow
                     VSM_File_Location_val = VSM_File_Location.Text,
                     Xlsx_File_Location_val = Xlsx_File_Location.Text,
                     Wafer_Type_val = Wafer_Type.Text,
-                    Windows_Title_val = Windows_Title.Text,
-                    Windows_X_val = Windows_X.Text,
-                    Windows_Y_val = Windows_Y.Text,
-                    Windows_Width_val = Windows_Width.Text,
-                    Windows_Height_val =Windows_Height.Text
+                    VSM_Windows_Title_val = VSM_Windows_Title.Text,
+                    VSM_Windows_X_val = VSM_Windows_X.Text,
+                    VSM_Windows_Y_val = VSM_Windows_Y.Text,
+                    VSM_Windows_Width_val = VSM_Windows_Width.Text,
+                    VSM_Windows_Height_val =VSM_Windows_Height.Text,
+                    Dat_Windows_Title_val = Dat_Windows_Title.Text,
+                    Dat_Windows_X_val = Dat_Windows_X.Text,
+                    Dat_Windows_Y_val = Dat_Windows_Y.Text,
+                    Dat_Windows_Width_val = Dat_Windows_Width.Text,
+                    Dat_Windows_Height_val =Dat_Windows_Height.Text
                  }
             };
             Config.Save(Parameter_config);
@@ -407,6 +422,9 @@ namespace AutoFlow
             for (int file = 0; file < vsm_file.Length; file++)
             {
                 Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Open_Text_val), "點選資料夾圖示");
+                Thread.Sleep(1000);
+                Tuple<int, int, int, int> vsm_dialogue_windows_pos = new Tuple<int, int, int, int>(Convert.ToInt32(VSM_Windows_X.Text), Convert.ToInt32(VSM_Windows_Y.Text), Convert.ToInt32(VSM_Windows_Width.Text), Convert.ToInt32(VSM_Windows_Height.Text));
+                Do.SetWindowsPosition(VSM_Windows_Title.Text, vsm_dialogue_windows_pos);
                 Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].ChooseVSMPath_Text_val), "選擇vsm路徑");
                 Do.SimulateInputText(TextBoxDispatcherGetValue(VSM_File_Location), "輸入vsm檔路徑");
                 Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].VSM_Text_val), "點選開啟檔案類型欄位");
@@ -425,6 +443,9 @@ namespace AutoFlow
                     Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].DTCS_Text_val), "點選DTCS");
                     Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].OK_Text_val), "點選OK");
                     Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Save_Text_val), "點選Save");
+                    Thread.Sleep(1000);
+                    Tuple<int, int, int, int> dat_dialogue_windows_pos = new Tuple<int, int, int, int>(Convert.ToInt32(Dat_Windows_X.Text), Convert.ToInt32(Dat_Windows_Y.Text), Convert.ToInt32(Dat_Windows_Width.Text), Convert.ToInt32(Dat_Windows_Height.Text));
+                    Do.SetWindowsPosition(Dat_Windows_Title.Text, dat_dialogue_windows_pos);
                     Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Dat_Text_val), "點選存檔類型欄位");
                     Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].DatType_Text_val), "選擇儲存類型dat");
                     Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].InputDat_Text_val), "點選輸入dat檔欄位");
@@ -641,7 +662,6 @@ namespace AutoFlow
                 case nameof(Open_Wafer_Point):
                     {
                         //OpenWaferWindow();
-                        //EH.ParameterCSVToList();
                         EH.ParameterToScatterChart(@"D:\Chimingkuei\repos\Project\AutoFlow\Document\output_parameters.csv", @"D:\Chimingkuei\repos\Project\AutoFlow\Document\test.xlsx");
                         break;
                     }
@@ -689,13 +709,22 @@ namespace AutoFlow
                         Xlsx_File_Location.Text = open_xlsx_folder_path.SelectedPath;
                         break;
                     }
-                case nameof(Set_Windows):
+                case nameof(VSM_Set_Windows):
                     {
-                        int x = Convert.ToInt32(Windows_X.Text);
-                        int y = Convert.ToInt32(Windows_Y.Text);
-                        int w = Convert.ToInt32(Windows_Width.Text);
-                        int h = Convert.ToInt32(Windows_Height.Text);
-                        Do.SetWindowsPosition(Windows_Title.Text, new Tuple<int, int, int, int>(x, y, w, h));
+                        int x = Convert.ToInt32(VSM_Windows_X.Text);
+                        int y = Convert.ToInt32(VSM_Windows_Y.Text);
+                        int w = Convert.ToInt32(VSM_Windows_Width.Text);
+                        int h = Convert.ToInt32(VSM_Windows_Height.Text);
+                        Do.SetWindowsPosition(VSM_Windows_Title.Text, new Tuple<int, int, int, int>(x, y, w, h));
+                        break;
+                    }
+                case nameof(Dat_Set_Windows):
+                    {
+                        int x = Convert.ToInt32(Dat_Windows_X.Text);
+                        int y = Convert.ToInt32(Dat_Windows_Y.Text);
+                        int w = Convert.ToInt32(Dat_Windows_Width.Text);
+                        int h = Convert.ToInt32(Dat_Windows_Height.Text);
+                        Do.SetWindowsPosition(Dat_Windows_Title.Text, new Tuple<int, int, int, int>(x, y, w, h));
                         break;
                     }
                 case nameof(Save_Config):

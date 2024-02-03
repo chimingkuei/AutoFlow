@@ -77,7 +77,7 @@
                         <ComboBoxItem>D3-19</ComboBoxItem>
                         <ComboBoxItem>D4-1</ComboBoxItem>
                     </ComboBox>
-                    <WrapPanel Orientation="Horizontal" Margin="34,90,521,70">
+                    <WrapPanel Orientation="Horizontal" Margin="28,86,527,73">
                         <Button x:Name="Open_Setting_File_Path" Style="{StaticResource FileButtonStyle}" Margin="32,13.2,0,0" FontSize="18" Height="51" Width="54" Click="Parameter_Btn_Click"/>
                         <TextBox x:Name="Setting_File_Location" Style="{StaticResource SettingTextBox}" Margin="10,15.4,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="32" Width="210"/>
                         <Button x:Name="Open_Ref_Fit_Folder" Style="{StaticResource FolderButtonStyle}" Margin="32,13.2,0,0" FontSize="18" Background="#FFE6F0FF" BorderThickness="0" Height="51" Width="54" Click="Parameter_Btn_Click"/>
@@ -88,13 +88,31 @@
                         <TextBox x:Name="Xlsx_File_Location" Style="{StaticResource XlsxTextBox}"  Margin="10,25.4,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="32" Width="210"/>
                     </WrapPanel>
                     <Button x:Name="Save_Config" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="403,253,390,93" Content="儲存參數" Click="Parameter_Btn_Click"/>
-                    <WrapPanel Orientation="Horizontal" Margin="530,87,25,73">
-                        <TextBox x:Name="Windows_Title" Style="{StaticResource WindowsTitleTextBox}" Margin="109,18,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
-                        <TextBox x:Name="Windows_X" Style="{StaticResource WindowsXTextBox}" Margin="32.6,18,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
-                        <TextBox x:Name="Windows_Y" Style="{StaticResource WindowsYTextBox}" Margin="32.6,18,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
-                        <TextBox x:Name="Windows_Width" Style="{StaticResource WindowsWidthTextBox}" Margin="32.6,18,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
-                        <TextBox x:Name="Windows_Height" Style="{StaticResource WindowsHeightTextBox}" Margin="32.6,18,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
-                        <Button x:Name="Set_Windows" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="114,18,0,0" Content="設定視窗位置" Click="Parameter_Btn_Click"/>
+                    <WrapPanel Orientation="Horizontal" Margin="536,16,19,9">
+                        <TextBox x:Name="VSM_Windows_Title" Style="{StaticResource VSMWindowsTitleTextBox}" Margin="109,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
+                        <TextBox x:Name="VSM_Windows_X" Style="{StaticResource VSMWindowsXTextBox}" Margin="32.6,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
+                        <TextBox x:Name="VSM_Windows_Y" Style="{StaticResource VSMWindowsYTextBox}" Margin="32.6,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
+                        <TextBox x:Name="VSM_Windows_Width" Style="{StaticResource VSMWindowsWidthTextBox}" Margin="32.6,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
+                        <TextBox x:Name="VSM_Windows_Height" Style="{StaticResource VSMWindowsHeightTextBox}" Margin="32.6,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
+                        <Button x:Name="VSM_Set_Windows" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="114,3,0,0" Click="Parameter_Btn_Click">
+                            <TextBlock TextAlignment="Center">
+                                設定vsm
+                                <LineBreak/>
+                                對話視窗位置
+                            </TextBlock>
+                        </Button>
+                        <TextBox x:Name="Dat_Windows_Title" Style="{StaticResource VSMWindowsTitleTextBox}" Margin="109,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
+                        <TextBox x:Name="Dat_Windows_X" Style="{StaticResource VSMWindowsXTextBox}" Margin="32.6,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
+                        <TextBox x:Name="Dat_Windows_Y" Style="{StaticResource VSMWindowsYTextBox}" Margin="32.6,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
+                        <TextBox x:Name="Dat_Windows_Width" Style="{StaticResource VSMWindowsWidthTextBox}" Margin="32.6,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
+                        <TextBox x:Name="Dat_Windows_Height" Style="{StaticResource VSMWindowsHeightTextBox}" Margin="32.6,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
+                        <Button x:Name="Dat_Set_Windows" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="114,3,0,0" Click="Parameter_Btn_Click">
+                            <TextBlock TextAlignment="Center">
+                                設定dat
+                                <LineBreak/>
+                                對話視窗位置
+                            </TextBlock>
+                        </Button>
                     </WrapPanel>
                 </Grid>
             </TabItem>
