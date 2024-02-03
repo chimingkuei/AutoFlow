@@ -459,10 +459,10 @@ namespace AutoFlow
                 Do.RunSoftware(Ref_Fit_Location.Text);
                 if (Do.CheckCSV(Path.Combine(Ref_Fit_Location.Text, "output_waveform.csv"), Path.Combine(Ref_Fit_Location.Text, "output_parameters.csv")))
                 {
-                    EH.waferID = vsm_file[file];
+                    EH.waferID = Path.GetFileNameWithoutExtension(vsm_file[file]);
                     Do.DeleteFile(Path.Combine(Ref_Fit_Location.Text, "sample_spectrum"), "*dat");
-                    EH.WaveToScatterChart(Path.Combine(Ref_Fit_Location.Text, "output_waveform.csv"), Path.Combine(Xlsx_File_Location.Text, "output_waveform.xlsx"));
-                    EH.ParameterToScatterChart(Path.Combine(Ref_Fit_Location.Text, "output_parameters.csv"), Path.Combine(Xlsx_File_Location.Text, "output_parameters.xlsx"));
+                    EH.WaveToScatterChart(Path.Combine(Ref_Fit_Location.Text, "output_waveform.csv"), Path.Combine(Xlsx_File_Location.Text, Path.GetFileNameWithoutExtension(vsm_file[file]) + "output_waveform.xlsx"));
+                    EH.ParameterToScatterChart(Path.Combine(Ref_Fit_Location.Text, "output_parameters.csv"), Path.Combine(Xlsx_File_Location.Text, Path.GetFileNameWithoutExtension(vsm_file[file]) + "output_parameters.xlsx"));
                 }
                 File.Move(Path.Combine(Ref_Fit_Location.Text, "output_waveform.csv"), Path.Combine(Xlsx_File_Location.Text, Path.GetFileNameWithoutExtension(vsm_file[file]) + "_output_waveform.csv"));
                 File.Move(Path.Combine(Ref_Fit_Location.Text, "output_parameters.csv"), Path.Combine(Xlsx_File_Location.Text, Path.GetFileNameWithoutExtension(vsm_file[file]) + "_output_parameters.csv"));
@@ -662,8 +662,7 @@ namespace AutoFlow
                     }
                 case nameof(Open_Wafer_Point):
                     {
-                        //OpenWaferWindow();
-                        EH.ParameterToScatterChart(@"D:\Chimingkuei\repos\Project\AutoFlow\Document\output_parameters.csv", @"D:\Chimingkuei\repos\Project\AutoFlow\Document\test.xlsx");
+                        OpenWaferWindow();
                         break;
                     }
             }

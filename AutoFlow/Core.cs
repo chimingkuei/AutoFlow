@@ -54,9 +54,9 @@ namespace AutoFlow
 
         #region Set windows position
         [DllImport("user32.dll")]
-        private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
-        private const int SWP_NOSIZE = 0x0001;
-        private const int SWP_NOMOVE = 0x0002;
+        static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+        const int SWP_NOSIZE = 0x0001;
+        const int SWP_NOMOVE = 0x0002;
         public bool SetWindowsPosition(string windows_title, Tuple<int, int ,int, int> position)
         {
             IntPtr hWnd = FindWindow(null, windows_title);
@@ -70,6 +70,24 @@ namespace AutoFlow
                 System.Windows.MessageBox.Show($"未找到標題{windows_title}視窗!", "確認", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
+        }
+        #endregion
+
+        #region Get mouse position
+        [DllImport("user32.dll")]
+        private static extern bool GetCursorPos(out POINT lpPoint);
+        // 定義POINT結構
+        [StructLayout(LayoutKind.Sequential)]
+        public struct POINT
+        {
+            public int X;
+            public int Y;
+        }
+        public void GetMousePosition()
+        {
+            POINT point;
+            GetCursorPos(out point);
+            Console.WriteLine($"Mouse Position - X: {point.X}, Y: {point.Y}");
         }
         #endregion
 
