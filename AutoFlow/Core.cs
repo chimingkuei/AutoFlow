@@ -254,13 +254,6 @@ namespace AutoFlow
 
         public void RunSoftware(string softwarepath)
         {
-            //ProcessStartInfo startInfo = new ProcessStartInfo
-            //{
-            //    FileName = softwarepath,
-            //    UseShellExecute = false,
-            //    Arguments = @"D:\RefFit\"
-            //};
-            //Process.Start(startInfo);
             Process process = new Process();
             process.StartInfo.FileName = "cmd.exe";
             process.StartInfo.UseShellExecute = false;
