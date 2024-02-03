@@ -462,6 +462,7 @@ namespace AutoFlow
                     EH.waferID = vsm_file[file];
                     Do.DeleteFile(Path.Combine(Ref_Fit_Location.Text, "sample_spectrum"), "*dat");
                     EH.WaveToScatterChart(Path.Combine(Ref_Fit_Location.Text, "output_waveform.csv"), Path.Combine(Xlsx_File_Location.Text, "output_waveform.xlsx"));
+                    EH.ParameterToScatterChart(Path.Combine(Ref_Fit_Location.Text, "output_parameters.csv"), Path.Combine(Xlsx_File_Location.Text, "output_parameters.xlsx"));
                 }
                 File.Move(Path.Combine(Ref_Fit_Location.Text, "output_waveform.csv"), Path.Combine(Xlsx_File_Location.Text, Path.GetFileNameWithoutExtension(vsm_file[file]) + "_output_waveform.csv"));
                 File.Move(Path.Combine(Ref_Fit_Location.Text, "output_parameters.csv"), Path.Combine(Xlsx_File_Location.Text, Path.GetFileNameWithoutExtension(vsm_file[file]) + "_output_parameters.csv"));

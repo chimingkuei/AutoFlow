@@ -36,10 +36,10 @@ namespace AutoFlow
     {
         #region Find windows
         [DllImport("user32.dll")]
-        static extern IntPtr FindWindows(string lpClassName, string lpWindowName);
+        static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
         public IntPtr PackFindWindows(string lpClassName, string lpWindowName)
         {
-            return FindWindows(lpClassName, lpWindowName);
+            return FindWindow(lpClassName, lpWindowName);
         }
         #endregion
 
@@ -59,7 +59,7 @@ namespace AutoFlow
         private const int SWP_NOMOVE = 0x0002;
         public bool SetWindowsPosition(string windows_title, Tuple<int, int ,int, int> position)
         {
-            IntPtr hWnd = FindWindows(null, windows_title);
+            IntPtr hWnd = FindWindow(null, windows_title);
             if (hWnd != IntPtr.Zero)
             {
                 SetWindowPos(hWnd, IntPtr.Zero, position.Item1, position.Item2, position.Item3, position.Item4, 0);
