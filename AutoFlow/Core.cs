@@ -279,6 +279,7 @@ namespace AutoFlow
     {
         public string waferID { get; set; }
 
+        #region  Generate output_waveform.xlsx
         private Dictionary<string, int> GetTupleExtremum(List<List<Tuple<string, string, double, double>>> lists)
         {
             double XmaxTuple0 = lists.SelectMany(innerList => innerList).Max(tuple => tuple.Item3);
@@ -433,95 +434,13 @@ namespace AutoFlow
 
             }
         }
+        #endregion
 
-        public string ConvertWaferPointJsonFormat(string[] fields)
-        {
-            return "(" + fields[0] + "," + fields[1] + ")" + "," + "(" + fields[2] + "," + fields[3] + ")";
-        }
-
-        public List<string> ReadCsv(string csvfilepath, Func<string[], string> fun)
-        {
-            List<string> data = new List<string>();
-            if (!string.IsNullOrEmpty(csvfilepath))
-            {
-                if (File.Exists(csvfilepath))
-                {
-                    using (StreamReader reader = new StreamReader(csvfilepath))
-                    {
-                        reader.ReadLine();
-                        while (!reader.EndOfStream)
-                        {
-                            string line = reader.ReadLine();
-                            string[] fields = line.Split(',');
-                            data.Add(fun(fields));
-                        }
-                    }
-                }
-                else
-                {
-                    System.Windows.MessageBox.Show("晶圓點位csv檔不存在!", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
-            }
-            else
-            {
-                System.Windows.MessageBox.Show("請輸入晶圓點位csv檔位置!", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
-            return data;
-        }
-
-        public List<string> ConvertScreenCoordinate(string csvfilepath, Tuple<int, int> origin_screen_index)
-        {
-            List<string> data = new List<string>();
-            data.Add("X,Y,Screen X,Screen Y");
-            if (!string.IsNullOrEmpty(csvfilepath))
-            {
-                if (File.Exists(csvfilepath))
-                {
-                    using (StreamReader reader = new StreamReader(csvfilepath))
-                    {
-                        reader.ReadLine();
-                        while (!reader.EndOfStream)
-                        {
-                            string line = reader.ReadLine();
-                            string[] fields = line.Split(',');
-                            string x = Math.Round(origin_screen_index.Item1 + Convert.ToInt32(fields[0]) * 5.2).ToString();
-                            string y = Math.Round(origin_screen_index.Item2 - Convert.ToInt32(fields[1]) * 5.2).ToString();
-                            data.Add(fields[0] + "," + fields[1] + "," + x + "," + y);
-                        }
-                    }
-                    string[] columnData = data.ToArray();
-                    using (StreamWriter writer = new StreamWriter(csvfilepath))
-                    {
-                        for (int i = 0; i < columnData.Length; i++)
-                        {
-                            string line = columnData[i];
-                            if (i < columnData.Length - 1)
-                            {
-                                writer.WriteLine(line);
-                            }
-                            else
-                            {
-                                writer.Write(line);
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    System.Windows.MessageBox.Show("晶圓點位csv檔不存在!", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
-            }
-            else
-            {
-                System.Windows.MessageBox.Show("請輸入晶圓點位csv檔位置!", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
-            return data;
-        }
-
-        //畫output_parameters
+        #region Generate output_parameters.xlsx
         private string GetFileNameWithoutExtension(string filename)
         {
-            return Path.GetFileNameWithoutExtension(filename).Split('_')[0];
+            string str = Path.GetFileNameWithoutExtension(filename).Split('_')[0];
+            return str.Substring(0, str.Length - 1);
         }
 
         private string ModifyCoordinate(string filename)
@@ -673,6 +592,91 @@ namespace AutoFlow
                 }
 
             }
+        }
+        #endregion
+
+        public string ConvertWaferPointJsonFormat(string[] fields)
+        {
+            return "(" + fields[0] + "," + fields[1] + ")" + "," + "(" + fields[2] + "," + fields[3] + ")";
+        }
+
+        public List<string> ReadCsv(string csvfilepath, Func<string[], string> fun)
+        {
+            List<string> data = new List<string>();
+            if (!string.IsNullOrEmpty(csvfilepath))
+            {
+                if (File.Exists(csvfilepath))
+                {
+                    using (StreamReader reader = new StreamReader(csvfilepath))
+                    {
+                        reader.ReadLine();
+                        while (!reader.EndOfStream)
+                        {
+                            string line = reader.ReadLine();
+                            string[] fields = line.Split(',');
+                            data.Add(fun(fields));
+                        }
+                    }
+                }
+                else
+                {
+                    System.Windows.MessageBox.Show("晶圓點位csv檔不存在!", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            else
+            {
+                System.Windows.MessageBox.Show("請輸入晶圓點位csv檔位置!", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            return data;
+        }
+
+        public List<string> ConvertScreenCoordinate(string csvfilepath, Tuple<int, int> origin_screen_index)
+        {
+            List<string> data = new List<string>();
+            data.Add("X,Y,Screen X,Screen Y");
+            if (!string.IsNullOrEmpty(csvfilepath))
+            {
+                if (File.Exists(csvfilepath))
+                {
+                    using (StreamReader reader = new StreamReader(csvfilepath))
+                    {
+                        reader.ReadLine();
+                        while (!reader.EndOfStream)
+                        {
+                            string line = reader.ReadLine();
+                            string[] fields = line.Split(',');
+                            string x = Math.Round(origin_screen_index.Item1 + Convert.ToInt32(fields[0]) * 5.2).ToString();
+                            string y = Math.Round(origin_screen_index.Item2 - Convert.ToInt32(fields[1]) * 5.2).ToString();
+                            data.Add(fields[0] + "," + fields[1] + "," + x + "," + y);
+                        }
+                    }
+                    string[] columnData = data.ToArray();
+                    using (StreamWriter writer = new StreamWriter(csvfilepath))
+                    {
+                        for (int i = 0; i < columnData.Length; i++)
+                        {
+                            string line = columnData[i];
+                            if (i < columnData.Length - 1)
+                            {
+                                writer.WriteLine(line);
+                            }
+                            else
+                            {
+                                writer.Write(line);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    System.Windows.MessageBox.Show("晶圓點位csv檔不存在!", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            else
+            {
+                System.Windows.MessageBox.Show("請輸入晶圓點位csv檔位置!", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            return data;
         }
     }
 }
