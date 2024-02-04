@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:AutoFlow.StepWindow"
         mc:Ignorable="d"
         ResizeMode="CanMinimize"
@@ -26,8 +27,8 @@
         </Button>
         <GroupBox Style="{StaticResource BaseGroupBox}" Margin="55,162,256,60" Header="點位鼠標測試" FontSize="22" Foreground="Black" Background="Teal">
             <Grid Margin="-10,-7,-9,-11">
-                <TextBox x:Name="CoordX" Style="{StaticResource XTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="32,26,147,95" FontSize="12"/>
-                <TextBox x:Name="CoordY" Style="{StaticResource YTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="32,87,147,35" FontSize="12"/>
+                <xctk:IntegerUpDown x:Name="CoordX" Margin="32,26,147,95" Minimum="0" Maximum="1920" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入X座標" HorizontalContentAlignment="Center"/>
+                <xctk:IntegerUpDown x:Name="CoordY" Margin="32,87,147,35" Minimum="0" Maximum="1080" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入Y座標" HorizontalContentAlignment="Center"/>
                 <Button x:Name="Move_Mouse" Style="{StaticResource CircleButton}" Margin="154,31,32,39" Content="移動滑鼠" FontSize="12" Click="Main_Btn_Click"/>
             </Grid>
         </GroupBox>

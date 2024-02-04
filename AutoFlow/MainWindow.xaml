@@ -88,25 +88,25 @@
                         <TextBox x:Name="Xlsx_File_Location" Style="{StaticResource XlsxTextBox}"  Margin="10,25.4,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="32" Width="210"/>
                     </WrapPanel>
                     <Button x:Name="Save_Config" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="403,253,390,93" Content="儲存參數" Click="Parameter_Btn_Click"/>
-                    <WrapPanel Orientation="Horizontal" Margin="536,16,19,9">
-                        <TextBox x:Name="VSM_Windows_Title" Style="{StaticResource VSMWindowsTitleTextBox}" Margin="109,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
-                        <TextBox x:Name="VSM_Windows_X" Style="{StaticResource VSMWindowsXTextBox}" Margin="32.6,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
-                        <TextBox x:Name="VSM_Windows_Y" Style="{StaticResource VSMWindowsYTextBox}" Margin="32.6,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
-                        <TextBox x:Name="VSM_Windows_Width" Style="{StaticResource VSMWindowsWidthTextBox}" Margin="32.6,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
-                        <TextBox x:Name="VSM_Windows_Height" Style="{StaticResource VSMWindowsHeightTextBox}" Margin="32.6,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
-                        <Button x:Name="VSM_Set_Windows" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="114,3,0,0" Click="Parameter_Btn_Click">
+                    <WrapPanel Orientation="Horizontal" Margin="558,15,57,10">
+                        <TextBox x:Name="VSM_Windows_Title" Style="{StaticResource VSMWindowsTitleTextBox}" Margin="79,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
+                        <xctk:IntegerUpDown x:Name="VSM_Windows_X" Margin="32.6,3,0,0" Minimum="0" Maximum="1920" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入X座標" HorizontalContentAlignment="Center"/>
+                        <xctk:IntegerUpDown x:Name="VSM_Windows_Y" Margin="32.6,3,0,0" Minimum="0" Maximum="1080" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入Y座標" HorizontalContentAlignment="Center"/>
+                        <xctk:IntegerUpDown x:Name="VSM_Windows_Width" Margin="32.6,3,0,0" Minimum="0" Maximum="1920" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入寬度" HorizontalContentAlignment="Center"/>
+                        <xctk:IntegerUpDown x:Name="VSM_Windows_Height" Margin="32.6,3,0,0" Minimum="0" Maximum="1080" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入長度" HorizontalContentAlignment="Center"/>
+                        <Button x:Name="VSM_Set_Windows" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="89,3,0,0" Click="Parameter_Btn_Click">
                             <TextBlock TextAlignment="Center">
                                 設定vsm
                                 <LineBreak/>
                                 對話視窗位置
                             </TextBlock>
                         </Button>
-                        <TextBox x:Name="Dat_Windows_Title" Style="{StaticResource VSMWindowsTitleTextBox}" Margin="109,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
-                        <TextBox x:Name="Dat_Windows_X" Style="{StaticResource VSMWindowsXTextBox}" Margin="32.6,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
-                        <TextBox x:Name="Dat_Windows_Y" Style="{StaticResource VSMWindowsYTextBox}" Margin="32.6,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
-                        <TextBox x:Name="Dat_Windows_Width" Style="{StaticResource VSMWindowsWidthTextBox}" Margin="32.6,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
-                        <TextBox x:Name="Dat_Windows_Height" Style="{StaticResource VSMWindowsHeightTextBox}" Margin="32.6,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
-                        <Button x:Name="Dat_Set_Windows" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="114,3,0,0" Click="Parameter_Btn_Click">
+                        <TextBox x:Name="Dat_Windows_Title" Style="{StaticResource VSMWindowsTitleTextBox}" Margin="79,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
+                        <xctk:IntegerUpDown x:Name="Dat_Windows_X" Margin="32.6,3,0,0" Minimum="0" Maximum="1920" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入X座標" HorizontalContentAlignment="Center"/>
+                        <xctk:IntegerUpDown x:Name="Dat_Windows_Y" Margin="32.6,3,0,0" Minimum="0" Maximum="1080" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入Y座標" HorizontalContentAlignment="Center"/>
+                        <xctk:IntegerUpDown x:Name="Dat_Windows_Width" Margin="32.6,3,0,0" Minimum="0" Maximum="1920" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入寬度" HorizontalContentAlignment="Center"/>
+                        <xctk:IntegerUpDown x:Name="Dat_Windows_Height" Margin="32.6,3,0,0" Minimum="0" Maximum="1080" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入長度" HorizontalContentAlignment="Center"/>
+                        <Button x:Name="Dat_Set_Windows" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="89,3,0,0" Click="Parameter_Btn_Click">
                             <TextBlock TextAlignment="Center">
                                 設定dat
                                 <LineBreak/>
