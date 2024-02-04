@@ -29,6 +29,7 @@ using Newtonsoft.Json;
 using OpenCvSharp.Flann;
 using System.Windows.Media.TextFormatting;
 using System.Collections;
+using System.Text.RegularExpressions;
 
 namespace AutoFlow
 {
@@ -91,6 +92,21 @@ namespace AutoFlow
         }
         #endregion
 
+        #region Coordinate Format Conversion
+        private System.Drawing.Point ConvertCoordXY(string coord_str)
+        {
+            Match match = Regex.Match(coord_str, @"\((\d+),(\d+)\)");
+            return new System.Drawing.Point(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
+        }
+
+        public Tuple<string, string> ConvertWaferCoordStr(string coord_str)
+        {
+            string wafer_coord = "_X" + coord_str.Split(',')[0].Trim('(') + "_Y" + coord_str.Split(',')[1].Trim(')');
+            string wafer_screen_coord = "\"" + coord_str.Split(',')[2] + "," + coord_str.Split(',')[3] + "\"";
+            return new Tuple<string, string>(wafer_coord, wafer_screen_coord);
+        }
+        #endregion
+
         #region Mouse action
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -102,16 +118,18 @@ namespace AutoFlow
         const uint MOUSEEVENTF_LEFTUP = 0x0004;
         const uint MOUSEEVENTF_RIGHTDOWN = 0x0008;
         const uint MOUSEEVENTF_RIGHTUP = 0x0010;
-        public void SimulateLeftMouseClick(System.Drawing.Point pos, string annotation = null)
+        public void SimulateLeftMouseClick(string coord_str, string annotation = null)
         {
+            System.Drawing.Point pos = ConvertCoordXY(coord_str);
             SetCursorPos(pos.X, pos.Y);
             mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, IntPtr.Zero);
             Thread.Sleep(100);
             mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, IntPtr.Zero);
         }
 
-        public void SimulateLeftMouseDoubleClick(System.Drawing.Point pos, string annotation = null)
+        public void SimulateLeftMouseDoubleClick(string coord_str, string annotation = null)
         {
+            System.Drawing.Point pos = ConvertCoordXY(coord_str);
             SetCursorPos(pos.X, pos.Y);
             mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, IntPtr.Zero);
             Thread.Sleep(100);
@@ -122,16 +140,18 @@ namespace AutoFlow
             mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, IntPtr.Zero);
         }
 
-        public void SimulateRightMouseClick(System.Drawing.Point pos, string annotation = null)
+        public void SimulateRightMouseClick(string coord_str, string annotation = null)
         {
+            System.Drawing.Point pos = ConvertCoordXY(coord_str);
             SetCursorPos(pos.X, pos.Y);
             mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, IntPtr.Zero);
             Thread.Sleep(100);
             mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, IntPtr.Zero);
         }
 
-        public void SimulateRightMouseDoubleClick(System.Drawing.Point pos, string annotation = null)
+        public void SimulateRightMouseDoubleClick(string coord_str, string annotation = null)
         {
+            System.Drawing.Point pos = ConvertCoordXY(coord_str);
             SetCursorPos(pos.X, pos.Y);
             mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, IntPtr.Zero);
             Thread.Sleep(100);

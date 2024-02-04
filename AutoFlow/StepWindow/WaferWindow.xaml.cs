@@ -162,11 +162,10 @@ namespace AutoFlow.StepWindow
                     {
                         if (!string.IsNullOrEmpty(CoordX.Text))
                         {
-                            if (!string.IsNullOrEmpty(CoordX.Text))
+                            if (!string.IsNullOrEmpty(CoordY.Text))
                             {
-                                int x = Convert.ToInt32(CoordX.Text);
-                                int y = Convert.ToInt32(CoordY.Text);
-                                Do.SimulateLeftMouseClick(new System.Drawing.Point(x, y));
+                                string coord = "\"(" + CoordX.Text + "," + CoordY.Text + ")\"";
+                                Do.SimulateLeftMouseClick(coord);
                             }
                             else
                             {

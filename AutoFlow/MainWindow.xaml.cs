@@ -164,6 +164,16 @@ namespace AutoFlow
             return name;
 
         }
+
+        public int IntegerUpDownDispatcherGetValue(Xceed.Wpf.Toolkit.IntegerUpDown control)
+        {
+            int value = new int();
+            this.Dispatcher.Invoke(() =>
+            {
+                value = Convert.ToInt32(control.Text);
+            });
+            return value;
+        }
         #endregion
 
         #region GetWindowRect
@@ -362,19 +372,6 @@ namespace AutoFlow
                 return "(0,0)";
             }
         }
-
-        private System.Drawing.Point ConvertCoordXY(string coord_str)
-        {
-            Match match = Regex.Match(coord_str, @"\((\d+),(\d+)\)");  
-            return new System.Drawing.Point(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
-        }
-
-        private Tuple<string, System.Drawing.Point> ConvertWaferCoordStr(string coord_str)
-        {
-            string wafer_coord = "_X" + coord_str.Split(',')[0].Trim('(') + "_Y" + coord_str.Split(',')[1].Trim(')');
-            string wafer_screen_coord = "\"" + coord_str.Split(',')[2] + "," + coord_str.Split(',')[3] + "\"";
-            return new Tuple<string, System.Drawing.Point>(wafer_coord, ConvertCoordXY(wafer_screen_coord));
-        }
         #endregion
 
         #region Action
@@ -421,40 +418,41 @@ namespace AutoFlow
             string[] vsm_file = Do.GetFilename(TextBoxDispatcherGetValue(VSM_File_Location), "*.vsm");
             for (int file = 0; file < vsm_file.Length; file++)
             {
-                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Open_Text_val), "點選資料夾圖示");
+                Do.SimulateLeftMouseClick(Step1Parameter_info[0].Open_Text_val, "點選資料夾圖示");
                 Thread.Sleep(1000);
                 Tuple<int, int, int, int> vsm_dialogue_windows_pos = new Tuple<int, int, int, int>(Convert.ToInt32(VSM_Windows_X.Text), Convert.ToInt32(VSM_Windows_Y.Text), Convert.ToInt32(VSM_Windows_Width.Text), Convert.ToInt32(VSM_Windows_Height.Text));
                 Do.SetWindowsPosition(VSM_Windows_Title.Text, vsm_dialogue_windows_pos);
-                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].ChooseVSMPath_Text_val), "選擇vsm路徑");
+                Do.SimulateLeftMouseClick(Step1Parameter_info[0].ChooseVSMPath_Text_val, "選擇vsm路徑");
                 Do.SimulateInputText(TextBoxDispatcherGetValue(VSM_File_Location), "輸入vsm檔路徑");
-                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].VSM_Text_val), "點選開啟檔案類型欄位");
-                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].VSMType_Text_val), "選擇開檔類型vsm");
-                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].InputVSM_Text_val), "點選輸入vsm檔欄位");
+                Do.SimulateLeftMouseClick(Step1Parameter_info[0].VSM_Text_val, "點選開啟檔案類型欄位");
+                Do.SimulateLeftMouseClick(Step1Parameter_info[0].VSMType_Text_val, "選擇開檔類型vsm");
+                Do.SimulateLeftMouseClick(Step1Parameter_info[0].InputVSM_Text_val, "點選輸入vsm檔欄位");
                 Do.SimulateInputText(Path.GetFileName(vsm_file[file]), "輸入vsm檔名");
-                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].TurnOn_Text_val), "點選開啟");
-                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].View_Text_val), "點選view");
-                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Display_Text_val), "點選Display");
-                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].OnePane_Text_val), "點選1Pane");
-                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Magnification_Text_val), "點選放大");
+                Do.SimulateLeftMouseClick(Step1Parameter_info[0].TurnOn_Text_val, "點選開啟");
+                Do.SimulateLeftMouseClick(Step1Parameter_info[0].View_Text_val, "點選view");
+                Do.SimulateLeftMouseClick(Step1Parameter_info[0].Display_Text_val, "點選Display");
+                Do.SimulateLeftMouseClick(Step1Parameter_info[0].OnePane_Text_val, "點選1Pane");
+                Do.SimulateLeftMouseClick(Step1Parameter_info[0].Magnification_Text_val, "點選放大");
                 Thread.Sleep(3000);
                 foreach (var point in WaferPointParameter_info[0].WaferPoint_val)
                 {
-                    Do.SimulateLeftMouseDoubleClick(ConvertWaferCoordStr(point).Item2, "點選Wafer點位");
-                    Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].DTCS_Text_val), "點選DTCS");
-                    Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].OK_Text_val), "點選OK");
-                    Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Save_Text_val), "點選Save");
+                    Do.ConvertWaferCoordStr(point);
+                    Do.SimulateLeftMouseDoubleClick(Do.ConvertWaferCoordStr(point).Item2, "點選Wafer點位");
+                    Do.SimulateLeftMouseClick(Step1Parameter_info[0].DTCS_Text_val, "點選DTCS");
+                    Do.SimulateLeftMouseClick(Step1Parameter_info[0].OK_Text_val, "點選OK");
+                    Do.SimulateLeftMouseClick(Step1Parameter_info[0].Save_Text_val, "點選Save");
                     Thread.Sleep(1000);
                     Tuple<int, int, int, int> dat_dialogue_windows_pos = new Tuple<int, int, int, int>(Convert.ToInt32(Dat_Windows_X.Text), Convert.ToInt32(Dat_Windows_Y.Text), Convert.ToInt32(Dat_Windows_Width.Text), Convert.ToInt32(Dat_Windows_Height.Text));
                     Do.SetWindowsPosition(Dat_Windows_Title.Text, dat_dialogue_windows_pos);
-                    Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Dat_Text_val), "點選存檔類型欄位");
-                    Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].DatType_Text_val), "選擇儲存類型dat");
-                    Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].InputDat_Text_val), "點選輸入dat檔欄位");
-                    Do.SimulateInputText(Path.GetFileNameWithoutExtension(vsm_file[file]) + ConvertWaferCoordStr(point).Item1, "輸入dat檔名");
-                    Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].Archive_Text_val), "點選存檔");
-                    Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].CloseVDSW_Text_val), "關閉VDSW");
+                    Do.SimulateLeftMouseClick(Step1Parameter_info[0].Dat_Text_val, "點選存檔類型欄位");
+                    Do.SimulateLeftMouseClick(Step1Parameter_info[0].DatType_Text_val, "選擇儲存類型dat");
+                    Do.SimulateLeftMouseClick(Step1Parameter_info[0].InputDat_Text_val, "點選輸入dat檔欄位");
+                    Do.SimulateInputText(Path.GetFileNameWithoutExtension(vsm_file[file]) + Do.ConvertWaferCoordStr(point).Item1, "輸入dat檔名");
+                    Do.SimulateLeftMouseClick(Step1Parameter_info[0].Archive_Text_val, "點選存檔");
+                    Do.SimulateLeftMouseClick(Step1Parameter_info[0].CloseVDSW_Text_val, "關閉VDSW");
                     Thread.Sleep(100);
                 }
-                Do.SimulateLeftMouseClick(ConvertCoordXY(Step1Parameter_info[0].CloseWafer_Text_val), "關閉Wafer");
+                Do.SimulateLeftMouseClick(Step1Parameter_info[0].CloseWafer_Text_val, "關閉Wafer");
                 Do.MoveFileToUpper(VSM_File_Location.Text, Path.Combine(Ref_Fit_Location.Text, "sample_spectrum"), "*dat");
                 Do.RunSoftware(Ref_Fit_Location.Text);
                 if (Do.CheckCSV(Path.Combine(Ref_Fit_Location.Text, "output_waveform.csv"), Path.Combine(Ref_Fit_Location.Text, "output_parameters.csv")))
