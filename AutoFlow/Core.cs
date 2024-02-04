@@ -93,7 +93,21 @@ namespace AutoFlow
         #endregion
 
         #region Coordinate Format Conversion
-        private System.Drawing.Point ConvertCoordXY(string coord_str)
+        public string ConvertCoordStr(System.Windows.Point point, System.Windows.Controls.Image display_image)
+        {
+            if (point != new System.Windows.Point(0, 0))
+            {
+                string x = Convert.ToInt32(point.X / display_image.ActualWidth * 1920).ToString();
+                string y = Convert.ToInt32(point.Y / display_image.ActualHeight * 1080).ToString();
+                return "(" + x + "," + y + ")";
+            }
+            else
+            {
+                return "(0,0)";
+            }
+        }
+
+        public System.Drawing.Point ConvertCoordXY(string coord_str)
         {
             Match match = Regex.Match(coord_str, @"\((\d+),(\d+)\)");
             return new System.Drawing.Point(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));

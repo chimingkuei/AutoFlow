@@ -358,22 +358,6 @@ namespace AutoFlow
         }
         #endregion
 
-        #region Coordinate Format Conversion
-        private string ConvertCoordStr(System.Windows.Point point , System.Windows.Controls.Image display_image)
-        {
-            if (point!=new System.Windows.Point(0,0))
-            {
-                string x = Convert.ToInt32(point.X / display_image.ActualWidth * 1920).ToString();
-                string y = Convert.ToInt32(point.Y / display_image.ActualHeight * 1080).ToString();
-                return "(" + x + "," + y + ")";
-            }
-            else
-            {
-                return "(0,0)";
-            }
-        }
-        #endregion
-
         #region Action
         private static bool IsStep1WindowVisible(Step1Window window)
         {
@@ -474,140 +458,140 @@ namespace AutoFlow
             {
                 if (val == true)
                 {
-                    Step1Data.Step1_data1 = ConvertCoordStr(_downPoint, Display_Image);
+                    Step1Data.Step1_data1 = Do.ConvertCoordStr(_downPoint, Display_Image);
                 }
             };
             Step1Data.CheckSendValueEventHandler2 += (val) =>
             {
                 if (val == true)
                 {
-                    Step1Data.Step1_data2 = ConvertCoordStr(_downPoint, Display_Image);
+                    Step1Data.Step1_data2 = Do.ConvertCoordStr(_downPoint, Display_Image);
                 }
             };
             Step1Data.CheckSendValueEventHandler3 += (val) =>
             {
                 if (val == true)
                 {
-                    Step1Data.Step1_data3 = ConvertCoordStr(_downPoint, Display_Image);
+                    Step1Data.Step1_data3 = Do.ConvertCoordStr(_downPoint, Display_Image);
                 }
             };
             Step1Data.CheckSendValueEventHandler4 += (val) =>
             {
                 if (val == true)
                 {
-                    Step1Data.Step1_data4 = ConvertCoordStr(_downPoint, Display_Image);
+                    Step1Data.Step1_data4 = Do.ConvertCoordStr(_downPoint, Display_Image);
                 }
             };
             Step1Data.CheckSendValueEventHandler5 += (val) =>
             {
                 if (val == true)
                 {
-                    Step1Data.Step1_data5 = ConvertCoordStr(_downPoint, Display_Image);
+                    Step1Data.Step1_data5 = Do.ConvertCoordStr(_downPoint, Display_Image);
                 }
             };
             Step1Data.CheckSendValueEventHandler6 += (val) =>
             {
                 if (val == true)
                 {
-                    Step1Data.Step1_data6 = ConvertCoordStr(_downPoint, Display_Image);
+                    Step1Data.Step1_data6 = Do.ConvertCoordStr(_downPoint, Display_Image);
                 }
             };
             Step1Data.CheckSendValueEventHandler7 += (val) =>
             {
                 if (val == true)
                 {
-                    Step1Data.Step1_data7 = ConvertCoordStr(_downPoint, Display_Image);
+                    Step1Data.Step1_data7 = Do.ConvertCoordStr(_downPoint, Display_Image);
                 }
             };
             Step1Data.CheckSendValueEventHandler8 += (val) =>
             {
                 if (val == true)
                 {
-                    Step1Data.Step1_data8 = ConvertCoordStr(_downPoint, Display_Image);
+                    Step1Data.Step1_data8 = Do.ConvertCoordStr(_downPoint, Display_Image);
                 }
             };
             Step1Data.CheckSendValueEventHandler9 += (val) =>
             {
                 if (val == true)
                 {
-                    Step1Data.Step1_data9 = ConvertCoordStr(_downPoint, Display_Image);
+                    Step1Data.Step1_data9 = Do.ConvertCoordStr(_downPoint, Display_Image);
                 }
             };
             Step1Data.CheckSendValueEventHandler10 += (val) =>
             {
                 if (val == true)
                 {
-                    Step1Data.Step1_data10 = ConvertCoordStr(_downPoint, Display_Image);
+                    Step1Data.Step1_data10 = Do.ConvertCoordStr(_downPoint, Display_Image);
                 }
             };
             Step1Data.CheckSendValueEventHandler11 += (val) =>
             {
                 if (val == true)
                 {
-                    Step1Data.Step1_data11 = ConvertCoordStr(_downPoint, Display_Image);
+                    Step1Data.Step1_data11 = Do.ConvertCoordStr(_downPoint, Display_Image);
                 }
             };
             Step1Data.CheckSendValueEventHandler12 += (val) =>
             {
                 if (val == true)
                 {
-                    Step1Data.Step1_data12 = ConvertCoordStr(_downPoint, Display_Image);
+                    Step1Data.Step1_data12 = Do.ConvertCoordStr(_downPoint, Display_Image);
                 }
             };
             Step1Data.CheckSendValueEventHandler13 += (val) =>
             {
                 if (val == true)
                 {
-                    Step1Data.Step1_data13 = ConvertCoordStr(_downPoint, Display_Image);
+                    Step1Data.Step1_data13 = Do.ConvertCoordStr(_downPoint, Display_Image);
                 }
             };
             Step1Data.CheckSendValueEventHandler14 += (val) =>
             {
                 if (val == true)
                 {
-                    Step1Data.Step1_data14 = ConvertCoordStr(_downPoint, Display_Image);
+                    Step1Data.Step1_data14 = Do.ConvertCoordStr(_downPoint, Display_Image);
                 }
             };
             Step1Data.CheckSendValueEventHandler15 += (val) =>
             {
                 if (val == true)
                 {
-                    Step1Data.Step1_data15 = ConvertCoordStr(_downPoint, Display_Image);
+                    Step1Data.Step1_data15 = Do.ConvertCoordStr(_downPoint, Display_Image);
                 }
             };
             Step1Data.CheckSendValueEventHandler16 += (val) =>
             {
                 if (val == true)
                 {
-                    Step1Data.Step1_data16 = ConvertCoordStr(_downPoint, Display_Image);
+                    Step1Data.Step1_data16 = Do.ConvertCoordStr(_downPoint, Display_Image);
                 }
             };
             Step1Data.CheckSendValueEventHandler17 += (val) =>
             {
                 if (val == true)
                 {
-                    Step1Data.Step1_data17 = ConvertCoordStr(_downPoint, Display_Image);
+                    Step1Data.Step1_data17 = Do.ConvertCoordStr(_downPoint, Display_Image);
                 }
             };
             Step1Data.CheckSendValueEventHandler18 += (val) =>
             {
                 if (val == true)
                 {
-                    Step1Data.Step1_data18 = ConvertCoordStr(_downPoint, Display_Image);
+                    Step1Data.Step1_data18 = Do.ConvertCoordStr(_downPoint, Display_Image);
                 }
             };
             Step1Data.CheckSendValueEventHandler19 += (val) =>
             {
                 if (val == true)
                 {
-                    Step1Data.Step1_data19 = ConvertCoordStr(_downPoint, Display_Image);
+                    Step1Data.Step1_data19 = Do.ConvertCoordStr(_downPoint, Display_Image);
                 }
             };
             Step1Data.CheckSendValueEventHandler20 += (val) =>
             {
                 if (val == true)
                 {
-                    Step1Data.Step1_data20 = ConvertCoordStr(_downPoint, Display_Image);
+                    Step1Data.Step1_data20 = Do.ConvertCoordStr(_downPoint, Display_Image);
                 }
             };
         }

@@ -121,12 +121,6 @@ namespace AutoFlow.StepWindow
             }
         }
         #endregion
-
-        private System.Drawing.Point ConvertCoordXY(string coord_str)
-        {
-            Match match = Regex.Match(coord_str, @"\((\d+),(\d+)\)");
-            return new System.Drawing.Point(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
-        }
         #endregion
 
         #region Parameter and Init
@@ -182,7 +176,7 @@ namespace AutoFlow.StepWindow
                     {
                         if (!string.IsNullOrEmpty(Origin.Text))
                         {
-                            System.Drawing.Point origin = ConvertCoordXY(Origin.Text);
+                            System.Drawing.Point origin = Do.ConvertCoordXY(Origin.Text);
                             EH.ConvertScreenCoordinate(WaferPoint_Csv_Path.Text, new Tuple<int, int>(origin.X, origin.Y));
                         }
                         else
