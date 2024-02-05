@@ -59,7 +59,7 @@ namespace AutoFlow
     }
     public partial class MainWindow : System.Windows.Window
     {
-        
+
         public MainWindow()
         {
             InitializeComponent();
@@ -348,7 +348,7 @@ namespace AutoFlow
                     _downPoint.Y = Convert.ToInt32(Convert.ToDouble(screen_y) / 1080 * Display_Image.ActualHeight);
                     Logger.WriteLog($"螢幕(X,Y)座標:({screen_x},{screen_y})", LogLevel.General, richTextBoxGeneral);
                 }
-               
+
             }
         }
         private void RemoveClickPoint()
@@ -396,59 +396,272 @@ namespace AutoFlow
             }
         }
 
+        private void SetWindowsPos(TextBox Windows_Title, Xceed.Wpf.Toolkit.IntegerUpDown Windows_X, Xceed.Wpf.Toolkit.IntegerUpDown Windows_Y, Xceed.Wpf.Toolkit.IntegerUpDown Windows_Width, Xceed.Wpf.Toolkit.IntegerUpDown Windows_Height, string annotation = null)
+        {
+            Thread.Sleep(1000);
+            int x = IntegerUpDownDispatcherGetValue(Windows_X);
+            int y = IntegerUpDownDispatcherGetValue(Windows_Y);
+            int w = IntegerUpDownDispatcherGetValue(Windows_Width);
+            int h = IntegerUpDownDispatcherGetValue(Windows_Height);
+            Tuple<int, int, int, int> vsm_dialogue_windows_pos = new Tuple<int, int, int, int>(x, y, w, h);
+            Do.SetWindowsPosition(TextBoxDispatcherGetValue(Windows_Title), vsm_dialogue_windows_pos);
+        }
+
+        private Dictionary<string, string> SetCsvWorkPath(string vsm_file)
+        {
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            dict.Add("WaveCsvPath", Path.Combine(TextBoxDispatcherGetValue(Ref_Fit_Location), "output_waveform.csv"));
+            dict.Add("ParameterCsvPath", Path.Combine(TextBoxDispatcherGetValue(Ref_Fit_Location), "output_parameters.csv"));
+            dict.Add("MoveWaveCsvPath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), Path.GetFileNameWithoutExtension(vsm_file) + "_output_waveform.csv"));
+            dict.Add("MoveParameterCsvPath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), Path.GetFileNameWithoutExtension(vsm_file) + "_output_parameters.csv"));
+            dict.Add("WaveXlsxPath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), Path.GetFileNameWithoutExtension(vsm_file) + "output_waveform.xlsx"));
+            dict.Add("ParameterXlsxPath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), Path.GetFileNameWithoutExtension(vsm_file) + "output_parameters.xlsx"));
+            return dict;
+        }
+
         private void AutoStart()
         {
-            LoadStep1WaferConfig(3);
-            string[] vsm_file = Do.GetFilename(TextBoxDispatcherGetValue(VSM_File_Location), "*.vsm");
-            for (int file = 0; file < vsm_file.Length; file++)
+            cts = new CancellationTokenSource();
+            Task.Run(() =>
             {
-                Do.SimulateLeftMouseClick(Step1Parameter_info[0].Open_Text_val, "點選資料夾圖示");
-                Thread.Sleep(1000);
-                Tuple<int, int, int, int> vsm_dialogue_windows_pos = new Tuple<int, int, int, int>(Convert.ToInt32(VSM_Windows_X.Text), Convert.ToInt32(VSM_Windows_Y.Text), Convert.ToInt32(VSM_Windows_Width.Text), Convert.ToInt32(VSM_Windows_Height.Text));
-                Do.SetWindowsPosition(VSM_Windows_Title.Text, vsm_dialogue_windows_pos);
-                Do.SimulateLeftMouseClick(Step1Parameter_info[0].ChooseVSMPath_Text_val, "選擇vsm路徑");
-                Do.SimulateInputText(TextBoxDispatcherGetValue(VSM_File_Location), "輸入vsm檔路徑");
-                Do.SimulateLeftMouseClick(Step1Parameter_info[0].VSM_Text_val, "點選開啟檔案類型欄位");
-                Do.SimulateLeftMouseClick(Step1Parameter_info[0].VSMType_Text_val, "選擇開檔類型vsm");
-                Do.SimulateLeftMouseClick(Step1Parameter_info[0].InputVSM_Text_val, "點選輸入vsm檔欄位");
-                Do.SimulateInputText(Path.GetFileName(vsm_file[file]), "輸入vsm檔名");
-                Do.SimulateLeftMouseClick(Step1Parameter_info[0].TurnOn_Text_val, "點選開啟");
-                Do.SimulateLeftMouseClick(Step1Parameter_info[0].View_Text_val, "點選view");
-                Do.SimulateLeftMouseClick(Step1Parameter_info[0].Display_Text_val, "點選Display");
-                Do.SimulateLeftMouseClick(Step1Parameter_info[0].OnePane_Text_val, "點選1Pane");
-                Do.SimulateLeftMouseClick(Step1Parameter_info[0].Magnification_Text_val, "點選放大");
-                Thread.Sleep(3000);
-                foreach (var point in WaferPointParameter_info[0].WaferPoint_val)
+                #region Check Work Folder Path
+                if (string.IsNullOrEmpty(TextBoxDispatcherGetValue(Setting_File_Location)))
                 {
-                    Do.ConvertWaferCoordStr(point);
-                    Do.SimulateLeftMouseDoubleClick(Do.ConvertWaferCoordStr(point).Item2, "點選Wafer點位");
-                    Do.SimulateLeftMouseClick(Step1Parameter_info[0].DTCS_Text_val, "點選DTCS");
-                    Do.SimulateLeftMouseClick(Step1Parameter_info[0].OK_Text_val, "點選OK");
-                    Do.SimulateLeftMouseClick(Step1Parameter_info[0].Save_Text_val, "點選Save");
-                    Thread.Sleep(1000);
-                    Tuple<int, int, int, int> dat_dialogue_windows_pos = new Tuple<int, int, int, int>(Convert.ToInt32(Dat_Windows_X.Text), Convert.ToInt32(Dat_Windows_Y.Text), Convert.ToInt32(Dat_Windows_Width.Text), Convert.ToInt32(Dat_Windows_Height.Text));
-                    Do.SetWindowsPosition(Dat_Windows_Title.Text, dat_dialogue_windows_pos);
-                    Do.SimulateLeftMouseClick(Step1Parameter_info[0].Dat_Text_val, "點選存檔類型欄位");
-                    Do.SimulateLeftMouseClick(Step1Parameter_info[0].DatType_Text_val, "選擇儲存類型dat");
-                    Do.SimulateLeftMouseClick(Step1Parameter_info[0].InputDat_Text_val, "點選輸入dat檔欄位");
-                    Do.SimulateInputText(Path.GetFileNameWithoutExtension(vsm_file[file]) + Do.ConvertWaferCoordStr(point).Item1, "輸入dat檔名");
-                    Do.SimulateLeftMouseClick(Step1Parameter_info[0].Archive_Text_val, "點選存檔");
-                    Do.SimulateLeftMouseClick(Step1Parameter_info[0].CloseVDSW_Text_val, "關閉VDSW");
-                    Thread.Sleep(100);
+                    MessageBox.Show("請輸入setting檔案路徑!", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
                 }
-                Do.SimulateLeftMouseClick(Step1Parameter_info[0].CloseWafer_Text_val, "關閉Wafer");
-                Do.MoveFileToUpper(VSM_File_Location.Text, Path.Combine(Ref_Fit_Location.Text, "sample_spectrum"), "*dat");
-                Do.RunSoftware(Ref_Fit_Location.Text);
-                if (Do.CheckCSV(Path.Combine(Ref_Fit_Location.Text, "output_waveform.csv"), Path.Combine(Ref_Fit_Location.Text, "output_parameters.csv")))
+                if (string.IsNullOrEmpty(TextBoxDispatcherGetValue(Ref_Fit_Location)))
                 {
-                    EH.waferID = Path.GetFileNameWithoutExtension(vsm_file[file]);
-                    Do.DeleteFile(Path.Combine(Ref_Fit_Location.Text, "sample_spectrum"), "*dat");
-                    EH.WaveToScatterChart(Path.Combine(Ref_Fit_Location.Text, "output_waveform.csv"), Path.Combine(Xlsx_File_Location.Text, Path.GetFileNameWithoutExtension(vsm_file[file]) + "output_waveform.xlsx"));
-                    EH.ParameterToScatterChart(Path.Combine(Ref_Fit_Location.Text, "output_parameters.csv"), Path.Combine(Xlsx_File_Location.Text, Path.GetFileNameWithoutExtension(vsm_file[file]) + "output_parameters.xlsx"));
+                    MessageBox.Show("請輸入Ref-Fit軟體資料夾路徑!", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
                 }
-                File.Move(Path.Combine(Ref_Fit_Location.Text, "output_waveform.csv"), Path.Combine(Xlsx_File_Location.Text, Path.GetFileNameWithoutExtension(vsm_file[file]) + "_output_waveform.csv"));
-                File.Move(Path.Combine(Ref_Fit_Location.Text, "output_parameters.csv"), Path.Combine(Xlsx_File_Location.Text, Path.GetFileNameWithoutExtension(vsm_file[file]) + "_output_parameters.csv"));
-            };
+                if (string.IsNullOrEmpty(TextBoxDispatcherGetValue(VSM_File_Location)))
+                {
+                    MessageBox.Show("請輸入vsm檔資料夾路徑!", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+                if (string.IsNullOrEmpty(TextBoxDispatcherGetValue(Xlsx_File_Location)))
+                {
+                    MessageBox.Show("請輸入xlsx檔資料夾路徑!", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+                #endregion
+                LoadStep1WaferConfig(3);
+                string[] vsm_file = Do.GetFilename(TextBoxDispatcherGetValue(VSM_File_Location), "*.vsm");
+                if (vsm_file.Length != 0)
+                {
+                    for (int file = 0; file < vsm_file.Length; file++)
+                    {
+                        if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].Open_Text_val, "點選資料夾圖示"))
+                        {
+                            cts.Cancel();
+                            Console.WriteLine("有人員控制滑鼠!");
+                            if (cts.Token.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                        }
+                        SetWindowsPos(VSM_Windows_Title, VSM_Windows_X, VSM_Windows_Y, VSM_Windows_Width, VSM_Windows_Height, "設定vsm對話視窗");
+                        if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].ChooseVSMPath_Text_val, "選擇vsm路徑"))
+                        {
+                            cts.Cancel();
+                            Console.WriteLine("有人員控制滑鼠!");
+                            if (cts.Token.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                        }
+                        Do.SimulateInputText(TextBoxDispatcherGetValue(VSM_File_Location), "輸入vsm檔路徑");
+                        if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].VSM_Text_val, "點選開啟檔案類型欄位"))
+                        {
+                            cts.Cancel();
+                            Console.WriteLine("有人員控制滑鼠!");
+                            if (cts.Token.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                        }
+                        if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].VSMType_Text_val, "選擇開檔類型vsm"))
+                        {
+                            cts.Cancel();
+                            Console.WriteLine("有人員控制滑鼠!");
+                            if (cts.Token.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                        }
+                        if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].InputVSM_Text_val, "點選輸入vsm檔欄位"))
+                        {
+                            cts.Cancel();
+                            Console.WriteLine("有人員控制滑鼠!");
+                            if (cts.Token.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                        }
+                        Do.SimulateInputText(Path.GetFileName(vsm_file[file]), "輸入vsm檔名");
+                        if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].TurnOn_Text_val, "點選開啟"))
+                        {
+                            cts.Cancel();
+                            Console.WriteLine("有人員控制滑鼠!");
+                            if (cts.Token.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                        }
+                        if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].View_Text_val, "點選view"))
+                        {
+                            cts.Cancel();
+                            Console.WriteLine("有人員控制滑鼠!");
+                            if (cts.Token.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                        }
+                        if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].Display_Text_val, "點選Display"))
+                        {
+                            cts.Cancel();
+                            Console.WriteLine("有人員控制滑鼠!");
+                            if (cts.Token.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                        }
+                        if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].OnePane_Text_val, "點選1Pane"))
+                        {
+                            cts.Cancel();
+                            Console.WriteLine("有人員控制滑鼠!");
+                            if (cts.Token.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                        }
+                        if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].Magnification_Text_val, "點選放大"))
+                        {
+                            cts.Cancel();
+                            Console.WriteLine("有人員控制滑鼠!");
+                            if (cts.Token.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                        }
+                        Thread.Sleep(3000);
+                        foreach (var point in WaferPointParameter_info[0].WaferPoint_val)
+                        {
+                            if (!Do.SimulateLeftMouseDoubleClick(Do.ConvertWaferCoordStr(point).Item2, "點選Wafer點位"))
+                            {
+                                cts.Cancel();
+                                Console.WriteLine("有人員控制滑鼠!");
+                                if (cts.Token.IsCancellationRequested)
+                                {
+                                    return;
+                                }
+                            }
+                            if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].DTCS_Text_val, "點選DTCS"))
+                            {
+                                cts.Cancel();
+                                Console.WriteLine("有人員控制滑鼠!");
+                                if (cts.Token.IsCancellationRequested)
+                                {
+                                    return;
+                                }
+                            }
+                            if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].OK_Text_val, "點選OK"))
+                            {
+                                cts.Cancel();
+                                Console.WriteLine("有人員控制滑鼠!");
+                                if (cts.Token.IsCancellationRequested)
+                                {
+                                    return;
+                                }
+                            }
+                            if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].Save_Text_val, "點選Save"))
+                            {
+                                cts.Cancel();
+                                Console.WriteLine("有人員控制滑鼠!");
+                                if (cts.Token.IsCancellationRequested)
+                                {
+                                    return;
+                                }
+                            }
+                            SetWindowsPos(Dat_Windows_Title, Dat_Windows_X, Dat_Windows_Y, Dat_Windows_Width, Dat_Windows_Height, "設定dat對話視窗");
+                            if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].Dat_Text_val, "點選存檔類型欄位"))
+                            {
+                                cts.Cancel();
+                                Console.WriteLine("有人員控制滑鼠!");
+                                if (cts.Token.IsCancellationRequested)
+                                {
+                                    return;
+                                }
+                            }
+                            if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].DatType_Text_val, "選擇儲存類型dat"))
+                            {
+                                cts.Cancel();
+                                Console.WriteLine("有人員控制滑鼠!");
+                                if (cts.Token.IsCancellationRequested)
+                                {
+                                    return;
+                                }
+                            }
+                            if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].InputDat_Text_val, "點選輸入dat檔欄位"))
+                            {
+                                cts.Cancel();
+                                Console.WriteLine("有人員控制滑鼠!");
+                                if (cts.Token.IsCancellationRequested)
+                                {
+                                    return;
+                                }
+                            }
+                            Do.SimulateInputText(Path.GetFileNameWithoutExtension(vsm_file[file]) + Do.ConvertWaferCoordStr(point).Item1, "輸入dat檔名");
+                            if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].Archive_Text_val, "點選存檔"))
+                            {
+                                cts.Cancel();
+                                Console.WriteLine("有人員控制滑鼠!");
+                                if (cts.Token.IsCancellationRequested)
+                                {
+                                    return;
+                                }
+                            }
+                            if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].CloseVDSW_Text_val, "關閉VDSW"))
+                            {
+                                cts.Cancel();
+                                Console.WriteLine("有人員控制滑鼠!");
+                                if (cts.Token.IsCancellationRequested)
+                                {
+                                    return;
+                                }
+                            }
+                            Thread.Sleep(100);
+                        }
+                        if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].CloseWafer_Text_val, "關閉Wafer"))
+                        {
+                            cts.Cancel();
+                            Console.WriteLine("有人員控制滑鼠!");
+                            if (cts.Token.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                        }
+                        Do.MoveFileToUpper(TextBoxDispatcherGetValue(VSM_File_Location), Path.Combine(TextBoxDispatcherGetValue(Ref_Fit_Location), "sample_spectrum"), "*dat");
+                        Do.RunSoftware(TextBoxDispatcherGetValue(Ref_Fit_Location));
+                        Dictionary<string, string> dict = SetCsvWorkPath(vsm_file[file]);
+                        if (Do.CheckCSV(dict["WaveCsvPath"], dict["ParameterCsvPath"]))
+                        {
+                            EH.waferID = Path.GetFileNameWithoutExtension(vsm_file[file]);
+                            Do.DeleteFile(Path.Combine(TextBoxDispatcherGetValue(Ref_Fit_Location), "sample_spectrum"), "*dat");
+                            EH.WaveToScatterChart(dict["WaveCsvPath"], dict["WaveXlsxPath"]);
+                            EH.ParameterToScatterChart(dict["ParameterCsvPath"], dict["ParameterXlsxPath"]);
+                        }
+                        File.Move(dict["WaveCsvPath"], dict["MoveWaveCsvPath"]);
+                        File.Move(dict["ParameterCsvPath"], dict["MoveParameterCsvPath"]);
+                    };
+                }
+                else
+                {
+                    MessageBox.Show("vsm檔資料夾內沒有vsm檔!", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }, cts.Token);
+           
         }
         #endregion
 
@@ -620,6 +833,7 @@ namespace AutoFlow
         private bool Model_Type_state = false;
         List<AutoFlow.StepWindow.Step1Parameter> Step1Parameter_info;
         List<AutoFlow.StepWindow.WaferPointParameter> WaferPointParameter_info;
+        CancellationTokenSource cts;
         #endregion
 
         #region Main Screen

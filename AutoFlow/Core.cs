@@ -132,16 +132,19 @@ namespace AutoFlow
         const uint MOUSEEVENTF_LEFTUP = 0x0004;
         const uint MOUSEEVENTF_RIGHTDOWN = 0x0008;
         const uint MOUSEEVENTF_RIGHTUP = 0x0010;
-        public void SimulateLeftMouseClick(string coord_str, string annotation = null)
+        public bool SimulateLeftMouseClick(string coord_str, string annotation = null)
         {
             System.Drawing.Point pos = ConvertCoordXY(coord_str);
             SetCursorPos(pos.X, pos.Y);
             mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, IntPtr.Zero);
             Thread.Sleep(100);
             mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, IntPtr.Zero);
+            POINT point;
+            GetCursorPos(out point);
+            return (pos.X - point.X != 0 && pos.Y - point.Y != 0) ? false : true;
         }
 
-        public void SimulateLeftMouseDoubleClick(string coord_str, string annotation = null)
+        public bool SimulateLeftMouseDoubleClick(string coord_str, string annotation = null)
         {
             System.Drawing.Point pos = ConvertCoordXY(coord_str);
             SetCursorPos(pos.X, pos.Y);
@@ -152,18 +155,24 @@ namespace AutoFlow
             mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, IntPtr.Zero);
             Thread.Sleep(100);
             mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, IntPtr.Zero);
+            POINT point;
+            GetCursorPos(out point);
+            return (pos.X - point.X != 0 && pos.Y - point.Y != 0) ? false : true;
         }
 
-        public void SimulateRightMouseClick(string coord_str, string annotation = null)
+        public bool SimulateRightMouseClick(string coord_str, string annotation = null)
         {
             System.Drawing.Point pos = ConvertCoordXY(coord_str);
             SetCursorPos(pos.X, pos.Y);
             mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, IntPtr.Zero);
             Thread.Sleep(100);
             mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, IntPtr.Zero);
+            POINT point;
+            GetCursorPos(out point);
+            return (pos.X - point.X != 0 && pos.Y - point.Y != 0) ? false : true;
         }
 
-        public void SimulateRightMouseDoubleClick(string coord_str, string annotation = null)
+        public bool SimulateRightMouseDoubleClick(string coord_str, string annotation = null)
         {
             System.Drawing.Point pos = ConvertCoordXY(coord_str);
             SetCursorPos(pos.X, pos.Y);
@@ -174,6 +183,9 @@ namespace AutoFlow
             mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, IntPtr.Zero);
             Thread.Sleep(100);
             mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, IntPtr.Zero);
+            POINT point;
+            GetCursorPos(out point);
+            return (pos.X - point.X != 0 && pos.Y - point.Y != 0) ? false : true;
         }
 
         public void SimulateInputText(string keys, string annotation = null)
@@ -311,7 +323,7 @@ namespace AutoFlow
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardInput = true;
             process.Start();
-            process.StandardInput.WriteLine("cd D:\\RefFit");
+            process.StandardInput.WriteLine("cd "+ softwarepath);
             process.StandardInput.WriteLine("run_RefFitTool.exe");
             process.Close();
         }

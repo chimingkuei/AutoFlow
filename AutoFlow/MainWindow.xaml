@@ -89,7 +89,7 @@
                     </WrapPanel>
                     <Button x:Name="Save_Config" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="403,253,390,93" Content="儲存參數" Click="Parameter_Btn_Click"/>
                     <WrapPanel Orientation="Horizontal" Margin="558,15,57,10">
-                        <TextBox x:Name="VSM_Windows_Title" Style="{StaticResource VSMWindowsTitleTextBox}" Margin="79,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
+                        <TextBox x:Name="VSM_Windows_Title" Style="{StaticResource WindowsTitleTextBox}" Margin="79,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
                         <xctk:IntegerUpDown x:Name="VSM_Windows_X" Margin="32.6,3,0,0" Minimum="0" Maximum="1920" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入X座標" HorizontalContentAlignment="Center"/>
                         <xctk:IntegerUpDown x:Name="VSM_Windows_Y" Margin="32.6,3,0,0" Minimum="0" Maximum="1080" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入Y座標" HorizontalContentAlignment="Center"/>
                         <xctk:IntegerUpDown x:Name="VSM_Windows_Width" Margin="32.6,3,0,0" Minimum="0" Maximum="1920" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入寬度" HorizontalContentAlignment="Center"/>
@@ -101,7 +101,7 @@
                                 對話視窗位置
                             </TextBlock>
                         </Button>
-                        <TextBox x:Name="Dat_Windows_Title" Style="{StaticResource VSMWindowsTitleTextBox}" Margin="79,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
+                        <TextBox x:Name="Dat_Windows_Title" Style="{StaticResource WindowsTitleTextBox}" Margin="79,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
                         <xctk:IntegerUpDown x:Name="Dat_Windows_X" Margin="32.6,3,0,0" Minimum="0" Maximum="1920" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入X座標" HorizontalContentAlignment="Center"/>
                         <xctk:IntegerUpDown x:Name="Dat_Windows_Y" Margin="32.6,3,0,0" Minimum="0" Maximum="1080" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入Y座標" HorizontalContentAlignment="Center"/>
                         <xctk:IntegerUpDown x:Name="Dat_Windows_Width" Margin="32.6,3,0,0" Minimum="0" Maximum="1920" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入寬度" HorizontalContentAlignment="Center"/>
