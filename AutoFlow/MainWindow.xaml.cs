@@ -414,8 +414,8 @@ namespace AutoFlow
             dict.Add("ParameterCsvPath", Path.Combine(TextBoxDispatcherGetValue(Ref_Fit_Location), "output_parameters.csv"));
             dict.Add("MoveWaveCsvPath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), Path.GetFileNameWithoutExtension(vsm_file) + "_output_waveform.csv"));
             dict.Add("MoveParameterCsvPath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), Path.GetFileNameWithoutExtension(vsm_file) + "_output_parameters.csv"));
-            dict.Add("WaveXlsxPath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), Path.GetFileNameWithoutExtension(vsm_file) + "output_waveform.xlsx"));
-            dict.Add("ParameterXlsxPath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), Path.GetFileNameWithoutExtension(vsm_file) + "output_parameters.xlsx"));
+            dict.Add("WaveXlsxPath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), Path.GetFileNameWithoutExtension(vsm_file) + "_output_waveform.xlsx"));
+            dict.Add("ParameterXlsxPath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), Path.GetFileNameWithoutExtension(vsm_file) + "_output_parameters.xlsx"));
             return dict;
         }
 

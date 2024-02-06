@@ -501,7 +501,7 @@ namespace AutoFlow
         private string ParameterModifyCoordinate(string filename)
         {
             string[] parts = Path.GetFileNameWithoutExtension(filename).Split('_');
-            string coordinate = parts[1] == "0" ? parts[2] : parts[1];
+            string coordinate = parts[1].Trim('X') == "0" ? parts[2].Trim('Y') : parts[1].Trim('X');
             return coordinate;
         }
 
@@ -597,7 +597,7 @@ namespace AutoFlow
                     var x = GetRange(worksheet, "E", start, start + lists[list_index].Count - 1);
                     var y = GetRange(worksheet, field, start, start + lists[list_index].Count - 1);
                     var series = (ExcelScatterChartSerie)chart.Series.Add(y, x);
-                    series.Marker.Style = eMarkerStyle.Star;
+                    series.Marker.Style = eMarkerStyle.Square;
                     Random rand = new Random();
                     Color randomColor = Color.FromArgb(rand.Next(256), rand.Next(256), rand.Next(256));
                     series.Fill.Color = randomColor;
@@ -627,7 +627,7 @@ namespace AutoFlow
                         worksheet.Cells["B" + (cell_y + cell_index).ToString()].Value = lists[list_index][cell_index].Item2;
                         worksheet.Cells["C" + (cell_y + cell_index).ToString()].Value = lists[list_index][cell_index].Item3;
                         worksheet.Cells["D" + (cell_y + cell_index).ToString()].Value = lists[list_index][cell_index].Item4;
-                        worksheet.Cells["E" + (cell_y + cell_index).ToString()].Value = ParameterModifyCoordinate(lists[list_index][cell_index].Item1);
+                        worksheet.Cells["E" + (cell_y + cell_index).ToString()].Value = Convert.ToInt32(ParameterModifyCoordinate(lists[list_index][cell_index].Item1));
                         worksheet.Cells["F" + (cell_y + cell_index).ToString()].Value = (lists[list_index][cell_index].Item2 - 1) * 100;
                         worksheet.Cells["G" + (cell_y + cell_index).ToString()].Value = lists[list_index][cell_index].Item3;
                         worksheet.Cells["H" + (cell_y + cell_index).ToString()].Value = (lists[list_index][cell_index].Item4 - 1) * 100;
