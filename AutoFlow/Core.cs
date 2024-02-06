@@ -582,7 +582,9 @@ namespace AutoFlow
             chart.Title.Text = waferID;
             chart.Legend.Position = eLegendPosition.Right;
             chart.XAxis.MajorGridlines.Fill.Color = Color.LightGray;
+            chart.XAxis.Title.Text = "Away From center (mm)";
             chart.YAxis.MajorGridlines.Fill.Color = Color.LightGray;
+            chart.YAxis.Title.Text = "Shifted %";
         }
 
         private void DrawParameterScatterChart(ExcelWorksheet worksheet, List<List<Tuple<string, double, double, double>>> lists, string chartnameGp, int pos, string field)
@@ -602,7 +604,7 @@ namespace AutoFlow
                     Color randomColor = Color.FromArgb(rand.Next(256), rand.Next(256), rand.Next(256));
                     series.Fill.Color = randomColor;
                     //series.Fill.Color = Color.Red;
-                    //measurementseries.Header = "0-量測";
+                    series.Header = waferID;
                     start += lists[list_index].Count;
                 }
             }
