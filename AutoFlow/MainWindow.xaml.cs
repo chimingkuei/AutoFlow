@@ -711,6 +711,7 @@ namespace AutoFlow
                         Dictionary<string, string> dict = SetCsvWorkPath(vsm_file[file]);
                         if (Do.CheckCSV(dict["WaveCsvPath"], dict["ParameterCsvPath"]))
                         {
+                            Thread.Sleep(1000);
                             EH.waferID = Path.GetFileNameWithoutExtension(vsm_file[file]);
                             Do.DeleteFile(Path.Combine(TextBoxDispatcherGetValue(Ref_Fit_Location), "sample_spectrum"), "*dat");
                             if (EH.WaveToScatterChart(dict["WaveCsvPath"], dict["WaveXlsxPath"]))
