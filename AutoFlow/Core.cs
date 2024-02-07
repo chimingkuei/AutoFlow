@@ -243,7 +243,7 @@ namespace AutoFlow
             return Directory.GetFiles(folderPath, filetype);
         }
 
-        public void MoveFileToUpper(string sourceDirectory, string targetDirectory, string type)
+        public bool MoveFileToUpper(string sourceDirectory, string targetDirectory, string type)
         {
             string[] datFiles = Directory.GetFiles(sourceDirectory, type);
             foreach (string datFile in datFiles)
@@ -253,6 +253,7 @@ namespace AutoFlow
                 string targetPath = Path.Combine(targetDirectory, newFileName);
                 File.Move(datFile, targetPath);
             }
+            return true;
         }
 
         public void DeleteFile(string sourceDirectory, string type)

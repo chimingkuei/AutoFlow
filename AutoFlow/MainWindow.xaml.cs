@@ -704,8 +704,10 @@ namespace AutoFlow
                                 return;
                             }
                         }
-                        Do.MoveFileToUpper(TextBoxDispatcherGetValue(VSM_File_Location), Path.Combine(TextBoxDispatcherGetValue(Ref_Fit_Location), "sample_spectrum"), "*dat");
-                        Do.RunSoftware(TextBoxDispatcherGetValue(Ref_Fit_Location));
+                        if (Do.MoveFileToUpper(TextBoxDispatcherGetValue(VSM_File_Location), Path.Combine(TextBoxDispatcherGetValue(Ref_Fit_Location), "sample_spectrum"), "*dat"))
+                        {
+                            Do.RunSoftware(TextBoxDispatcherGetValue(Ref_Fit_Location));
+                        }
                         Dictionary<string, string> dict = SetCsvWorkPath(vsm_file[file]);
                         if (Do.CheckCSV(dict["WaveCsvPath"], dict["ParameterCsvPath"]))
                         {
@@ -724,7 +726,6 @@ namespace AutoFlow
                     MessageBox.Show("vsm檔資料夾內沒有vsm檔!", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }, cts.Token);
-           
         }
         #endregion
 
