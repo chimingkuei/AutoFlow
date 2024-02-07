@@ -447,7 +447,7 @@ namespace AutoFlow
             return dataListChunks;
         }
 
-        public void WaveToScatterChart(string csvfilepath, string xlsxfilepath)
+        public bool WaveToScatterChart(string csvfilepath, string xlsxfilepath)
         {
             List<List<Tuple<string, string, double, double>>> lists = CSVToList(csvfilepath);
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -489,6 +489,7 @@ namespace AutoFlow
                 }
 
             }
+            return true;
         }
         #endregion
 

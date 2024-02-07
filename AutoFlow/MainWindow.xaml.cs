@@ -713,9 +713,11 @@ namespace AutoFlow
                         {
                             EH.waferID = Path.GetFileNameWithoutExtension(vsm_file[file]);
                             Do.DeleteFile(Path.Combine(TextBoxDispatcherGetValue(Ref_Fit_Location), "sample_spectrum"), "*dat");
-                            EH.WaveToScatterChart(dict["WaveCsvPath"], dict["WaveXlsxPath"]);
+                            if (EH.WaveToScatterChart(dict["WaveCsvPath"], dict["WaveXlsxPath"]))
+                            {
+                                File.Move(dict["WaveCsvPath"], dict["MoveWaveCsvPath"]);
+                            }
                             EH.ParameterToScatterChart(dict["ParameterCsvPath"], dict["ParameterXlsxPath"]);
-                            File.Move(dict["WaveCsvPath"], dict["MoveWaveCsvPath"]);
                             File.Move(dict["ParameterCsvPath"], dict["MoveParameterCsvPath"]);
                         }
                     };
