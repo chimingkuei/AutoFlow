@@ -713,11 +713,11 @@ namespace AutoFlow
                             Do.DeleteFile(Path.Combine(TextBoxDispatcherGetValue(Ref_Fit_Location), "sample_spectrum"), "*dat");
                             EH.WaveToScatterChart(dict["WaveCsvPath"], dict["WaveXlsxPath"]);
                             EH.ParameterToScatterChart(dict["ParameterCsvPath"], dict["ParameterXlsxPath"]);
+                            File.Move(dict["WaveCsvPath"], dict["MoveWaveCsvPath"]);
+                            File.Move(dict["ParameterCsvPath"], dict["MoveParameterCsvPath"]);
                         }
-                        File.Move(dict["WaveCsvPath"], dict["MoveWaveCsvPath"]);
-                        File.Move(dict["ParameterCsvPath"], dict["MoveParameterCsvPath"]);
-                        Logger.WriteLog("自動化流程完成!", LogLevel.General, richTextBoxGeneral);
                     };
+                    Logger.WriteLog("自動化流程完成!", LogLevel.General, richTextBoxGeneral);
                 }
                 else
                 {
