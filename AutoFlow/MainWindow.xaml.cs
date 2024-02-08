@@ -719,11 +719,14 @@ namespace AutoFlow
                             {
                                 File.Move(dict["WaveCsvPath"], dict["MoveWaveCsvPath"]);
                             }
-                            //EH.ParameterToScatterChart(dict["ParameterCsvPath"], dict["ParameterXlsxPath"]);
                             File.Move(dict["ParameterCsvPath"], dict["MoveParameterCsvPath"]);
                         }
                     };
-                    Logger.WriteLog("自動化流程完成!", LogLevel.General, richTextBoxGeneral);
+                    // Do parameterCsvPath convert map.
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        Logger.WriteLog("自動化流程完成!", LogLevel.General, richTextBoxGeneral);
+                    });
                 }
                 else
                 {
