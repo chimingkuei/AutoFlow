@@ -30,6 +30,7 @@ using OpenCvSharp.Flann;
 using System.Windows.Media.TextFormatting;
 using System.Collections;
 using System.Text.RegularExpressions;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace AutoFlow
 {
@@ -462,7 +463,8 @@ namespace AutoFlow
                     if (!CheckChartName(worksheet, chartname))
                     {
                         ExcelChart chart = worksheet.Drawings.AddChart(chartname, eChartType.XYScatterLinesNoMarkers);
-                        WaveSetChartStyle(chart, new Tuple<int, int, int, int>(cell_y, 0, 5, 0), lists);
+                        WaveSetChartStyle(chart, new Tuple<int, int, int, int>((list_index/2)*20, 0, 5, 0), lists);
+                        //WaveSetChartStyle(chart, new Tuple<int, int, int, int>(cell_y, 0, 5, 0), lists);
                         int tag0_count = lists[list_index].Count;
                         int tag1_count = lists[list_index + 1].Count;
                         WaveWhiteCells(worksheet, lists, tag0_count, cell_y, list_index);
@@ -565,6 +567,27 @@ namespace AutoFlow
             return dataListChunks;
         }
 
+        public List<Tuple<string, double, double, double>> NewParameterCSVToList(string csvfilepath)
+        {
+            List<Tuple<string, double, double, double>> currentChunk = new List<Tuple<string, double, double, double>>();
+            if (File.Exists(csvfilepath))
+            {
+                using (StreamReader reader = new StreamReader(csvfilepath))
+                {
+                    // 跳過標題行
+                    reader.ReadLine();
+                    while (!reader.EndOfStream)
+                    {
+                        string line = reader.ReadLine();
+                        string[] fields = line.Split(',');
+                        Tuple<string, double, double, double> rowData = new Tuple<string, double, double, double>(fields[1], Convert.ToDouble(fields[2]), Convert.ToDouble(fields[3]), Convert.ToDouble(fields[4]));
+                        currentChunk.Add(rowData);
+                    }
+                }
+            }
+            return currentChunk;
+        }
+
         private void ParameterFieldLabel(ExcelWorksheet worksheet)
         {
             worksheet.Cells["A1"].Value = "filename";
@@ -589,6 +612,25 @@ namespace AutoFlow
             chart.YAxis.Title.Text = "Shifted %";
         }
 
+        private void NewParameterSetChartStyle(ExcelChart chart, Tuple<int, int, int, int> position, List<List<Tuple<string, double, double, double>>> lists, string title)
+        {
+            chart.SetPosition(position.Item1, position.Item2, position.Item3, position.Item4);
+            chart.SetSize(600, 400);
+            chart.Title.Text = title;
+            chart.Legend.Position = eLegendPosition.Right;
+            chart.XAxis.MajorGridlines.Fill.Color = Color.LightGray;
+            chart.XAxis.Title.Text = "Away From center (mm)";
+            chart.YAxis.MajorGridlines.Fill.Color = Color.LightGray;
+            if (title == "GP2")
+            {
+                chart.YAxis.Title.Text = "Shifted Thickness (mm)";
+            }
+            else
+            {
+                chart.YAxis.Title.Text = "Shifted %";
+            }
+        }
+
         private void DrawParameterScatterChart(ExcelWorksheet worksheet, List<List<Tuple<string, double, double, double>>> lists, string chartnameGp, int pos, string field)
         {
             if (!CheckChartName(worksheet, chartnameGp))
@@ -607,6 +649,30 @@ namespace AutoFlow
                     series.Fill.Color = randomColor;
                     //series.Fill.Color = Color.Red;
                     series.Header = waferID;
+                    start += lists[list_index].Count;
+                }
+            }
+
+        }
+
+        private void NewDrawParameterScatterChart(ExcelWorksheet worksheet, List<List<Tuple<string, double, double, double>>> lists, string chartnameGp, int pos, string field, string title)
+        {
+            if (!CheckChartName(worksheet, chartnameGp))
+            {
+                ExcelChart chart = worksheet.Drawings.AddChart(chartnameGp, eChartType.XYScatter);
+                NewParameterSetChartStyle(chart, new Tuple<int, int, int, int>(pos, 0, 9, 0), lists, title);
+                int start = 2;
+                for (int list_index = 0; list_index < lists.Count; list_index++)
+                {
+                    var x = GetRange(worksheet, "E", start, start + lists[list_index].Count - 1);
+                    var y = GetRange(worksheet, field, start, start + lists[list_index].Count - 1);
+                    var series = (ExcelScatterChartSerie)chart.Series.Add(y, x);
+                    series.Marker.Style = eMarkerStyle.Square;
+                    Random rand = new Random();
+                    Color randomColor = Color.FromArgb(rand.Next(256), rand.Next(256), rand.Next(256));
+                    series.Fill.Color = randomColor;
+                    //series.Fill.Color = Color.Red;
+                    series.Header = Path.GetFileNameWithoutExtension(lists[list_index][0].Item1).Split('_')[0];
                     start += lists[list_index].Count;
                 }
             }
@@ -641,6 +707,45 @@ namespace AutoFlow
                 DrawParameterScatterChart(worksheet, lists, "ScatterPlotGp1", 0, "F");
                 DrawParameterScatterChart(worksheet, lists, "ScatterPlotGp2", 20, "G");
                 DrawParameterScatterChart(worksheet, lists, "ScatterPlotGp3", 40, "H");
+                try
+                {
+                    package.SaveAs(new FileInfo(xlsxfilepath));
+                }
+                catch
+                {
+                    Console.WriteLine(xlsxfilepath + " file is opened! Please close that file.");
+                }
+
+            }
+        }
+
+        public void NewParameterToScatterChart(List<List<Tuple<string, double, double, double>>> lists, string xlsxfilepath)
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("output_parameters");
+                ParameterFieldLabel(worksheet);
+                int cell_y = 2;
+                for (int list_index = 0; list_index < lists.Count; list_index++)
+                {
+                    int num = lists[list_index].Count;
+                    for (int cell_index = 0; cell_index < num; cell_index++)
+                    {
+                        worksheet.Cells["A" + (cell_y + cell_index).ToString()].Value = lists[list_index][cell_index].Item1;
+                        worksheet.Cells["B" + (cell_y + cell_index).ToString()].Value = lists[list_index][cell_index].Item2;
+                        worksheet.Cells["C" + (cell_y + cell_index).ToString()].Value = lists[list_index][cell_index].Item3;
+                        worksheet.Cells["D" + (cell_y + cell_index).ToString()].Value = lists[list_index][cell_index].Item4;
+                        worksheet.Cells["E" + (cell_y + cell_index).ToString()].Value = Convert.ToInt32(ParameterModifyCoordinate(lists[list_index][cell_index].Item1));
+                        worksheet.Cells["F" + (cell_y + cell_index).ToString()].Value = (lists[list_index][cell_index].Item2 - 1) * 100;
+                        worksheet.Cells["G" + (cell_y + cell_index).ToString()].Value = lists[list_index][cell_index].Item3;
+                        worksheet.Cells["H" + (cell_y + cell_index).ToString()].Value = (lists[list_index][cell_index].Item4 - 1) * 100;
+                    }
+                    cell_y += num;
+                }
+                NewDrawParameterScatterChart(worksheet, lists, "ScatterPlotGp1", 0, "F", "GP1");
+                NewDrawParameterScatterChart(worksheet, lists, "ScatterPlotGp2", 20, "G", "GP2");
+                NewDrawParameterScatterChart(worksheet, lists, "ScatterPlotGp3", 40, "H", "GP3");
                 try
                 {
                     package.SaveAs(new FileInfo(xlsxfilepath));

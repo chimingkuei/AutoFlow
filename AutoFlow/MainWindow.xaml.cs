@@ -711,14 +711,14 @@ namespace AutoFlow
                         Dictionary<string, string> dict = SetCsvWorkPath(vsm_file[file]);
                         if (Do.CheckCSV(dict["WaveCsvPath"], dict["ParameterCsvPath"]))
                         {
-                            Thread.Sleep(1000);
+                            Thread.Sleep(10000);
                             EH.waferID = Path.GetFileNameWithoutExtension(vsm_file[file]);
                             Do.DeleteFile(Path.Combine(TextBoxDispatcherGetValue(Ref_Fit_Location), "sample_spectrum"), "*dat");
                             if (EH.WaveToScatterChart(dict["WaveCsvPath"], dict["WaveXlsxPath"]))
                             {
                                 File.Move(dict["WaveCsvPath"], dict["MoveWaveCsvPath"]);
                             }
-                            EH.ParameterToScatterChart(dict["ParameterCsvPath"], dict["ParameterXlsxPath"]);
+                            //EH.ParameterToScatterChart(dict["ParameterCsvPath"], dict["ParameterXlsxPath"]);
                             File.Move(dict["ParameterCsvPath"], dict["MoveParameterCsvPath"]);
                         }
                     };
@@ -926,7 +926,15 @@ namespace AutoFlow
                     }
                 case nameof(Open_Wafer_Point):
                     {
-                        OpenWaferWindow();
+                        //OpenWaferWindow();
+                        string directoryPath = @"E:\DIP Temp\Image Temp";
+                        string searchPattern = "*output_parameters*.csv";
+                        List<List<Tuple<string, double, double, double>>> dataListChunks = new List<List<Tuple<string, double, double, double>>>();
+                        foreach (var chunk in Do.GetFilename(directoryPath, searchPattern))
+                        {
+                            dataListChunks.Add(EH.NewParameterCSVToList(chunk));
+                        }
+                        EH.NewParameterToScatterChart(dataListChunks, @"E:\DIP Temp\Image Output\test.xlsx");
                         break;
                     }
             }
