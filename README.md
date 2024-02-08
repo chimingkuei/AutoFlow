@@ -18,13 +18,6 @@ chart.YAxis.MinorGridlines.Fill.Color = Color.LightGray;
 chart.YAxis.MinValue = 0;
 chart.YAxis.MaxValue = 20;
 ```
-#Generate scatter map
-```
-string csvpath = "put your csv path"; 
-string wavepath = "put your xlsx path";
-List<List<Tuple<double, double>>> lists = EH.CSVToList(csvpath, new Tuple<int, int>(2, 3));
-EH.WaveToScatterChart(wavepath, "sheetname", lists);
-```
 ```
 IntPtr targetWindowHandle = Do.PackFindWindow(null, TextBoxDispatcherGetValue(Window_Name));
 if (targetWindowHandle != IntPtr.Zero)
