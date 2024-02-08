@@ -266,6 +266,20 @@ namespace AutoFlow
             }
         }
 
+        public void MoveDatFile(string sourceDirectory, string targetDirectory)
+        {
+            if (!Directory.Exists(targetDirectory))
+            {
+                Directory.CreateDirectory(targetDirectory);
+                Thread.Sleep(200);
+            }
+            string[] datFiles = Directory.GetFiles(sourceDirectory, "*dat");
+            foreach (string datFile in datFiles)
+            {
+                File.Move(datFile, Path.Combine(targetDirectory, Path.GetFileName(datFile)));
+            }
+        }
+
         public bool CheckCSV(string csvfile1, string csvfile2)
         {
             bool state = false;
