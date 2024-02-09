@@ -56,6 +56,7 @@ namespace AutoFlow
         public string Dat_Windows_Y_val { get; set; }
         public string Dat_Windows_Width_val { get; set; }
         public string Dat_Windows_Height_val { get; set; }
+        public bool Save_Datfile_val { get; set; }
     }
     public partial class MainWindow : System.Windows.Window
     {
@@ -174,6 +175,17 @@ namespace AutoFlow
             });
             return value;
         }
+
+        public bool CheckBoxDispatcherGetValue(CheckBox control)
+        {
+            bool check = new bool();
+            this.Dispatcher.Invoke(() =>
+            {
+                check = (bool)control.IsChecked;
+            });
+            return check;
+
+        }
         #endregion
 
         #region GetWindowRect
@@ -212,6 +224,7 @@ namespace AutoFlow
                 Dat_Windows_Y.Text = Parameter_info[0].Dat_Windows_Y_val;
                 Dat_Windows_Width.Text = Parameter_info[0].Dat_Windows_Width_val;
                 Dat_Windows_Height.Text = Parameter_info[0].Dat_Windows_Height_val;
+                Save_Datfile.IsChecked = Parameter_info[0].Save_Datfile_val;
             }
         }
 
@@ -235,7 +248,8 @@ namespace AutoFlow
                     Dat_Windows_X_val = Dat_Windows_X.Text,
                     Dat_Windows_Y_val = Dat_Windows_Y.Text,
                     Dat_Windows_Width_val = Dat_Windows_Width.Text,
-                    Dat_Windows_Height_val =Dat_Windows_Height.Text
+                    Dat_Windows_Height_val =Dat_Windows_Height.Text,
+                    Save_Datfile_val = (bool)Save_Datfile.IsChecked
                  }
             };
             Config.Save(Parameter_config);
@@ -409,16 +423,41 @@ namespace AutoFlow
             Do.SetWindowsPosition(TextBoxDispatcherGetValue(Windows_Title), vsm_dialogue_windows_pos);
         }
 
-        private Dictionary<string, string> SetCsvWorkPath(string vsm_file)
+        private string CreateDateDir()
         {
+            string date = DateTime.Now.ToString("yyyyMMddhhmmss").ToString();
+            string dir = Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), date);
+            if (!Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+            return date;
+        }
+
+        private Dictionary<string, string> SetCsvWorkPath(string vsm_file, string date)
+        {
+           
             Dictionary<string, string> dict = new Dictionary<string, string>();
             dict.Add("WaveCsvPath", Path.Combine(TextBoxDispatcherGetValue(Ref_Fit_Location), "output_waveform.csv"));
             dict.Add("ParameterCsvPath", Path.Combine(TextBoxDispatcherGetValue(Ref_Fit_Location), "output_parameters.csv"));
-            dict.Add("MoveWaveCsvPath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), Path.GetFileNameWithoutExtension(vsm_file) + "_output_waveform.csv"));
-            dict.Add("MoveParameterCsvPath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), Path.GetFileNameWithoutExtension(vsm_file) + "_output_parameters.csv"));
-            dict.Add("WaveXlsxPath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), Path.GetFileNameWithoutExtension(vsm_file) + "_output_waveform.xlsx"));
-            dict.Add("ParameterXlsxPath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), Path.GetFileNameWithoutExtension(vsm_file) + "_output_parameters.xlsx"));
+            dict.Add("sample_spectrum", Path.Combine(TextBoxDispatcherGetValue(Ref_Fit_Location), "sample_spectrum"));
+            dict.Add("MoveWaveCsvPath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), date, Path.GetFileNameWithoutExtension(vsm_file) + "_output_waveform.csv"));
+            dict.Add("MoveParameterCsvPath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), date, Path.GetFileNameWithoutExtension(vsm_file) + "_output_parameters.csv"));
+            dict.Add("WaveXlsxPath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), date, Path.GetFileNameWithoutExtension(vsm_file) + "_output_waveform.xlsx"));
+            dict.Add("ParameterSummaryXlsxPath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), date, "output_parameters_summary.xlsx"));
+            dict.Add("DatePath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), date));
             return dict;
+        }
+
+        private void DoParameterToScatterChart(string directoryPath, string filename)
+        {
+            string searchPattern = "*output_parameters*.csv";
+            List<List<Tuple<string, double, double, double>>> dataListChunks = new List<List<Tuple<string, double, double, double>>>();
+            foreach (var chunk in Do.GetFilename(directoryPath, searchPattern))
+            {
+                dataListChunks.Add(EH.NewParameterCSVToList(chunk));
+            }
+            EH.NewParameterToScatterChart(dataListChunks, filename);
         }
 
         private void AutoStart()
@@ -452,6 +491,8 @@ namespace AutoFlow
                 string[] vsm_file = Do.GetFilename(TextBoxDispatcherGetValue(VSM_File_Location), "*.vsm");
                 if (vsm_file.Length != 0)
                 {
+                    string date = CreateDateDir();
+                    Dictionary<string, string> dict = null;
                     for (int file = 0; file < vsm_file.Length; file++)
                     {
                         if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].Open_Text_val, "點選資料夾圖示"))
@@ -704,17 +745,23 @@ namespace AutoFlow
                                 return;
                             }
                         }
-                        if (Do.MoveFileToUpper(TextBoxDispatcherGetValue(VSM_File_Location), Path.Combine(TextBoxDispatcherGetValue(Ref_Fit_Location), "sample_spectrum"), "*dat"))
+                        dict = SetCsvWorkPath(vsm_file[file], date);
+                        if (Do.MoveFileToUpper(TextBoxDispatcherGetValue(VSM_File_Location), dict["sample_spectrum"], "*dat"))
                         {
                             Do.RunSoftware(TextBoxDispatcherGetValue(Ref_Fit_Location));
                         }
-                        Dictionary<string, string> dict = SetCsvWorkPath(vsm_file[file]);
                         if (Do.CheckCSV(dict["WaveCsvPath"], dict["ParameterCsvPath"]))
                         {
                             Thread.Sleep(10000);
                             EH.waferID = Path.GetFileNameWithoutExtension(vsm_file[file]);
-                            //Do.DeleteFile(Path.Combine(TextBoxDispatcherGetValue(Ref_Fit_Location), "sample_spectrum"), "*dat");
-                            Do.MoveDatFile(Path.Combine(TextBoxDispatcherGetValue(Ref_Fit_Location), "sample_spectrum"), Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location)));
+                            if (CheckBoxDispatcherGetValue(Save_Datfile))
+                            {
+                                Do.MoveDatFile(dict["sample_spectrum"], Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), date, Path.GetFileName(vsm_file[file])));
+                            }
+                            else
+                            {
+                                Do.DeleteFile(dict["sample_spectrum"], "*dat");
+                            }
                             if (EH.WaveToScatterChart(dict["WaveCsvPath"], dict["WaveXlsxPath"]))
                             {
                                 File.Move(dict["WaveCsvPath"], dict["MoveWaveCsvPath"]);
@@ -722,7 +769,7 @@ namespace AutoFlow
                             File.Move(dict["ParameterCsvPath"], dict["MoveParameterCsvPath"]);
                         }
                     };
-                    // Do parameterCsvPath convert map.
+                    DoParameterToScatterChart(dict["DatePath"], dict["ParameterSummaryXlsxPath"]);
                     this.Dispatcher.Invoke(() =>
                     {
                         Logger.WriteLog("自動化流程完成!", LogLevel.General, richTextBoxGeneral);
@@ -930,15 +977,7 @@ namespace AutoFlow
                     }
                 case nameof(Open_Wafer_Point):
                     {
-                        //OpenWaferWindow();
-                        string directoryPath = @"E:\DIP Temp\Image Temp";
-                        string searchPattern = "*output_parameters*.csv";
-                        List<List<Tuple<string, double, double, double>>> dataListChunks = new List<List<Tuple<string, double, double, double>>>();
-                        foreach (var chunk in Do.GetFilename(directoryPath, searchPattern))
-                        {
-                            dataListChunks.Add(EH.NewParameterCSVToList(chunk));
-                        }
-                        EH.NewParameterToScatterChart(dataListChunks, @"E:\DIP Temp\Image Output\test.xlsx");
+                        OpenWaferWindow();
                         break;
                     }
             }

@@ -7,16 +7,16 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="CheckBox">
-                    <Border Width="60" Height="20" CornerRadius="10" Background="{TemplateBinding Background}" >
+                    <Border Width="120" Height="40" CornerRadius="20" Background="{TemplateBinding Background}" >
                         <Grid>
-                            <Border x:Name="border" Width="18" Height="18" CornerRadius="9" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="1 0" Background="White">
+                            <Border x:Name="border" Width="36" Height="36" CornerRadius="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="2 0" Background="White">
                                 <Border.RenderTransform>
                                     <TranslateTransform  X="0"/>
                                 </Border.RenderTransform>
                             </Border>
-                            <TextBlock x:Name="txt" Text="{TemplateBinding Content}" Margin="9 0" VerticalAlignment="Center" Foreground="White" >
+                            <TextBlock x:Name="txt" Text="{TemplateBinding Content}" Margin="18 0" VerticalAlignment="Center" Foreground="White" >
                                 <TextBlock.RenderTransform>
-                                    <TranslateTransform   X="18"></TranslateTransform>
+                                    <TranslateTransform   X="36"></TranslateTransform>
                                 </TextBlock.RenderTransform>
                             </TextBlock>
                         </Grid>
@@ -27,8 +27,8 @@
                             <Trigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="border" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" To="40" Duration="00:00:0.2"/>
-                                        <DoubleAnimation Storyboard.TargetName="txt" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" To="0" Duration="00:00:0.2"/>
+                                        <DoubleAnimation Storyboard.TargetName="border" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" To="80" Duration="00:00:0.2"/>
+                                        <DoubleAnimation Storyboard.TargetName="txt" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" To="20" Duration="00:00:0.2"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.EnterActions>
@@ -36,7 +36,7 @@
                                 <BeginStoryboard>
                                     <Storyboard>
                                         <DoubleAnimation Storyboard.TargetName="border" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" To="0" Duration="00:00:0.2"/>
-                                        <DoubleAnimation Storyboard.TargetName="txt" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" To="18" Duration="00:00:0.2"/>
+                                        <DoubleAnimation Storyboard.TargetName="txt" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" To="20" Duration="00:00:0.2"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
