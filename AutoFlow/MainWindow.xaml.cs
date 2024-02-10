@@ -57,6 +57,10 @@ namespace AutoFlow
         public string Dat_Windows_Width_val { get; set; }
         public string Dat_Windows_Height_val { get; set; }
         public bool Save_Datfile_val { get; set; }
+        public bool Fixed_Time_val { get; set; }
+        public bool Stop_Writing_val { get; set; }
+        public string Fixed_Time_Value_val { get; set; }
+        public string Stop_Writing_Value_val { get; set; }
     }
     public partial class MainWindow : System.Windows.Window
     {
@@ -186,6 +190,17 @@ namespace AutoFlow
             return check;
 
         }
+
+        public bool RadioButtonDispatcherGetValue(RadioButton control)
+        {
+            bool check = new bool();
+            this.Dispatcher.Invoke(() =>
+            {
+                check = (bool)control.IsChecked;
+            });
+            return check;
+
+        }
         #endregion
 
         #region GetWindowRect
@@ -225,6 +240,11 @@ namespace AutoFlow
                 Dat_Windows_Width.Text = Parameter_info[0].Dat_Windows_Width_val;
                 Dat_Windows_Height.Text = Parameter_info[0].Dat_Windows_Height_val;
                 Save_Datfile.IsChecked = Parameter_info[0].Save_Datfile_val;
+                Fixed_Time.IsChecked = Parameter_info[0].Fixed_Time_val;
+                Stop_Writing.IsChecked = Parameter_info[0].Stop_Writing_val;
+                Fixed_Time_Value.Text = Parameter_info[0].Fixed_Time_Value_val;
+                Stop_Writing_Value.Text = Parameter_info[0].Stop_Writing_Value_val;
+
             }
         }
 
@@ -249,8 +269,12 @@ namespace AutoFlow
                     Dat_Windows_Y_val = Dat_Windows_Y.Text,
                     Dat_Windows_Width_val = Dat_Windows_Width.Text,
                     Dat_Windows_Height_val =Dat_Windows_Height.Text,
-                    Save_Datfile_val = (bool)Save_Datfile.IsChecked
-                 }
+                    Save_Datfile_val = (bool)Save_Datfile.IsChecked,
+                    Fixed_Time_val = (bool)Fixed_Time.IsChecked,
+                    Stop_Writing_val = (bool)Stop_Writing.IsChecked,
+                    Fixed_Time_Value_val = Fixed_Time_Value.Text,
+                    Stop_Writing_Value_val = Stop_Writing_Value.Text
+                }
             };
             Config.Save(Parameter_config);
         }
@@ -492,6 +516,8 @@ namespace AutoFlow
                 if (vsm_file.Length != 0)
                 {
                     string date = CreateDateDir();
+                    string method = RadioButtonDispatcherGetValue(Fixed_Time)? "FixedTime": "StopWriting";
+                    int timeout = RadioButtonDispatcherGetValue(Fixed_Time) ? Convert.ToInt32(IntegerUpDownDispatcherGetValue(Fixed_Time_Value)) : Convert.ToInt32(IntegerUpDownDispatcherGetValue(Stop_Writing_Value));
                     Dictionary<string, string> dict = null;
                     for (int file = 0; file < vsm_file.Length; file++)
                     {
@@ -750,9 +776,8 @@ namespace AutoFlow
                         {
                             Do.RunSoftware(TextBoxDispatcherGetValue(Ref_Fit_Location));
                         }
-                        if (Do.CheckCSV(dict["WaveCsvPath"], dict["ParameterCsvPath"]))
+                        if (Do.CheckCSV(dict["WaveCsvPath"], dict["ParameterCsvPath"], method, timeout))
                         {
-                            Thread.Sleep(10000);
                             EH.waferID = Path.GetFileNameWithoutExtension(vsm_file[file]);
                             if (CheckBoxDispatcherGetValue(Save_Datfile))
                             {
@@ -953,7 +978,7 @@ namespace AutoFlow
         List<AutoFlow.StepWindow.WaferPointParameter> WaferPointParameter_info;
         CancellationTokenSource cts;
         #endregion
-
+        
         #region Main Screen
         private void Main_Btn_Click(object sender, RoutedEventArgs e)
         {

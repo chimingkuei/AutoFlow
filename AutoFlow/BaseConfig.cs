@@ -89,8 +89,7 @@ namespace AutoFlow
                 string[] contentArray = File.ReadAllText(config_path).Trim('[', ']').Split(new string[] { "}," }, StringSplitOptions.None);
                 string formattedRecord = (index == contentArray.Length - 1) ? "[" + contentArray[index] + "]" : "[" + contentArray[index] + "}]";
                 string decryptedRecord = encryption ? RSADecrypt(formattedRecord) : formattedRecord;
-                jsonData = JsonConvert.DeserializeObject<List<T>>(decryptedRecord);
-            }
+                jsonData = JsonConvert.DeserializeObject<List<T>>(decryptedRecord);            }
             else
             {
                 string jsonEmpty = "[" + string.Join(",", Enumerable.Repeat("{}", group_num)) + "]";

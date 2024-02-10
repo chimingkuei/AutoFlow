@@ -280,17 +280,42 @@ namespace AutoFlow
             }
         }
 
-        public bool CheckCSV(string csvfile1, string csvfile2)
+        public bool CheckCSV(string csvfile1, string csvfile2, string type, int timeout)
         {
             bool state = false;
-            while (true)
+            switch (type)
             {
-                if (File.Exists(csvfile1) && File.Exists(csvfile2))
-                {
-                    state = true;
-                    break;
-                }
-                Thread.Sleep(1000);
+                case "FixedTime":
+                    {
+                        while (true)
+                        {
+                            if (File.Exists(csvfile1) && File.Exists(csvfile2))
+                            {
+                                state = true;
+                                break;
+                            }
+                            Thread.Sleep(1000);
+                        }
+                        Thread.Sleep(timeout*1000);
+                        break;
+                    }
+                case "StopWriting":
+                    {
+                        while (true)
+                        {
+                            if (File.Exists(csvfile1) && File.Exists(csvfile2))
+                            {
+                                DateTime lastWriteTime = File.GetLastWriteTime(csvfile2);
+                                if (DateTime.Now - lastWriteTime > TimeSpan.FromSeconds(timeout))
+                                {
+                                    state = true;
+                                    break;
+                                }
+                            }
+                            Thread.Sleep(1000);
+                        }
+                        break;
+                    }
             }
             return state;
         }
