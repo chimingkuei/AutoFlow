@@ -35,6 +35,7 @@ using System.Text.RegularExpressions;
 using Microsoft.Win32;
 using System.Net.NetworkInformation;
 using Path = System.IO.Path;
+using Newtonsoft.Json;
 
 namespace AutoFlow
 {
@@ -244,7 +245,6 @@ namespace AutoFlow
                 Stop_Writing.IsChecked = Parameter_info[0].Stop_Writing_val;
                 Fixed_Time_Value.Text = Parameter_info[0].Fixed_Time_Value_val;
                 Stop_Writing_Value.Text = Parameter_info[0].Stop_Writing_Value_val;
-
             }
         }
 
@@ -473,6 +473,17 @@ namespace AutoFlow
             return dict;
         }
 
+        private void ClearRefFit()
+        {
+            Do.DeleteFile(Path.Combine(TextBoxDispatcherGetValue(Ref_Fit_Location), "sample_spectrum"), "*dat");
+            string waveform_csv = Path.Combine(TextBoxDispatcherGetValue(Ref_Fit_Location), "output_waveform.csv");
+            string parameter_csv = Path.Combine(TextBoxDispatcherGetValue(Ref_Fit_Location), "output_parameters.csv");
+            if (File.Exists(waveform_csv))
+                File.Delete(waveform_csv);
+            if (File.Exists(parameter_csv))
+                File.Delete(parameter_csv);
+        }
+
         private void DoParameterToScatterChart(string directoryPath, string filename)
         {
             string searchPattern = "*output_parameters*.csv";
@@ -511,6 +522,7 @@ namespace AutoFlow
                     return;
                 }
                 #endregion
+                ClearRefFit();
                 LoadStep1WaferConfig(3);
                 string[] vsm_file = Do.GetFilename(TextBoxDispatcherGetValue(VSM_File_Location), "*.vsm");
                 if (vsm_file.Length != 0)
