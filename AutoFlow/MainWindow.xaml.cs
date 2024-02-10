@@ -36,6 +36,7 @@ using Microsoft.Win32;
 using System.Net.NetworkInformation;
 using Path = System.IO.Path;
 using Newtonsoft.Json;
+using System.Management;
 
 namespace AutoFlow
 {
@@ -216,6 +217,29 @@ namespace AutoFlow
             public int Top;
             public int Right;
             public int Bottom;
+        }
+        #endregion
+
+        #region Software Lock
+        private string GetBoardSerialNumber()
+        {
+            string boardSerial = string.Empty;
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT SerialNumber FROM Win32_BaseBoard");
+            foreach (ManagementObject mo in searcher.Get())
+            {
+                boardSerial = mo["SerialNumber"].ToString();
+                break;
+            }
+            return boardSerial;
+        }
+
+        private void Lock()
+        {
+            if (GetBoardSerialNumber() != "BSS-0123456789")
+            {
+                MessageBox.Show("請聯繫廠商提供Licence!", "確認", MessageBoxButton.OK, MessageBoxImage.Warning);
+                Environment.Exit(0);
+            }
         }
         #endregion
 
@@ -473,9 +497,10 @@ namespace AutoFlow
             return dict;
         }
 
-        private void ClearRefFit()
+        private void RemoveExtraData()
         {
             Do.DeleteFile(Path.Combine(TextBoxDispatcherGetValue(Ref_Fit_Location), "sample_spectrum"), "*dat");
+            Do.DeleteFile(TextBoxDispatcherGetValue(VSM_File_Location), "*dat");
             string waveform_csv = Path.Combine(TextBoxDispatcherGetValue(Ref_Fit_Location), "output_waveform.csv");
             string parameter_csv = Path.Combine(TextBoxDispatcherGetValue(Ref_Fit_Location), "output_parameters.csv");
             if (File.Exists(waveform_csv))
@@ -522,7 +547,7 @@ namespace AutoFlow
                     return;
                 }
                 #endregion
-                ClearRefFit();
+                RemoveExtraData();
                 LoadStep1WaferConfig(3);
                 string[] vsm_file = Do.GetFilename(TextBoxDispatcherGetValue(VSM_File_Location), "*.vsm");
                 if (vsm_file.Length != 0)
@@ -968,6 +993,7 @@ namespace AutoFlow
         #region Parameter and Init
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            //Lock();
             InitialTray();
             LoadConfig();
             //Do.LoadEIM();
