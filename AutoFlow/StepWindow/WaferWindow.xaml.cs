@@ -24,6 +24,7 @@ namespace AutoFlow.StepWindow
         public string CoordX_val { get; set; }
         public string CoordY_val { get; set; }
         public string Origin_val { get; set; }
+        public string Mag_val { get; set; }
     }
     public class WaferPointParameter
     {
@@ -58,6 +59,7 @@ namespace AutoFlow.StepWindow
                 CoordX.Text = WaferParameter_info[0].CoordX_val;
                 CoordY.Text = WaferParameter_info[0].CoordY_val;
                 Origin.Text = WaferParameter_info[0].Origin_val;
+                Mag.Text = WaferParameter_info[0].Mag_val;
             }
         }
 
@@ -69,8 +71,9 @@ namespace AutoFlow.StepWindow
                                           WaferPoint_Csv_Path_val = WaferPoint_Csv_Path.Text,
                                           CoordX_val = CoordX.Text,
                                           CoordY_val = CoordY.Text,
-                                          Origin_val = Origin.Text
-                }
+                                          Origin_val = Origin.Text,
+                                          Mag_val = Mag.Text
+                 }
             };
             Wafer.Save(WaferParameter_config, index);
         }
@@ -177,7 +180,7 @@ namespace AutoFlow.StepWindow
                         if (!string.IsNullOrEmpty(Origin.Text))
                         {
                             System.Drawing.Point origin = Do.ConvertCoordXY(Origin.Text);
-                            EH.ConvertScreenCoordinate(WaferPoint_Csv_Path.Text, new Tuple<int, int>(origin.X, origin.Y));
+                            EH.ConvertScreenCoordinate(WaferPoint_Csv_Path.Text, new Tuple<int, int>(origin.X, origin.Y), Convert.ToDouble(Mag.Text));
                         }
                         else
                         {

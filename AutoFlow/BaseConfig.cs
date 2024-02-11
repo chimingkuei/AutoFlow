@@ -57,7 +57,7 @@ namespace AutoFlow
             BackupRemove();
             string jsonData = JsonConvert.SerializeObject(record);
             string[] contentArray = File.ReadAllText(config_path).Trim('[', ']').Split(new string[] { "}," }, StringSplitOptions.None);
-            contentArray[replace_index] = jsonData.Trim('[', ']', '}');
+            contentArray[replace_index] = jsonData.Trim('[', ']').Trim('}');
             string content = (replace_index == contentArray.Length - 1) ? "[" + string.Join("},", contentArray) + "}]" : "[" + string.Join("},", contentArray) + "]";
             string encryptedContent = encryption ? RSAEncrypt(content) : content;
             File.WriteAllText(config_path, encryptedContent);

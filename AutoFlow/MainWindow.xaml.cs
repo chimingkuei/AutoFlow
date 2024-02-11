@@ -515,7 +515,7 @@ namespace AutoFlow
             List<List<Tuple<string, double, double, double>>> dataListChunks = new List<List<Tuple<string, double, double, double>>>();
             foreach (var chunk in Do.GetFilename(directoryPath, searchPattern))
             {
-                dataListChunks.Add(EH.NewParameterCSVToList(chunk));
+                dataListChunks.Add(EH.ParameterCSVToList(chunk));
             }
             EH.NewParameterToScatterChart(dataListChunks, filename);
         }
@@ -1000,6 +1000,7 @@ namespace AutoFlow
             //Do.CloseCapsLock();
             CheckSendValueInit();
             Model_Type_state = true;
+            Wafer_Type_state = true;
         }
         BaseConfig<Parameter> Config = new BaseConfig<Parameter>(@"Config\Config.json");
         BaseConfig<AutoFlow.StepWindow.Step1Parameter> Step1Config = new BaseConfig<AutoFlow.StepWindow.Step1Parameter>(@"Config\Step1Config.json");
@@ -1012,6 +1013,7 @@ namespace AutoFlow
         private static Step1Window SWInstance;
         private static WaferWindow WWInstance;
         private bool Model_Type_state = false;
+        private bool Wafer_Type_state = false;
         List<AutoFlow.StepWindow.Step1Parameter> Step1Parameter_info;
         List<AutoFlow.StepWindow.WaferPointParameter> WaferPointParameter_info;
         CancellationTokenSource cts;
@@ -1060,6 +1062,7 @@ namespace AutoFlow
                         if (open_setting_file_path.ShowDialog()==true)
                         {
                             Setting_File_Location.Text = open_setting_file_path.FileName;
+                            Logger.WriteLog("設定setting檔案路徑!", LogLevel.General, richTextBoxGeneral);
                         }
                         break;
                     }
@@ -1067,24 +1070,33 @@ namespace AutoFlow
                     {
                         System.Windows.Forms.FolderBrowserDialog open_vsm_folder_path = new System.Windows.Forms.FolderBrowserDialog();
                         open_vsm_folder_path.Description = "選擇vsm檔資料夾";
-                        open_vsm_folder_path.ShowDialog();
-                        Setting_File_Location.Text = open_vsm_folder_path.SelectedPath;
+                        if (open_vsm_folder_path.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                        {
+                            VSM_File_Location.Text = open_vsm_folder_path.SelectedPath;
+                            Logger.WriteLog("設定vsm檔資料夾路徑!", LogLevel.General, richTextBoxGeneral);
+                        }
                         break;
                     }
                 case nameof(Open_Ref_Fit_Folder):
                     {
                         System.Windows.Forms.FolderBrowserDialog open_vsm_folder_path = new System.Windows.Forms.FolderBrowserDialog();
                         open_vsm_folder_path.Description = "選擇Ref-Fit軟體資料夾";
-                        open_vsm_folder_path.ShowDialog();
-                        Ref_Fit_Location.Text = open_vsm_folder_path.SelectedPath;
+                        if (open_vsm_folder_path.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                        {
+                            Ref_Fit_Location.Text = open_vsm_folder_path.SelectedPath;
+                            Logger.WriteLog("設定Ref-Fit軟體資料夾路徑!", LogLevel.General, richTextBoxGeneral);
+                        }
                         break;
                     }
                 case nameof(Open_Xlsx_Folder):
                     {
                         System.Windows.Forms.FolderBrowserDialog open_xlsx_folder_path = new System.Windows.Forms.FolderBrowserDialog();
                         open_xlsx_folder_path.Description = "選擇xlsx檔資料夾";
-                        open_xlsx_folder_path.ShowDialog();
-                        Xlsx_File_Location.Text = open_xlsx_folder_path.SelectedPath;
+                        if (open_xlsx_folder_path.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                        {
+                            Xlsx_File_Location.Text = open_xlsx_folder_path.SelectedPath;
+                            Logger.WriteLog("設定xlsx檔資料夾路徑!", LogLevel.General, richTextBoxGeneral);
+                        }
                         break;
                     }
                 case nameof(VSM_Set_Windows):
@@ -1094,6 +1106,7 @@ namespace AutoFlow
                         int w = Convert.ToInt32(VSM_Windows_Width.Text);
                         int h = Convert.ToInt32(VSM_Windows_Height.Text);
                         Do.SetWindowsPosition(VSM_Windows_Title.Text, new Tuple<int, int, int, int>(x, y, w, h));
+                        Logger.WriteLog("設定vsm對話視窗位置!", LogLevel.General, richTextBoxGeneral);
                         break;
                     }
                 case nameof(Dat_Set_Windows):
@@ -1103,6 +1116,7 @@ namespace AutoFlow
                         int w = Convert.ToInt32(Dat_Windows_Width.Text);
                         int h = Convert.ToInt32(Dat_Windows_Height.Text);
                         Do.SetWindowsPosition(Dat_Windows_Title.Text, new Tuple<int, int, int, int>(x, y, w, h));
+                        Logger.WriteLog("設定dat對話視窗位置!", LogLevel.General, richTextBoxGeneral);
                         break;
                     }
                 case nameof(Save_Config):
@@ -1144,7 +1158,18 @@ namespace AutoFlow
         #region Combobox SelectionChanged
         private void Wafer_Type_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            if (Wafer_Type_state)
+            {
+                if (IsWaferWindowVisible(WWInstance))
+                {
+                    WWInstance.Close();
+                }
+                if (IsStep1WindowVisible(SWInstance))
+                {
+                    SWInstance.Close();
+                }
+                Logger.WriteLog("因切換晶圓尺寸，關閉相關參數頁面，請重新開啟!", LogLevel.General, richTextBoxGeneral);
+            }
         }
 
         private void Model_Type_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1157,18 +1182,19 @@ namespace AutoFlow
                     {
                         string stringToRemove = "System.Windows.Controls.ComboBoxItem: ";
                         Do.CheckModel(Setting_File_Location.Text, Model_Type.SelectedValue.ToString().Replace(stringToRemove, ""));
+                        Logger.WriteLog($"更新{Model_Type.SelectedValue.ToString().Replace(stringToRemove, "")}模型!", LogLevel.General, richTextBoxGeneral);
                     }
                     else
                     {
                         MessageBox.Show("setting檔案不存在!", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        Logger.WriteLog("更新模型失敗!原因:setting檔案不存在!", LogLevel.General, richTextBoxGeneral);
                     }
                 }
                 else
                 {
                     MessageBox.Show("請輸入setting檔案位置!", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    Logger.WriteLog("更新模型失敗!原因:setting檔案路徑欄位為空!", LogLevel.General, richTextBoxGeneral);
                 }
-
-
             }
         }
         #endregion

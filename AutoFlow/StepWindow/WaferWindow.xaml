@@ -33,6 +33,7 @@
             </Grid>
         </GroupBox>
         <Button x:Name="Save_Config" Style="{StaticResource CircleButton}" Margin="475,188,25,146" Content="儲存參數" Click="Main_Btn_Click"/>
-        <TextBox x:Name="Origin" Style="{StaticResource OriginTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="404,145,70,239"/>
+        <TextBox x:Name="Origin" Style="{StaticResource OriginTextBox}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="350,141,124,243"/>
+        <xctk:DoubleUpDown x:Name="Mag" Margin="475,137,16,242" Minimum="0" Increment="0.01" TextAlignment="Center" FontSize="12" Watermark="請輸入倍率" HorizontalContentAlignment="Center" RenderTransformOrigin="0.509,0.672"/>
     </Grid>
 </Window>

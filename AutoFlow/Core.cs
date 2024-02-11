@@ -535,12 +535,6 @@ namespace AutoFlow
         #endregion
 
         #region Generate output_parameters.xlsx
-        private string ParameterGetFileNameWithoutExtension(string filename)
-        {
-            string str = Path.GetFileNameWithoutExtension(filename).Split('_')[0];
-            return str.Substring(0, str.Length - 1);
-        }
-
         private string ParameterModifyCoordinate(string filename)
         {
             string[] parts = Path.GetFileNameWithoutExtension(filename).Split('_');
@@ -548,65 +542,7 @@ namespace AutoFlow
             return coordinate;
         }
 
-        private string ParameterGetCsvB2Info(string csvfilepath)
-        {
-            using (StreamReader reader = new StreamReader(csvfilepath))
-            {
-                string headerLine = reader.ReadLine();
-                string secondLine = reader.ReadLine();
-                string line = reader.ReadLine();
-                string[] fields = line.Split(',');
-                return ParameterGetFileNameWithoutExtension(fields[1]);
-            }
-            
-        }
-
-        private List<List<Tuple<string, double, double, double>>> ParameterCSVToList(string csvfilepath)
-        {
-            List<List<Tuple<string, double, double, double>>> dataListChunks = new List<List<Tuple<string, double, double, double>>>();
-            if (File.Exists(csvfilepath))
-            {
-                string tmp = ParameterGetCsvB2Info(csvfilepath);
-                using (StreamReader reader = new StreamReader(csvfilepath))
-                {
-                    // 跳過標題行
-                    reader.ReadLine();
-                    List<Tuple<string, double, double, double>> currentChunk = new List<Tuple<string, double, double, double>>();
-                    while (!reader.EndOfStream)
-                    {
-                        string line = reader.ReadLine();
-                        string[] fields = line.Split(',');
-                        if (ParameterGetFileNameWithoutExtension(fields[1]) == tmp)
-                        {
-                            Tuple<string, double, double, double> rowData = new Tuple<string, double, double, double>(fields[1], Convert.ToDouble(fields[2]), Convert.ToDouble(fields[3]), Convert.ToDouble(fields[4]));
-                            currentChunk.Add(rowData);
-                        }
-                        else
-                        {
-                            dataListChunks.Add(currentChunk);
-                            tmp = ParameterGetFileNameWithoutExtension(fields[1]);
-                            currentChunk = new List<Tuple<string, double, double, double>>();
-                            Tuple<string, double, double, double> rowData = new Tuple<string, double, double, double>(fields[1], Convert.ToDouble(fields[2]), Convert.ToDouble(fields[3]), Convert.ToDouble(fields[4]));
-                            currentChunk.Add(rowData);
-                        }
-                    }
-                    dataListChunks.Add(currentChunk);
-                }
-                #region For debug
-                //foreach (var chunk in dataListChunks)
-                //{
-                //    Console.WriteLine("--------------------------");
-                //    foreach (var tuple in chunk)
-                //    {
-                //        Console.WriteLine($"({tuple.Item1}, {tuple.Item2}, {tuple.Item3}, {tuple.Item4})");
-                //    }
-                //}
-                #endregion
-            }
-            return dataListChunks;
-        }
-
-        public List<Tuple<string, double, double, double>> NewParameterCSVToList(string csvfilepath)
+        public List<Tuple<string, double, double, double>> ParameterCSVToList(string csvfilepath)
         {
             List<Tuple<string, double, double, double>> currentChunk = new List<Tuple<string, double, double, double>>();
             if (File.Exists(csvfilepath))
@@ -639,19 +575,7 @@ namespace AutoFlow
             worksheet.Cells["H1"].Value = "Gp3";
         }
 
-        private void ParameterSetChartStyle(ExcelChart chart, Tuple<int, int, int, int> position, List<List<Tuple<string, double, double, double>>> lists)
-        {
-            chart.SetPosition(position.Item1, position.Item2, position.Item3, position.Item4);
-            chart.SetSize(600, 400);
-            chart.Title.Text = waferID;
-            chart.Legend.Position = eLegendPosition.Right;
-            chart.XAxis.MajorGridlines.Fill.Color = Color.LightGray;
-            chart.XAxis.Title.Text = "Away From center (mm)";
-            chart.YAxis.MajorGridlines.Fill.Color = Color.LightGray;
-            chart.YAxis.Title.Text = "Shifted %";
-        }
-
-        private void NewParameterSetChartStyle(ExcelChart chart, Tuple<int, int, int, int> position, List<List<Tuple<string, double, double, double>>> lists, string title)
+        private void ParameterSetChartStyle(ExcelChart chart, Tuple<int, int, int, int> position, List<List<Tuple<string, double, double, double>>> lists, string title)
         {
             chart.SetPosition(position.Item1, position.Item2, position.Item3, position.Item4);
             chart.SetSize(600, 400);
@@ -670,36 +594,12 @@ namespace AutoFlow
             }
         }
 
-        private void DrawParameterScatterChart(ExcelWorksheet worksheet, List<List<Tuple<string, double, double, double>>> lists, string chartnameGp, int pos, string field)
+        private void DrawParameterScatterChart(ExcelWorksheet worksheet, List<List<Tuple<string, double, double, double>>> lists, string chartnameGp, int pos, string field, string title)
         {
             if (!CheckChartName(worksheet, chartnameGp))
             {
                 ExcelChart chart = worksheet.Drawings.AddChart(chartnameGp, eChartType.XYScatter);
-                ParameterSetChartStyle(chart, new Tuple<int, int, int, int>(pos, 0, 9, 0), lists);
-                int start = 2;
-                for (int list_index = 0; list_index < lists.Count; list_index++)
-                {
-                    var x = GetRange(worksheet, "E", start, start + lists[list_index].Count - 1);
-                    var y = GetRange(worksheet, field, start, start + lists[list_index].Count - 1);
-                    var series = (ExcelScatterChartSerie)chart.Series.Add(y, x);
-                    series.Marker.Style = eMarkerStyle.Square;
-                    Random rand = new Random();
-                    Color randomColor = Color.FromArgb(rand.Next(256), rand.Next(256), rand.Next(256));
-                    series.Fill.Color = randomColor;
-                    //series.Fill.Color = Color.Red;
-                    series.Header = waferID;
-                    start += lists[list_index].Count;
-                }
-            }
-
-        }
-
-        private void NewDrawParameterScatterChart(ExcelWorksheet worksheet, List<List<Tuple<string, double, double, double>>> lists, string chartnameGp, int pos, string field, string title)
-        {
-            if (!CheckChartName(worksheet, chartnameGp))
-            {
-                ExcelChart chart = worksheet.Drawings.AddChart(chartnameGp, eChartType.XYScatter);
-                NewParameterSetChartStyle(chart, new Tuple<int, int, int, int>(pos, 0, 9, 0), lists, title);
+                ParameterSetChartStyle(chart, new Tuple<int, int, int, int>(pos, 0, 9, 0), lists, title);
                 int start = 2;
                 for (int list_index = 0; list_index < lists.Count; list_index++)
                 {
@@ -716,46 +616,6 @@ namespace AutoFlow
                 }
             }
 
-        }
-
-        public void ParameterToScatterChart(string csvfilepath, string xlsxfilepath)
-        {
-            List<List<Tuple<string, double, double, double>>> lists = ParameterCSVToList(csvfilepath);
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            using (var package = new ExcelPackage())
-            {
-                var worksheet = package.Workbook.Worksheets.Add("output_parameters");
-                ParameterFieldLabel(worksheet);
-                int cell_y = 2;
-                for (int list_index = 0; list_index < lists.Count; list_index++)
-                {
-                    int num = lists[list_index].Count;
-                    for (int cell_index = 0; cell_index < num; cell_index++)
-                    {
-                        worksheet.Cells["A" + (cell_y + cell_index).ToString()].Value = lists[list_index][cell_index].Item1;
-                        worksheet.Cells["B" + (cell_y + cell_index).ToString()].Value = lists[list_index][cell_index].Item2;
-                        worksheet.Cells["C" + (cell_y + cell_index).ToString()].Value = lists[list_index][cell_index].Item3;
-                        worksheet.Cells["D" + (cell_y + cell_index).ToString()].Value = lists[list_index][cell_index].Item4;
-                        worksheet.Cells["E" + (cell_y + cell_index).ToString()].Value = Convert.ToInt32(ParameterModifyCoordinate(lists[list_index][cell_index].Item1));
-                        worksheet.Cells["F" + (cell_y + cell_index).ToString()].Value = (lists[list_index][cell_index].Item2 - 1) * 100;
-                        worksheet.Cells["G" + (cell_y + cell_index).ToString()].Value = lists[list_index][cell_index].Item3;
-                        worksheet.Cells["H" + (cell_y + cell_index).ToString()].Value = (lists[list_index][cell_index].Item4 - 1) * 100;
-                    }
-                    cell_y += num;
-                }
-                DrawParameterScatterChart(worksheet, lists, "ScatterPlotGp1", 0, "F");
-                DrawParameterScatterChart(worksheet, lists, "ScatterPlotGp2", 20, "G");
-                DrawParameterScatterChart(worksheet, lists, "ScatterPlotGp3", 40, "H");
-                try
-                {
-                    package.SaveAs(new FileInfo(xlsxfilepath));
-                }
-                catch
-                {
-                    Console.WriteLine(xlsxfilepath + " file is opened! Please close that file.");
-                }
-
-            }
         }
 
         public void NewParameterToScatterChart(List<List<Tuple<string, double, double, double>>> lists, string xlsxfilepath)
@@ -782,9 +642,9 @@ namespace AutoFlow
                     }
                     cell_y += num;
                 }
-                NewDrawParameterScatterChart(worksheet, lists, "ScatterPlotGp1", 0, "F", "GP1");
-                NewDrawParameterScatterChart(worksheet, lists, "ScatterPlotGp2", 20, "G", "GP2");
-                NewDrawParameterScatterChart(worksheet, lists, "ScatterPlotGp3", 40, "H", "GP3");
+                DrawParameterScatterChart(worksheet, lists, "ScatterPlotGp1", 0, "F", "GP1");
+                DrawParameterScatterChart(worksheet, lists, "ScatterPlotGp2", 20, "G", "GP2");
+                DrawParameterScatterChart(worksheet, lists, "ScatterPlotGp3", 40, "H", "GP3");
                 try
                 {
                     package.SaveAs(new FileInfo(xlsxfilepath));
@@ -833,7 +693,7 @@ namespace AutoFlow
             return data;
         }
 
-        public List<string> ConvertScreenCoordinate(string csvfilepath, Tuple<int, int> origin_screen_index)
+        public List<string> ConvertScreenCoordinate(string csvfilepath, Tuple<int, int> origin_screen_index, double mag)
         {
             List<string> data = new List<string>();
             data.Add("X,Y,Screen X,Screen Y");
@@ -848,8 +708,8 @@ namespace AutoFlow
                         {
                             string line = reader.ReadLine();
                             string[] fields = line.Split(',');
-                            string x = Math.Round(origin_screen_index.Item1 + Convert.ToInt32(fields[0]) * 5.2).ToString();
-                            string y = Math.Round(origin_screen_index.Item2 - Convert.ToInt32(fields[1]) * 5.2).ToString();
+                            string x = Math.Round(origin_screen_index.Item1 + Convert.ToInt32(fields[0]) * mag).ToString();
+                            string y = Math.Round(origin_screen_index.Item2 - Convert.ToInt32(fields[1]) * mag).ToString();
                             data.Add(fields[0] + "," + fields[1] + "," + x + "," + y);
                         }
                     }
