@@ -42,7 +42,6 @@ namespace AutoFlow
 {
     public class Parameter
     {
-        public List<System.Drawing.Point> click_points { get; set; }
         public string Setting_File_Location_val { get; set; }
         public string Ref_Fit_Location_val { get; set; }
         public string VSM_File_Location_val { get; set; }
@@ -277,7 +276,6 @@ namespace AutoFlow
             List<Parameter> Parameter_config = new List<Parameter>()
             {
                 new Parameter() {
-                    click_points = pointlist,
                     Setting_File_Location_val = Setting_File_Location.Text,
                     Ref_Fit_Location_val = Ref_Fit_Location.Text,
                     VSM_File_Location_val = VSM_File_Location.Text,
@@ -375,7 +373,8 @@ namespace AutoFlow
             // List螢幕座標位置
             int screen_x = Convert.ToInt32(_downPoint.X / Display_Image.ActualWidth * 1920);
             int screen_y = Convert.ToInt32(_downPoint.Y / Display_Image.ActualHeight * 1080);
-            pointlist.Add(new System.Drawing.Point(screen_x, screen_y));
+            Screenpointlist.Add(new System.Drawing.Point(screen_x, screen_y));
+            pointlist.Add(_downPoint);
             Logger.WriteLog($"螢幕(X,Y)座標:({screen_x},{screen_y})", LogLevel.General, richTextBoxGeneral);
         }
         private void RemoveDot()
@@ -384,7 +383,7 @@ namespace AutoFlow
             {
                 Canvas.Children.Remove(dotlist[dotlist.Count - 1]);
                 dotlist.Remove(dotlist[dotlist.Count - 1]);
-                pointlist.Remove(pointlist[pointlist.Count - 1]);
+                Screenpointlist.Remove(Screenpointlist[Screenpointlist.Count - 1]);
             }
         }
         private void RemoveCross()
@@ -395,8 +394,9 @@ namespace AutoFlow
                 Canvas.Children.Remove(cross2list[cross2list.Count - 1]);
                 cross1list.Remove(cross1list[cross1list.Count - 1]);
                 cross2list.Remove(cross2list[cross2list.Count - 1]);
+                Screenpointlist.Remove(Screenpointlist[Screenpointlist.Count - 1]);
                 pointlist.Remove(pointlist[pointlist.Count - 1]);
-                if (pointlist.Count - 1 == -1)
+                if (Screenpointlist.Count == 0)
                 {
                     _downPoint.X = 0;
                     _downPoint.Y = 0;
@@ -404,10 +404,9 @@ namespace AutoFlow
                 }
                 else
                 {
-                    int screen_x = pointlist[pointlist.Count - 1].X;
-                    int screen_y = pointlist[pointlist.Count - 1].Y;
-                    _downPoint.X = Convert.ToInt32(Convert.ToDouble(screen_x) / 1920 * Display_Image.ActualWidth);
-                    _downPoint.Y = Convert.ToInt32(Convert.ToDouble(screen_y) / 1080 * Display_Image.ActualHeight);
+                    int screen_x = Screenpointlist[Screenpointlist.Count - 1].X;
+                    int screen_y = Screenpointlist[Screenpointlist.Count - 1].Y;
+                    _downPoint = pointlist[pointlist.Count - 1];
                     Logger.WriteLog($"螢幕(X,Y)座標:({screen_x},{screen_y})", LogLevel.General, richTextBoxGeneral);
                 }
 
@@ -1133,7 +1132,8 @@ namespace AutoFlow
         private List<Ellipse> dotlist = new List<Ellipse>();
         private List<Line> cross1list = new List<Line>();
         private List<Line> cross2list = new List<Line>();
-        private List<System.Drawing.Point> pointlist = new List<System.Drawing.Point>();
+        private List<System.Drawing.Point> Screenpointlist = new List<System.Drawing.Point>();
+        private List<System.Windows.Point> pointlist = new List<System.Windows.Point>();
         private void AddPointButtonDown(object sender, MouseButtonEventArgs e)
         {
             _started = true;

@@ -76,6 +76,7 @@
                         <ComboBoxItem IsSelected="True">D3-18</ComboBoxItem>
                         <ComboBoxItem>D3-19</ComboBoxItem>
                         <ComboBoxItem>D4-1</ComboBoxItem>
+                        <ComboBoxItem>D4-7</ComboBoxItem>
                     </ComboBox>
                     <WrapPanel Orientation="Horizontal" Margin="6,123,567,35">
                         <Button x:Name="Open_Setting_File_Path" Style="{StaticResource FileButtonStyle}" Margin="23,13.2,0,0" FontSize="18" Height="51" Width="54" Click="Parameter_Btn_Click"/>
