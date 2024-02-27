@@ -408,12 +408,12 @@ namespace AutoFlow
             return dict;
         }
 
-        private void WaveSetChartStyle(ExcelChart chart, Tuple<int, int, int, int> position, List<List<Tuple<string, string, double, double>>> lists)
+        private void WaveSetChartStyle(ExcelChart chart, Tuple<int, int, int, int> position, List<List<Tuple<string, string, double, double>>> lists, string title)
         {
             Dictionary<string, int> range= WaveGetTupleExtremum(lists);
             chart.SetPosition(position.Item1, position.Item2, position.Item3, position.Item4);
             chart.SetSize(600, 400);
-            chart.Title.Text = waferID;
+            chart.Title.Text = title;
             chart.Legend.Position = eLegendPosition.Right;
             chart.XAxis.MajorGridlines.Fill.Color = Color.LightGray;
             chart.XAxis.MaxValue = range["XMax"];
@@ -502,7 +502,7 @@ namespace AutoFlow
                     if (!CheckChartName(worksheet, chartname))
                     {
                         ExcelChart chart = worksheet.Drawings.AddChart(chartname, eChartType.XYScatterLinesNoMarkers);
-                        WaveSetChartStyle(chart, new Tuple<int, int, int, int>((list_index/2)*20, 0, 5, 0), lists);
+                        WaveSetChartStyle(chart, new Tuple<int, int, int, int>((list_index/2)*20, 0, 5, 0), lists, Path.GetFileNameWithoutExtension(lists[list_index][0].Item2));
                         //WaveSetChartStyle(chart, new Tuple<int, int, int, int>(cell_y, 0, 5, 0), lists);
                         int tag0_count = lists[list_index].Count;
                         int tag1_count = lists[list_index + 1].Count;
@@ -534,7 +534,7 @@ namespace AutoFlow
         }
         #endregion
 
-        #region Generate output_parameters.xlsx
+        #region Generate output_parameters.xlsx old version
         private string ParameterModifyCoordinate(string filename)
         {
             string[] parts = Path.GetFileNameWithoutExtension(filename).Split('_');

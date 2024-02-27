@@ -814,7 +814,7 @@ namespace AutoFlow
                         }
                         if (Do.CheckCSV(dict["WaveCsvPath"], dict["ParameterCsvPath"], method, timeout))
                         {
-                            EH.waferID = Path.GetFileNameWithoutExtension(vsm_file[file]);
+                            //EH.waferID = Path.GetFileNameWithoutExtension(vsm_file[file]);
                             if (CheckBoxDispatcherGetValue(Save_Datfile))
                             {
                                 Do.MoveDatFile(dict["sample_spectrum"], Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), date, Path.GetFileName(vsm_file[file])));
@@ -995,8 +995,8 @@ namespace AutoFlow
             //Lock();
             InitialTray();
             LoadConfig();
-            //Do.LoadEIM();
-            //Do.CloseCapsLock();
+            Do.LoadEIM();
+            Do.CloseCapsLock();
             CheckSendValueInit();
             Model_Type_state = true;
             Wafer_Type_state = true;
