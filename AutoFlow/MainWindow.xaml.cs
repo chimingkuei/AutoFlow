@@ -37,6 +37,7 @@ using System.Net.NetworkInformation;
 using Path = System.IO.Path;
 using Newtonsoft.Json;
 using System.Management;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace AutoFlow
 {
@@ -508,17 +509,6 @@ namespace AutoFlow
                 File.Delete(parameter_csv);
         }
 
-        private void DoParameterToScatterChart(string directoryPath, string filename)
-        {
-            string searchPattern = "*output_parameters*.csv";
-            List<List<Tuple<string, double, double, double>>> dataListChunks = new List<List<Tuple<string, double, double, double>>>();
-            foreach (var chunk in Do.GetFilename(directoryPath, searchPattern))
-            {
-                dataListChunks.Add(EH.ParameterCSVToList(chunk));
-            }
-            EH.NewParameterToScatterChart(dataListChunks, filename);
-        }
-
         private void AutoStart()
         {
             cts = new CancellationTokenSource();
@@ -814,7 +804,7 @@ namespace AutoFlow
                         }
                         if (Do.CheckCSV(dict["WaveCsvPath"], dict["ParameterCsvPath"], method, timeout))
                         {
-                            //EH.waferID = Path.GetFileNameWithoutExtension(vsm_file[file]);
+                            EH.waferID = Path.GetFileNameWithoutExtension(vsm_file[file]);
                             if (CheckBoxDispatcherGetValue(Save_Datfile))
                             {
                                 Do.MoveDatFile(dict["sample_spectrum"], Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), date, Path.GetFileName(vsm_file[file])));
@@ -827,10 +817,12 @@ namespace AutoFlow
                             {
                                 File.Move(dict["WaveCsvPath"], dict["MoveWaveCsvPath"]);
                             }
-                            File.Move(dict["ParameterCsvPath"], dict["MoveParameterCsvPath"]);
+                            if (EH.ParameterToScatterChart(dict["ParameterCsvPath"], dict["MoveParameterCsvPath"]))
+                            {
+                                File.Move(dict["ParameterCsvPath"], dict["MoveParameterCsvPath"]);
+                            }
                         }
                     };
-                    DoParameterToScatterChart(dict["DatePath"], dict["ParameterSummaryXlsxPath"]);
                     this.Dispatcher.Invoke(() =>
                     {
                         Logger.WriteLog("自動化流程完成!", LogLevel.General, richTextBoxGeneral);
@@ -995,8 +987,8 @@ namespace AutoFlow
             //Lock();
             InitialTray();
             LoadConfig();
-            Do.LoadEIM();
-            Do.CloseCapsLock();
+            //Do.LoadEIM();
+            //Do.CloseCapsLock();
             CheckSendValueInit();
             Model_Type_state = true;
             Wafer_Type_state = true;
@@ -1041,7 +1033,8 @@ namespace AutoFlow
                     }
                 case nameof(Open_Wafer_Point):
                     {
-                        OpenWaferWindow();
+                        //OpenWaferWindow();
+                        EH.ParameterToScatterChart(@"D:\Chimingkuei\repos\Project\AutoFlow\Document\output_parameters.csv", @"D:\Chimingkuei\repos\Project\AutoFlow\Document\output_parameters.xlsx");
                         break;
                     }
             }

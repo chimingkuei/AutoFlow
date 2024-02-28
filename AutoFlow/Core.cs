@@ -31,6 +31,8 @@ using System.Windows.Media.TextFormatting;
 using System.Collections;
 using System.Text.RegularExpressions;
 using System.Runtime.InteropServices.ComTypes;
+using System.Globalization;
+using OpenCvSharp.Internal;
 
 namespace AutoFlow
 {
@@ -534,17 +536,19 @@ namespace AutoFlow
         }
         #endregion
 
-        #region Generate output_parameters.xlsx old version
-        private string ParameterModifyCoordinate(string filename)
+        #region Generate output_parameters.xlsx
+        private void ParameterFieldLabel(ExcelWorksheet worksheet)
         {
-            string[] parts = Path.GetFileNameWithoutExtension(filename).Split('_');
-            string coordinate = parts[1].Trim('X') == "0" ? parts[2].Trim('Y') : parts[1].Trim('X');
-            return coordinate;
+            string[] labels = { "tag", "filename", "X", "Y", "Gp1", "Gp2", "Gp3", "Gp4", "WL", "gth", "dn", "dip(meas)", "sbc(meas)", "sbw(meas)", "dip(sim)", "sbc(sim)", "sbw(sim)", "Gp1", "Gp2", "Gp3"};
+            for (int i = 0; i < labels.Length; i++)
+            {
+                worksheet.Cells[1, i + 1].Value = labels[i];
+            }
         }
 
-        public List<Tuple<string, double, double, double>> ParameterCSVToList(string csvfilepath)
+        private List<string> ParameterCSVToList(string csvfilepath)
         {
-            List<Tuple<string, double, double, double>> currentChunk = new List<Tuple<string, double, double, double>>();
+            List<string> currentChunk = new List<string>();
             if (File.Exists(csvfilepath))
             {
                 using (StreamReader reader = new StreamReader(csvfilepath))
@@ -554,37 +558,40 @@ namespace AutoFlow
                     while (!reader.EndOfStream)
                     {
                         string line = reader.ReadLine();
-                        string[] fields = line.Split(',');
-                        Tuple<string, double, double, double> rowData = new Tuple<string, double, double, double>(fields[1], Convert.ToDouble(fields[2]), Convert.ToDouble(fields[3]), Convert.ToDouble(fields[4]));
-                        currentChunk.Add(rowData);
+                        currentChunk.Add(line);
                     }
                 }
             }
             return currentChunk;
         }
 
-        private void ParameterFieldLabel(ExcelWorksheet worksheet)
-        {
-            worksheet.Cells["A1"].Value = "filename";
-            worksheet.Cells["B1"].Value = "Gp1";
-            worksheet.Cells["C1"].Value = "Gp2";
-            worksheet.Cells["D1"].Value = "Gp3";
-            worksheet.Cells["E1"].Value = "";
-            worksheet.Cells["F1"].Value = "Gp1";
-            worksheet.Cells["G1"].Value = "Gp2";
-            worksheet.Cells["H1"].Value = "Gp3";
-        }
-
-        private void ParameterSetChartStyle(ExcelChart chart, Tuple<int, int, int, int> position, List<List<Tuple<string, double, double, double>>> lists, string title)
+        private void ParameterSetChartStyle(ExcelChart chart, Tuple<int, int, int, int> position, string title)
         {
             chart.SetPosition(position.Item1, position.Item2, position.Item3, position.Item4);
             chart.SetSize(600, 400);
-            chart.Title.Text = title;
+            if (title == "Gp1")
+            {
+                chart.Title.Text = waferID + "_P-DBR";
+            }
+            else if (title == "Gp2")
+            {
+                chart.Title.Text = waferID + "_Cavity thickness";
+            }
+            else if (title == "Gp3")
+            {
+                chart.Title.Text = waferID + "_N-DBR";
+            }
+            else
+            {
+                chart.Title.Text = "Gp1";
+            }
             chart.Legend.Position = eLegendPosition.Right;
             chart.XAxis.MajorGridlines.Fill.Color = Color.LightGray;
+            chart.XAxis.MajorUnit = 10;
             chart.XAxis.Title.Text = "Away From center (mm)";
             chart.YAxis.MajorGridlines.Fill.Color = Color.LightGray;
-            if (title == "GP2")
+            chart.YAxis.Title.TextVertical = eTextVerticalType.Vertical270;
+            if (title == "Gp2")
             {
                 chart.YAxis.Title.Text = "Shifted Thickness (mm)";
             }
@@ -592,59 +599,126 @@ namespace AutoFlow
             {
                 chart.YAxis.Title.Text = "Shifted %";
             }
+            
         }
 
-        private void DrawParameterScatterChart(ExcelWorksheet worksheet, List<List<Tuple<string, double, double, double>>> lists, string chartnameGp, int pos, string field, string title)
+        //後續將x、y改成大寫
+        private int GetCoord(string filename, string type)
+        {
+            int coord = 0;
+            if (type == "X")
+            {
+                coord = Convert.ToInt32(Path.GetFileNameWithoutExtension(filename).Split('_')[1].Trim('x'));
+            }
+            else if (type == "Y")
+            {
+                coord = Convert.ToInt32(Path.GetFileNameWithoutExtension(filename).Split('_')[2].Trim('y'));
+            }
+            return coord;
+        }
+
+        private Dictionary<string, int> FindZeroIndex(List<string> list_string)
+        {
+            List<int> coord_x = new List<int>();
+            for (int i = 0; i < list_string.Count; i++)
+            {
+                string filename = list_string[i].Split(',')[1];
+                int index = GetCoord(filename, "X");
+                coord_x.Add(index);
+            }
+            int firstZeroIndex = coord_x.FindIndex(num => num == 0);
+            int lastZeroIndex = coord_x.FindLastIndex(num => num == 0);
+            Dictionary<string, int> dict = new Dictionary<string, int>();
+            dict.Add("firstZeroIndex", firstZeroIndex);
+            dict.Add("lastZeroIndex", lastZeroIndex);
+            return dict;
+        }
+
+        private void DrawParameterScatterChart(ExcelWorksheet worksheet, List<string> list_string, string chartnameGp, int pos, string title, string field, int yaxis_length)
         {
             if (!CheckChartName(worksheet, chartnameGp))
             {
                 ExcelChart chart = worksheet.Drawings.AddChart(chartnameGp, eChartType.XYScatter);
-                ParameterSetChartStyle(chart, new Tuple<int, int, int, int>(pos, 0, 9, 0), lists, title);
-                int start = 2;
-                for (int list_index = 0; list_index < lists.Count; list_index++)
-                {
-                    var x = GetRange(worksheet, "E", start, start + lists[list_index].Count - 1);
-                    var y = GetRange(worksheet, field, start, start + lists[list_index].Count - 1);
-                    var series = (ExcelScatterChartSerie)chart.Series.Add(y, x);
-                    series.Marker.Style = eMarkerStyle.Square;
-                    Random rand = new Random();
-                    Color randomColor = Color.FromArgb(rand.Next(256), rand.Next(256), rand.Next(256));
-                    series.Fill.Color = randomColor;
-                    //series.Fill.Color = Color.Red;
-                    series.Header = Path.GetFileNameWithoutExtension(lists[list_index][0].Item1).Split('_')[0];
-                    start += lists[list_index].Count;
-                }
+                ParameterSetChartStyle(chart, new Tuple<int, int, int, int>(pos, 0, 22, 0), title);
+                var yaxis_x = GetRange(worksheet, "D", 2, yaxis_length + 1);
+                var yaxis_y = GetRange(worksheet, field, 2, yaxis_length + 1);
+                var yaxis_series = (ExcelScatterChartSerie)chart.Series.Add(yaxis_y, yaxis_x);
+                yaxis_series.Marker.Style = eMarkerStyle.Diamond;
+                yaxis_series.Fill.Color = Color.AliceBlue;
+                yaxis_series.Header = "Y";
+                var xaxis_x1 = GetRange(worksheet, "C", yaxis_length + 2, list_string.Count + 1);
+                var xaxis_y1 = GetRange(worksheet, field, yaxis_length + 2, list_string.Count + 1);
+                var xaxis_series1 = (ExcelScatterChartSerie)chart.Series.Add(xaxis_y1, xaxis_x1);
+                xaxis_series1.Marker.Style = eMarkerStyle.Square;
+                xaxis_series1.Fill.Color = Color.Orange;
+                xaxis_series1.Header = "X";
             }
-
         }
 
-        public void NewParameterToScatterChart(List<List<Tuple<string, double, double, double>>> lists, string xlsxfilepath)
+        public bool ParameterToScatterChart(string csvfilepath, string xlsxfilepath)
         {
+            List<string> list_string = ParameterCSVToList(csvfilepath);
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using (var package = new ExcelPackage())
             {
                 var worksheet = package.Workbook.Worksheets.Add("output_parameters");
                 ParameterFieldLabel(worksheet);
-                int cell_y = 2;
-                for (int list_index = 0; list_index < lists.Count; list_index++)
+                Dictionary<string, int> dict = FindZeroIndex(list_string);
+                int index1 = 2;
+                for (int list_string_index = dict["firstZeroIndex"]; list_string_index < list_string.Count; list_string_index++)
                 {
-                    int num = lists[list_index].Count;
-                    for (int cell_index = 0; cell_index < num; cell_index++)
-                    {
-                        worksheet.Cells["A" + (cell_y + cell_index).ToString()].Value = lists[list_index][cell_index].Item1;
-                        worksheet.Cells["B" + (cell_y + cell_index).ToString()].Value = lists[list_index][cell_index].Item2;
-                        worksheet.Cells["C" + (cell_y + cell_index).ToString()].Value = lists[list_index][cell_index].Item3;
-                        worksheet.Cells["D" + (cell_y + cell_index).ToString()].Value = lists[list_index][cell_index].Item4;
-                        worksheet.Cells["E" + (cell_y + cell_index).ToString()].Value = Convert.ToInt32(ParameterModifyCoordinate(lists[list_index][cell_index].Item1));
-                        worksheet.Cells["F" + (cell_y + cell_index).ToString()].Value = (lists[list_index][cell_index].Item2 - 1) * 100;
-                        worksheet.Cells["G" + (cell_y + cell_index).ToString()].Value = lists[list_index][cell_index].Item3;
-                        worksheet.Cells["H" + (cell_y + cell_index).ToString()].Value = (lists[list_index][cell_index].Item4 - 1) * 100;
-                    }
-                    cell_y += num;
+                    string[] fields = list_string[list_string_index].Split(',');
+                    worksheet.Cells["A" + index1.ToString()].Value = Convert.ToDouble(fields[0]);
+                    worksheet.Cells["B" + index1.ToString()].Value = fields[1];
+                    worksheet.Cells["C" + index1.ToString()].Value = GetCoord(fields[1], "X");
+                    worksheet.Cells["D" + index1.ToString()].Value = GetCoord(fields[1], "Y");
+                    worksheet.Cells["E" + index1.ToString()].Value = Convert.ToDouble(fields[2]);
+                    worksheet.Cells["F" + index1.ToString()].Value = Convert.ToDouble(fields[3]);
+                    worksheet.Cells["G" + index1.ToString()].Value = Convert.ToDouble(fields[4]);
+                    worksheet.Cells["H" + index1.ToString()].Value = Convert.ToDouble(fields[5]);
+                    worksheet.Cells["I" + index1.ToString()].Value = Convert.ToDouble(fields[6]);
+                    worksheet.Cells["J" + index1.ToString()].Value = Convert.ToDouble(fields[7]);
+                    worksheet.Cells["K" + index1.ToString()].Value = Convert.ToDouble(fields[8]);
+                    worksheet.Cells["L" + index1.ToString()].Value = Convert.ToDouble(fields[9]);
+                    worksheet.Cells["M" + index1.ToString()].Value = Convert.ToDouble(fields[10]);
+                    worksheet.Cells["N" + index1.ToString()].Value = Convert.ToDouble(fields[11]);
+                    worksheet.Cells["O" + index1.ToString()].Value = Convert.ToDouble(fields[12]);
+                    worksheet.Cells["P" + index1.ToString()].Value = Convert.ToDouble(fields[13]);
+                    worksheet.Cells["Q" + index1.ToString()].Value = Convert.ToDouble(fields[14]);
+                    worksheet.Cells["R" + index1.ToString()].Value = (Convert.ToDouble(fields[2]) - 1) * 100;
+                    worksheet.Cells["S" + index1.ToString()].Value = Convert.ToDouble(fields[3]);
+                    worksheet.Cells["T" + index1.ToString()].Value = (Convert.ToDouble(fields[4]) - 1) * 100;
+                    index1 += 1;
                 }
-                DrawParameterScatterChart(worksheet, lists, "ScatterPlotGp1", 0, "F", "GP1");
-                DrawParameterScatterChart(worksheet, lists, "ScatterPlotGp2", 20, "G", "GP2");
-                DrawParameterScatterChart(worksheet, lists, "ScatterPlotGp3", 40, "H", "GP3");
+                int index2 = list_string.Count - dict["firstZeroIndex"] + 2;
+                for (int list_string_index = 0; list_string_index < dict["firstZeroIndex"]; list_string_index++)
+                {
+                    string[] fields = list_string[list_string_index].Split(',');
+                    worksheet.Cells["A" + index2.ToString()].Value = Convert.ToDouble(fields[0]);
+                    worksheet.Cells["B" + index2.ToString()].Value = fields[1];
+                    worksheet.Cells["C" + index2.ToString()].Value = GetCoord(fields[1], "X");
+                    worksheet.Cells["D" + index2.ToString()].Value = GetCoord(fields[1], "Y");
+                    worksheet.Cells["E" + index2.ToString()].Value = Convert.ToDouble(fields[2]);
+                    worksheet.Cells["F" + index2.ToString()].Value = Convert.ToDouble(fields[3]);
+                    worksheet.Cells["G" + index2.ToString()].Value = Convert.ToDouble(fields[4]);
+                    worksheet.Cells["H" + index2.ToString()].Value = Convert.ToDouble(fields[5]);
+                    worksheet.Cells["I" + index2.ToString()].Value = Convert.ToDouble(fields[6]);
+                    worksheet.Cells["J" + index2.ToString()].Value = Convert.ToDouble(fields[7]);
+                    worksheet.Cells["K" + index2.ToString()].Value = Convert.ToDouble(fields[8]);
+                    worksheet.Cells["L" + index2.ToString()].Value = Convert.ToDouble(fields[9]);
+                    worksheet.Cells["M" + index2.ToString()].Value = Convert.ToDouble(fields[10]);
+                    worksheet.Cells["N" + index2.ToString()].Value = Convert.ToDouble(fields[11]);
+                    worksheet.Cells["O" + index2.ToString()].Value = Convert.ToDouble(fields[12]);
+                    worksheet.Cells["P" + index2.ToString()].Value = Convert.ToDouble(fields[13]);
+                    worksheet.Cells["Q" + index2.ToString()].Value = Convert.ToDouble(fields[14]);
+                    worksheet.Cells["R" + index2.ToString()].Value = (Convert.ToDouble(fields[2]) - 1) * 100;
+                    worksheet.Cells["S" + index2.ToString()].Value = Convert.ToDouble(fields[3]);
+                    worksheet.Cells["T" + index2.ToString()].Value = (Convert.ToDouble(fields[4]) - 1) * 100;
+                    index2 += 1;
+                }
+                DrawParameterScatterChart(worksheet, list_string, "Gp1", 0, "Gp1", "R", dict["lastZeroIndex"] - dict["firstZeroIndex"] + 1);
+                DrawParameterScatterChart(worksheet, list_string, "Gp2", 22, "Gp2", "S", dict["lastZeroIndex"] - dict["firstZeroIndex"] + 1);
+                DrawParameterScatterChart(worksheet, list_string, "Gp3", 44, "Gp3", "T", dict["lastZeroIndex"] - dict["firstZeroIndex"] + 1);
                 try
                 {
                     package.SaveAs(new FileInfo(xlsxfilepath));
@@ -653,7 +727,7 @@ namespace AutoFlow
                 {
                     Console.WriteLine(xlsxfilepath + " file is opened! Please close that file.");
                 }
-
+                return true;
             }
         }
         #endregion
