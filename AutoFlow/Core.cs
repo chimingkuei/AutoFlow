@@ -539,7 +539,7 @@ namespace AutoFlow
         #region Generate output_parameters.xlsx
         private void ParameterFieldLabel(ExcelWorksheet worksheet)
         {
-            string[] labels = { "tag", "filename", "X", "Y", "Gp1", "Gp2", "Gp3", "Gp4", "WL", "gth", "dn", "dip(meas)", "sbc(meas)", "sbw(meas)", "dip(sim)", "sbc(sim)", "sbw(sim)", "Gp1", "Gp2", "Gp3"};
+            string[] labels = { "tag", "filename", "X", "Y", "", "Gp1", "Gp2", "Gp3", "Gp4", "WL", "gth", "dn", "dip(meas)", "sbc(meas)", "sbw(meas)", "dip(sim)", "sbc(sim)", "sbw(sim)", "Gp1", "Gp2", "Gp3"};
             for (int i = 0; i < labels.Length; i++)
             {
                 worksheet.Cells[1, i + 1].Value = labels[i];
@@ -602,17 +602,26 @@ namespace AutoFlow
             
         }
 
-        //後續將x、y改成大寫
         private int GetCoord(string filename, string type)
         {
             int coord = 0;
             if (type == "X")
             {
-                coord = Convert.ToInt32(Path.GetFileNameWithoutExtension(filename).Split('_')[1].Trim('x'));
+                coord = Convert.ToInt32(Path.GetFileNameWithoutExtension(filename).Split('_')[1].Trim('X'));
             }
             else if (type == "Y")
             {
-                coord = Convert.ToInt32(Path.GetFileNameWithoutExtension(filename).Split('_')[2].Trim('y'));
+                coord = Convert.ToInt32(Path.GetFileNameWithoutExtension(filename).Split('_')[2].Trim('Y'));
+            }
+            return coord;
+        }
+
+        private int GetNonZeroCoord(string filename)
+        {
+            int coord = Convert.ToInt32(Path.GetFileNameWithoutExtension(filename).Split('_')[1].Trim('X'));
+            if (coord == 0)
+            {
+                coord = Convert.ToInt32(Path.GetFileNameWithoutExtension(filename).Split('_')[2].Trim('Y'));
             }
             return coord;
         }
@@ -655,6 +664,20 @@ namespace AutoFlow
             }
         }
 
+        private void DrawParameterScatterChart1(ExcelWorksheet worksheet, List<string> list_string, string chartnameGp, int pos, string title)
+        {
+            if (!CheckChartName(worksheet, chartnameGp))
+            {
+                ExcelChart chart = worksheet.Drawings.AddChart(chartnameGp, eChartType.XYScatter);
+                ParameterSetChartStyle(chart, new Tuple<int, int, int, int>(pos, 0, 22, 0), title);
+                var yaxis_x = GetRange(worksheet, "E", 2, list_string.Count + 1);
+                var yaxis_y = GetRange(worksheet, "S", 2, list_string.Count + 1);
+                var yaxis_series = (ExcelScatterChartSerie)chart.Series.Add(yaxis_y, yaxis_x);
+                yaxis_series.Marker.Style = eMarkerStyle.Circle;
+                yaxis_series.Fill.Color = Color.AliceBlue;
+            }
+        }
+
         public bool ParameterToScatterChart(string csvfilepath, string xlsxfilepath)
         {
             List<string> list_string = ParameterCSVToList(csvfilepath);
@@ -672,22 +695,23 @@ namespace AutoFlow
                     worksheet.Cells["B" + index1.ToString()].Value = fields[1];
                     worksheet.Cells["C" + index1.ToString()].Value = GetCoord(fields[1], "X");
                     worksheet.Cells["D" + index1.ToString()].Value = GetCoord(fields[1], "Y");
-                    worksheet.Cells["E" + index1.ToString()].Value = Convert.ToDouble(fields[2]);
-                    worksheet.Cells["F" + index1.ToString()].Value = Convert.ToDouble(fields[3]);
-                    worksheet.Cells["G" + index1.ToString()].Value = Convert.ToDouble(fields[4]);
-                    worksheet.Cells["H" + index1.ToString()].Value = Convert.ToDouble(fields[5]);
-                    worksheet.Cells["I" + index1.ToString()].Value = Convert.ToDouble(fields[6]);
-                    worksheet.Cells["J" + index1.ToString()].Value = Convert.ToDouble(fields[7]);
-                    worksheet.Cells["K" + index1.ToString()].Value = Convert.ToDouble(fields[8]);
-                    worksheet.Cells["L" + index1.ToString()].Value = Convert.ToDouble(fields[9]);
-                    worksheet.Cells["M" + index1.ToString()].Value = Convert.ToDouble(fields[10]);
-                    worksheet.Cells["N" + index1.ToString()].Value = Convert.ToDouble(fields[11]);
-                    worksheet.Cells["O" + index1.ToString()].Value = Convert.ToDouble(fields[12]);
-                    worksheet.Cells["P" + index1.ToString()].Value = Convert.ToDouble(fields[13]);
-                    worksheet.Cells["Q" + index1.ToString()].Value = Convert.ToDouble(fields[14]);
-                    worksheet.Cells["R" + index1.ToString()].Value = (Convert.ToDouble(fields[2]) - 1) * 100;
-                    worksheet.Cells["S" + index1.ToString()].Value = Convert.ToDouble(fields[3]);
-                    worksheet.Cells["T" + index1.ToString()].Value = (Convert.ToDouble(fields[4]) - 1) * 100;
+                    worksheet.Cells["E" + index1.ToString()].Value = GetNonZeroCoord(fields[1]);
+                    worksheet.Cells["F" + index1.ToString()].Value = Convert.ToDouble(fields[2]);
+                    worksheet.Cells["G" + index1.ToString()].Value = Convert.ToDouble(fields[3]);
+                    worksheet.Cells["H" + index1.ToString()].Value = Convert.ToDouble(fields[4]);
+                    worksheet.Cells["I" + index1.ToString()].Value = Convert.ToDouble(fields[5]);
+                    worksheet.Cells["J" + index1.ToString()].Value = Convert.ToDouble(fields[6]);
+                    worksheet.Cells["K" + index1.ToString()].Value = Convert.ToDouble(fields[7]);
+                    worksheet.Cells["L" + index1.ToString()].Value = Convert.ToDouble(fields[8]);
+                    worksheet.Cells["M" + index1.ToString()].Value = Convert.ToDouble(fields[9]);
+                    worksheet.Cells["N" + index1.ToString()].Value = Convert.ToDouble(fields[10]);
+                    worksheet.Cells["O" + index1.ToString()].Value = Convert.ToDouble(fields[11]);
+                    worksheet.Cells["P" + index1.ToString()].Value = Convert.ToDouble(fields[12]);
+                    worksheet.Cells["Q" + index1.ToString()].Value = Convert.ToDouble(fields[13]);
+                    worksheet.Cells["R" + index1.ToString()].Value = Convert.ToDouble(fields[14]);
+                    worksheet.Cells["S" + index1.ToString()].Value = (Convert.ToDouble(fields[2]) - 1) * 100;
+                    worksheet.Cells["T" + index1.ToString()].Value = Convert.ToDouble(fields[3]);
+                    worksheet.Cells["U" + index1.ToString()].Value = (Convert.ToDouble(fields[4]) - 1) * 100;
                     index1 += 1;
                 }
                 int index2 = list_string.Count - dict["firstZeroIndex"] + 2;
@@ -698,27 +722,29 @@ namespace AutoFlow
                     worksheet.Cells["B" + index2.ToString()].Value = fields[1];
                     worksheet.Cells["C" + index2.ToString()].Value = GetCoord(fields[1], "X");
                     worksheet.Cells["D" + index2.ToString()].Value = GetCoord(fields[1], "Y");
-                    worksheet.Cells["E" + index2.ToString()].Value = Convert.ToDouble(fields[2]);
-                    worksheet.Cells["F" + index2.ToString()].Value = Convert.ToDouble(fields[3]);
-                    worksheet.Cells["G" + index2.ToString()].Value = Convert.ToDouble(fields[4]);
-                    worksheet.Cells["H" + index2.ToString()].Value = Convert.ToDouble(fields[5]);
-                    worksheet.Cells["I" + index2.ToString()].Value = Convert.ToDouble(fields[6]);
-                    worksheet.Cells["J" + index2.ToString()].Value = Convert.ToDouble(fields[7]);
-                    worksheet.Cells["K" + index2.ToString()].Value = Convert.ToDouble(fields[8]);
-                    worksheet.Cells["L" + index2.ToString()].Value = Convert.ToDouble(fields[9]);
-                    worksheet.Cells["M" + index2.ToString()].Value = Convert.ToDouble(fields[10]);
-                    worksheet.Cells["N" + index2.ToString()].Value = Convert.ToDouble(fields[11]);
-                    worksheet.Cells["O" + index2.ToString()].Value = Convert.ToDouble(fields[12]);
-                    worksheet.Cells["P" + index2.ToString()].Value = Convert.ToDouble(fields[13]);
-                    worksheet.Cells["Q" + index2.ToString()].Value = Convert.ToDouble(fields[14]);
-                    worksheet.Cells["R" + index2.ToString()].Value = (Convert.ToDouble(fields[2]) - 1) * 100;
-                    worksheet.Cells["S" + index2.ToString()].Value = Convert.ToDouble(fields[3]);
-                    worksheet.Cells["T" + index2.ToString()].Value = (Convert.ToDouble(fields[4]) - 1) * 100;
+                    worksheet.Cells["E" + index2.ToString()].Value = GetNonZeroCoord(fields[1]);
+                    worksheet.Cells["F" + index2.ToString()].Value = Convert.ToDouble(fields[2]);
+                    worksheet.Cells["G" + index2.ToString()].Value = Convert.ToDouble(fields[3]);
+                    worksheet.Cells["H" + index2.ToString()].Value = Convert.ToDouble(fields[4]);
+                    worksheet.Cells["I" + index2.ToString()].Value = Convert.ToDouble(fields[5]);
+                    worksheet.Cells["J" + index2.ToString()].Value = Convert.ToDouble(fields[6]);
+                    worksheet.Cells["K" + index2.ToString()].Value = Convert.ToDouble(fields[7]);
+                    worksheet.Cells["L" + index2.ToString()].Value = Convert.ToDouble(fields[8]);
+                    worksheet.Cells["M" + index2.ToString()].Value = Convert.ToDouble(fields[9]);
+                    worksheet.Cells["N" + index2.ToString()].Value = Convert.ToDouble(fields[10]);
+                    worksheet.Cells["O" + index2.ToString()].Value = Convert.ToDouble(fields[11]);
+                    worksheet.Cells["P" + index2.ToString()].Value = Convert.ToDouble(fields[12]);
+                    worksheet.Cells["Q" + index2.ToString()].Value = Convert.ToDouble(fields[13]);
+                    worksheet.Cells["R" + index2.ToString()].Value = Convert.ToDouble(fields[14]);
+                    worksheet.Cells["S" + index2.ToString()].Value = (Convert.ToDouble(fields[2]) - 1) * 100;
+                    worksheet.Cells["T" + index2.ToString()].Value = Convert.ToDouble(fields[3]);
+                    worksheet.Cells["U" + index2.ToString()].Value = (Convert.ToDouble(fields[4]) - 1) * 100;
                     index2 += 1;
                 }
-                DrawParameterScatterChart(worksheet, list_string, "Gp1", 0, "Gp1", "R", dict["lastZeroIndex"] - dict["firstZeroIndex"] + 1);
-                DrawParameterScatterChart(worksheet, list_string, "Gp2", 22, "Gp2", "S", dict["lastZeroIndex"] - dict["firstZeroIndex"] + 1);
-                DrawParameterScatterChart(worksheet, list_string, "Gp3", 44, "Gp3", "T", dict["lastZeroIndex"] - dict["firstZeroIndex"] + 1);
+                DrawParameterScatterChart1(worksheet, list_string, "None", 0, "None");
+                DrawParameterScatterChart(worksheet, list_string, "Gp1", 22, "Gp1", "S", dict["lastZeroIndex"] - dict["firstZeroIndex"] + 1);
+                DrawParameterScatterChart(worksheet, list_string, "Gp2", 44, "Gp2", "T", dict["lastZeroIndex"] - dict["firstZeroIndex"] + 1);
+                DrawParameterScatterChart(worksheet, list_string, "Gp3", 66, "Gp3", "U", dict["lastZeroIndex"] - dict["firstZeroIndex"] + 1);
                 try
                 {
                     package.SaveAs(new FileInfo(xlsxfilepath));

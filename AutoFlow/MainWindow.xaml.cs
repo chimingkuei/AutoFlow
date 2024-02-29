@@ -492,7 +492,7 @@ namespace AutoFlow
             dict.Add("MoveWaveCsvPath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), date, Path.GetFileNameWithoutExtension(vsm_file) + "_output_waveform.csv"));
             dict.Add("MoveParameterCsvPath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), date, Path.GetFileNameWithoutExtension(vsm_file) + "_output_parameters.csv"));
             dict.Add("WaveXlsxPath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), date, Path.GetFileNameWithoutExtension(vsm_file) + "_output_waveform.xlsx"));
-            dict.Add("ParameterSummaryXlsxPath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), date, "output_parameters_summary.xlsx"));
+            dict.Add("ParameterXlsxPath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), date, Path.GetFileNameWithoutExtension(vsm_file) + "output_parameters.xlsx"));
             dict.Add("DatePath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), date));
             return dict;
         }
@@ -817,7 +817,7 @@ namespace AutoFlow
                             {
                                 File.Move(dict["WaveCsvPath"], dict["MoveWaveCsvPath"]);
                             }
-                            if (EH.ParameterToScatterChart(dict["ParameterCsvPath"], dict["MoveParameterCsvPath"]))
+                            if (EH.ParameterToScatterChart(dict["ParameterCsvPath"], dict["ParameterXlsxPath"]))
                             {
                                 File.Move(dict["ParameterCsvPath"], dict["MoveParameterCsvPath"]);
                             }
