@@ -1203,20 +1203,29 @@ namespace AutoFlow
                     }
                 case nameof(Change_Model_Item):
                     {
-                        Model_Type.Items.Clear();
                         List<Parameter> Parameter_info = Config.Load();
                         string Content = Parameter_info[0].Model_Type_val;
-                        if (!Model_Type_Checklist.Items.Cast<object>().Any(item => item.ToString() == Content))
+                        if (!string.IsNullOrEmpty(Content))
                         {
-                            Model_Type.Items.Add(Content);
+                            Model_Type.Items.Clear();
+                            if (!Model_Type_Checklist.Items.Cast<object>().Any(item => item.ToString() == Content))
+                            {
+                                Model_Type.Items.Add(Content);
+                            }
+                            Model_Type.SelectedValue = Content;
+                            foreach (var item in Model_Type_Checklist.Items)
+                            {
+                                Model_Type.Items.Add(item.ToString());
+                            }
+                            WriteListBoxContent();
+                            Logger.WriteLog("變更模型下拉按鈕項目!", LogLevel.General, richTextBoxGeneral);
                         }
-                        Model_Type.SelectedValue = Content;
-                        foreach (var item in Model_Type_Checklist.Items)
+                        else
                         {
-                            Model_Type.Items.Add(item.ToString());
+                            Model_Type.Items.Add("D4-1");
+                            Model_Type.SelectedValue = "D4-1";
+                            SaveConfig();
                         }
-                        WriteListBoxContent();
-                        Logger.WriteLog("變更模型下拉按鈕項目!", LogLevel.General, richTextBoxGeneral);
                         break;
                     }
             }
