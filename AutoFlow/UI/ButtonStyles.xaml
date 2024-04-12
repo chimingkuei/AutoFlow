@@ -4,7 +4,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border x:Name="Border" CornerRadius="15" Background="{TemplateBinding Background}" TextBlock.Foreground="Black">
+                    <Border x:Name="Border" CornerRadius="5" Background="{TemplateBinding Background}" TextBlock.Foreground="Black">
                         <!--设置控件的边框，圆角，背景色，字体颜色-->
                         <ContentPresenter Margin="{TemplateBinding Padding}" HorizontalAlignment="Center" VerticalAlignment="Center">
                             <!--显示控件的内容-->

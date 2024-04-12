@@ -65,20 +65,15 @@
                     </WrapPanel>
                 </Grid>
             </TabItem>
-            <TabItem Header="參數畫面" Style="{StaticResource BaseTabcontrol}">
+            <TabItem Header="參數畫面1" Style="{StaticResource BaseTabcontrol}">
                 <Grid>
-                    <ComboBox Style="{StaticResource AdvancedComboBox}" Name="Wafer_Type" HorizontalAlignment="Left" Width="106" FontSize="18" Margin="45,67,0,341" SelectionChanged="Wafer_Type_SelectionChanged">
+                    <ComboBox Style="{StaticResource AdvancedComboBox}" Name="Wafer_Type" HorizontalAlignment="Left" Width="106" FontSize="18" Margin="44,34,0,374" SelectionChanged="Wafer_Type_SelectionChanged">
                         <ComboBoxItem IsSelected="True">6吋晶圓</ComboBoxItem>
                         <ComboBoxItem>4吋晶圓</ComboBoxItem>
                         <ComboBoxItem>3吋晶圓</ComboBoxItem>
                     </ComboBox>
-                    <ComboBox Style="{StaticResource AdvancedComboBox}" Name="Model_Type" HorizontalAlignment="Left" Width="106" FontSize="18" Margin="185,68,0,340" SelectionChanged="Model_Type_SelectionChanged">
-                        <ComboBoxItem IsSelected="True">D3-18</ComboBoxItem>
-                        <ComboBoxItem>D3-19</ComboBoxItem>
-                        <ComboBoxItem>D4-1</ComboBoxItem>
-                        <ComboBoxItem>D4-7</ComboBoxItem>
-                    </ComboBox>
-                    <WrapPanel Orientation="Horizontal" Margin="6,123,567,35">
+                    <ComboBox Style="{StaticResource AdvancedComboBox}" Name="Model_Type" HorizontalAlignment="Left" Width="106" FontSize="18" Margin="183,34,0,373" SelectionChanged="Model_Type_SelectionChanged"/>
+                    <WrapPanel Orientation="Horizontal" Margin="6,82,567,76">
                         <Button x:Name="Open_Setting_File_Path" Style="{StaticResource FileButtonStyle}" Margin="23,13.2,0,0" FontSize="18" Height="51" Width="54" Click="Parameter_Btn_Click"/>
                         <TextBox x:Name="Setting_File_Location" Style="{StaticResource SettingTextBox}" Margin="10,15.4,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="32" Width="210"/>
                         <Button x:Name="Open_Ref_Fit_Folder" Style="{StaticResource FolderButtonStyle}" Margin="23,13.2,0,0" FontSize="18" Background="#FFE6F0FF" BorderThickness="0" Height="51" Width="54" Click="Parameter_Btn_Click"/>
@@ -88,9 +83,14 @@
                         <Button x:Name="Open_Xlsx_Folder" Style="{StaticResource FolderButtonStyle}" Margin="23,13.2,0,0" FontSize="18" Background="#FFE6F0FF" BorderThickness="0" Height="51" Width="54" Click="Parameter_Btn_Click"/>
                         <TextBox x:Name="Xlsx_File_Location" Style="{StaticResource XlsxTextBox}"  Margin="10,25.4,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="32" Width="210"/>
                     </WrapPanel>
-                    <Label x:Name="Save_Datfile_Label" Content="儲存dat檔:" HorizontalAlignment="Left" Margin="644,66,0,0" VerticalAlignment="Top" FontSize="18" Width="96"/>
-                    <CheckBox x:Name="Save_Datfile" Style="{StaticResource BaseCheckBox}" Background="#FF43B5BF" IsChecked="False" Content="Off" Tag="On" FontSize="15" Margin="753,66,72,343"/>
-                    <GroupBox Style="{StaticResource BaseGroupBox}" Margin="628,110,43,171" Header="卡控Ref-fit完成方法" FontSize="22" Foreground="Black" Background="Teal">
+                    <TextBox x:Name="Input_Model" Height="30" HorizontalAlignment="Left" Margin="352,54,0,0" VerticalAlignment="Top" Width="127" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18"/>
+                    <Button x:Name="Add_Item" Style="{StaticResource BaseButton}" Margin="492,35,0,0" Content="增加模型" VerticalAlignment="Top" HorizontalAlignment="Left" Width="80" Height="30" FontSize="18" Background="#FF6DB4EF" Click="Parameter_Btn_Click"/>
+                    <Button x:Name="Delete_Item" Style="{StaticResource BaseButton}" Margin="492,73,0,0" Content="刪除模型" VerticalAlignment="Top" HorizontalAlignment="Left" Width="80" Height="30" FontSize="18" Background="#FF6DB4EF" Click="Parameter_Btn_Click"/>
+                    <Button x:Name="Change_Model_Item" Style="{StaticResource BaseButton}" Margin="393,393,0,0" Content="變更模型下拉按鈕項目" VerticalAlignment="Top" HorizontalAlignment="Left" Height="34" Width="187" FontSize="18" Background="#FF6DB4EF" Click="Parameter_Btn_Click"/>
+                    <ListBox x:Name="Model_Type_Checklist" Background="LightBlue" Margin="343,111,311,62" FontSize="18"/>
+                    <Label x:Name="Save_Datfile_Label" Content="儲存dat檔:" HorizontalAlignment="Left" Margin="643,119,0,0" VerticalAlignment="Top" FontSize="18" Width="96"/>
+                    <CheckBox x:Name="Save_Datfile" Style="{StaticResource BaseCheckBox}" Background="#FF43B5BF" IsChecked="False" Content="Off" Tag="On" FontSize="15" Margin="740,119,85,290"/>
+                    <GroupBox Style="{StaticResource BaseGroupBox}" Margin="623,168,48,112" Header="卡控Ref-fit完成方法" FontSize="22" Foreground="Black" Background="Teal">
                         <Grid Margin="-10,-7,-9,-11">
                             <RadioButton x:Name="Fixed_Time" Style="{StaticResource BaseRadioButton}" Margin="7,18,116,69" FontSize="18">固定時間</RadioButton>
                             <xctk:IntegerUpDown x:Name="Fixed_Time_Value" Margin="113,22,16,70" Minimum="0" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="時間(s)" HorizontalContentAlignment="Center"/>
@@ -98,33 +98,47 @@
                             <xctk:IntegerUpDown x:Name="Stop_Writing_Value" Margin="113,69,16,23" Minimum="0" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="時間(s)" HorizontalContentAlignment="Center"/>
                         </Grid>
                     </GroupBox>
-                    <Button x:Name="Save_Config" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="690,304,103,42" Content="儲存參數" Click="Parameter_Btn_Click"/>
-                    <WrapPanel Orientation="Horizontal" Margin="314,17,301,8">
-                        <TextBox x:Name="VSM_Windows_Title" Style="{StaticResource WindowsTitleTextBox}" Margin="79,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
-                        <xctk:IntegerUpDown x:Name="VSM_Windows_X" Margin="32.6,3,0,0" Minimum="0" Maximum="1920" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入X座標" HorizontalContentAlignment="Center"/>
-                        <xctk:IntegerUpDown x:Name="VSM_Windows_Y" Margin="32.6,3,0,0" Minimum="0" Maximum="1080" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入Y座標" HorizontalContentAlignment="Center"/>
-                        <xctk:IntegerUpDown x:Name="VSM_Windows_Width" Margin="32.6,3,0,0" Minimum="0" Maximum="1920" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入寬度" HorizontalContentAlignment="Center"/>
-                        <xctk:IntegerUpDown x:Name="VSM_Windows_Height" Margin="32.6,3,0,0" Minimum="0" Maximum="1080" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入長度" HorizontalContentAlignment="Center"/>
-                        <Button x:Name="VSM_Set_Windows" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="89,3,0,0" Click="Parameter_Btn_Click">
-                            <TextBlock TextAlignment="Center">
-                                設定vsm
-                                <LineBreak/>
-                                對話視窗位置
-                            </TextBlock>
-                        </Button>
-                        <TextBox x:Name="Dat_Windows_Title" Style="{StaticResource WindowsTitleTextBox}" Margin="79,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32"/>
-                        <xctk:IntegerUpDown x:Name="Dat_Windows_X" Margin="32.6,3,0,0" Minimum="0" Maximum="1920" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入X座標" HorizontalContentAlignment="Center"/>
-                        <xctk:IntegerUpDown x:Name="Dat_Windows_Y" Margin="32.6,3,0,0" Minimum="0" Maximum="1080" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入Y座標" HorizontalContentAlignment="Center"/>
-                        <xctk:IntegerUpDown x:Name="Dat_Windows_Width" Margin="32.6,3,0,0" Minimum="0" Maximum="1920" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入寬度" HorizontalContentAlignment="Center"/>
-                        <xctk:IntegerUpDown x:Name="Dat_Windows_Height" Margin="32.6,3,0,0" Minimum="0" Maximum="1080" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入長度" HorizontalContentAlignment="Center"/>
-                        <Button x:Name="Dat_Set_Windows" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="89,3,0,0" Click="Parameter_Btn_Click">
-                            <TextBlock TextAlignment="Center">
-                                設定dat
-                                <LineBreak/>
-                                對話視窗位置
-                            </TextBlock>
-                        </Button>
-                    </WrapPanel>
+                    <Button x:Name="Save_Config" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="125,340,668,6" Content="儲存參數" FontSize="18" Click="Parameter_Btn_Click"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="參數畫面2" Style="{StaticResource BaseTabcontrol}">
+                <Grid>
+                    <GroupBox Style="{StaticResource BaseGroupBox}" Margin="10,26,600,34" Header="vsm對話視窗位置" FontSize="22" Foreground="Black" Background="Teal">
+                        <WrapPanel Orientation="Horizontal" Margin="-5,0,-7,0" Height="343">
+                            <TextBox x:Name="VSM_Windows_Title" Style="{StaticResource WindowsTitleTextBox}" Margin="76.5,28.8,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32" FontSize="12"/>
+                            <xctk:IntegerUpDown x:Name="VSM_Windows_X" Margin="31,28.8,0,0" Minimum="0" Maximum="1920" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入X座標" HorizontalContentAlignment="Center"/>
+                            <xctk:IntegerUpDown x:Name="VSM_Windows_Y" Margin="31,28.8,0,0" Minimum="0" Maximum="1080" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入Y座標" HorizontalContentAlignment="Center"/>
+                            <xctk:IntegerUpDown x:Name="VSM_Windows_Width" Margin="31,28.8,0,0" Minimum="0" Maximum="1920" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入寬度" HorizontalContentAlignment="Center"/>
+                            <xctk:IntegerUpDown x:Name="VSM_Windows_Height" Margin="31,28.8,0,0" Minimum="0" Maximum="1080" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入長度" HorizontalContentAlignment="Center"/>
+                            <Button x:Name="VSM_Set_Windows" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="86.5,28.8,0,0" FontSize="18" Click="Parameter_Btn_Click">
+                                <TextBlock TextAlignment="Center">設定</TextBlock>
+                            </Button>
+                        </WrapPanel>
+                    </GroupBox>
+                    <GroupBox Style="{StaticResource BaseGroupBox}" Margin="305,26,305,34" Header="dat對話視窗位置" FontSize="22" Foreground="Black" Background="Teal">
+                        <WrapPanel Orientation="Horizontal" Margin="-5,0,-7,0" Height="343">
+                            <TextBox x:Name="Dat_Windows_Title" Style="{StaticResource WindowsTitleTextBox}" Margin="76.5,28.8,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32" FontSize="12"/>
+                            <xctk:IntegerUpDown x:Name="Dat_Windows_X" Margin="31,28.8,0,0" Minimum="0" Maximum="1920" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入X座標" HorizontalContentAlignment="Center"/>
+                            <xctk:IntegerUpDown x:Name="Dat_Windows_Y" Margin="31,28.8,0,0" Minimum="0" Maximum="1080" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入Y座標" HorizontalContentAlignment="Center"/>
+                            <xctk:IntegerUpDown x:Name="Dat_Windows_Width" Margin="31,28.8,0,0" Minimum="0" Maximum="1920" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入寬度" HorizontalContentAlignment="Center"/>
+                            <xctk:IntegerUpDown x:Name="Dat_Windows_Height" Margin="31,28.8,0,0" Minimum="0" Maximum="1080" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入長度" HorizontalContentAlignment="Center"/>
+                            <Button x:Name="Dat_Set_Windows" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="86.5,28.8,0,0" FontSize="18" Click="Parameter_Btn_Click">
+                                <TextBlock TextAlignment="Center">設定</TextBlock>
+                            </Button>
+                        </WrapPanel>
+                    </GroupBox>
+                    <GroupBox Style="{StaticResource BaseGroupBox}" Margin="600,26,10,34" Header="VCSEL/DBR對話視窗位置" FontSize="22" Foreground="Black" Background="Teal">
+                        <WrapPanel Orientation="Horizontal" Margin="-5,0,-7,0" Height="343">
+                            <TextBox x:Name="VDSW_Windows_Title" Style="{StaticResource WindowsTitleTextBox}" Margin="76.5,28.8,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="120" Height="32" FontSize="12"/>
+                            <xctk:IntegerUpDown x:Name="VDSW_Windows_X" Margin="31,28.8,0,0"  Minimum="0" Maximum="1920" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入X座標" HorizontalContentAlignment="Center"/>
+                            <xctk:IntegerUpDown x:Name="VDSW_Windows_Y" Margin="31,28.8,0,0"  Minimum="0" Maximum="1920" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入Y座標" HorizontalContentAlignment="Center"/>
+                            <xctk:IntegerUpDown x:Name="VDSW_Windows_Width" Margin="31,28.8,0,0"  Minimum="0" Maximum="1920" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入寬度" HorizontalContentAlignment="Center"/>
+                            <xctk:IntegerUpDown x:Name="VDSW_Windows_Height" Margin="31,28.8,0,0"  Minimum="0" Maximum="1080" TextAlignment="Center" FontSize="12" Width="90" Height="32" Watermark="請輸入長度" HorizontalContentAlignment="Center"/>
+                            <Button x:Name="VDSW_Set_Windows" Style="{StaticResource CircleButton}" Width="100" Height="100" Margin="86.5,28.8,0,0" FontSize="18" Click="Parameter_Btn_Click">
+                                <TextBlock TextAlignment="Center">設定</TextBlock>
+                            </Button>
+                        </WrapPanel>
+                    </GroupBox>
                 </Grid>
             </TabItem>
         </TabControl>

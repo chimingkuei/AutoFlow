@@ -87,11 +87,11 @@ namespace AutoFlow
             public int X;
             public int Y;
         }
-        public void GetMousePosition()
+        public POINT GetMousePosition()
         {
             POINT point;
             GetCursorPos(out point);
-            Console.WriteLine($"Mouse Position - X: {point.X}, Y: {point.Y}");
+            return point;
         }
         #endregion
 
@@ -528,7 +528,7 @@ namespace AutoFlow
                 }
                 catch
                 {
-                    Console.WriteLine(xlsxfilepath + " file is opened! Please close that file.");
+                    Console.WriteLine(xlsxfilepath + "檔案被開啟!請關閉其檔案!");
                 }
 
             }
@@ -643,7 +643,21 @@ namespace AutoFlow
             return dict;
         }
 
-        private void DrawParameterScatterChart(ExcelWorksheet worksheet, List<string> list_string, string chartnameGp, int pos, string title, string field, int yaxis_length)
+        private void DrawParameterScatterChart1(ExcelWorksheet worksheet, List<string> list_string, string chartnameGp, int pos, string title)
+        {
+            if (!CheckChartName(worksheet, chartnameGp))
+            {
+                ExcelChart chart = worksheet.Drawings.AddChart(chartnameGp, eChartType.XYScatter);
+                ParameterSetChartStyle(chart, new Tuple<int, int, int, int>(pos, 0, 22, 0), title);
+                var yaxis_x = GetRange(worksheet, "E", 2, list_string.Count + 1);
+                var yaxis_y = GetRange(worksheet, "S", 2, list_string.Count + 1);
+                var yaxis_series = (ExcelScatterChartSerie)chart.Series.Add(yaxis_y, yaxis_x);
+                yaxis_series.Marker.Style = eMarkerStyle.Circle;
+                yaxis_series.Fill.Color = Color.AliceBlue;
+            }
+        }
+
+        private void DrawParameterScatterChart2(ExcelWorksheet worksheet, List<string> list_string, string chartnameGp, int pos, string title, string field, int yaxis_length)
         {
             if (!CheckChartName(worksheet, chartnameGp))
             {
@@ -661,20 +675,6 @@ namespace AutoFlow
                 xaxis_series1.Marker.Style = eMarkerStyle.Square;
                 xaxis_series1.Fill.Color = Color.Orange;
                 xaxis_series1.Header = "X";
-            }
-        }
-
-        private void DrawParameterScatterChart1(ExcelWorksheet worksheet, List<string> list_string, string chartnameGp, int pos, string title)
-        {
-            if (!CheckChartName(worksheet, chartnameGp))
-            {
-                ExcelChart chart = worksheet.Drawings.AddChart(chartnameGp, eChartType.XYScatter);
-                ParameterSetChartStyle(chart, new Tuple<int, int, int, int>(pos, 0, 22, 0), title);
-                var yaxis_x = GetRange(worksheet, "E", 2, list_string.Count + 1);
-                var yaxis_y = GetRange(worksheet, "S", 2, list_string.Count + 1);
-                var yaxis_series = (ExcelScatterChartSerie)chart.Series.Add(yaxis_y, yaxis_x);
-                yaxis_series.Marker.Style = eMarkerStyle.Circle;
-                yaxis_series.Fill.Color = Color.AliceBlue;
             }
         }
 
@@ -742,16 +742,16 @@ namespace AutoFlow
                     index2 += 1;
                 }
                 DrawParameterScatterChart1(worksheet, list_string, "None", 0, "None");
-                DrawParameterScatterChart(worksheet, list_string, "Gp1", 22, "Gp1", "S", dict["lastZeroIndex"] - dict["firstZeroIndex"] + 1);
-                DrawParameterScatterChart(worksheet, list_string, "Gp2", 44, "Gp2", "T", dict["lastZeroIndex"] - dict["firstZeroIndex"] + 1);
-                DrawParameterScatterChart(worksheet, list_string, "Gp3", 66, "Gp3", "U", dict["lastZeroIndex"] - dict["firstZeroIndex"] + 1);
+                DrawParameterScatterChart2(worksheet, list_string, "Gp1", 22, "Gp1", "S", dict["lastZeroIndex"] - dict["firstZeroIndex"] + 1);
+                DrawParameterScatterChart2(worksheet, list_string, "Gp2", 44, "Gp2", "T", dict["lastZeroIndex"] - dict["firstZeroIndex"] + 1);
+                DrawParameterScatterChart2(worksheet, list_string, "Gp3", 66, "Gp3", "U", dict["lastZeroIndex"] - dict["firstZeroIndex"] + 1);
                 try
                 {
                     package.SaveAs(new FileInfo(xlsxfilepath));
                 }
                 catch
                 {
-                    Console.WriteLine(xlsxfilepath + " file is opened! Please close that file.");
+                    Console.WriteLine(xlsxfilepath + "檔案被開啟!請關閉其檔案!");
                 }
                 return true;
             }

@@ -48,6 +48,7 @@ namespace AutoFlow
         public string VSM_File_Location_val { get; set; }
         public string Xlsx_File_Location_val { get; set; }
         public string Wafer_Type_val { get; set; }
+        public string Model_Type_val { get; set; }
         public string VSM_Windows_Title_val { get; set; }
         public string VSM_Windows_X_val { get; set; }
         public string VSM_Windows_Y_val { get; set; }
@@ -58,12 +59,18 @@ namespace AutoFlow
         public string Dat_Windows_Y_val { get; set; }
         public string Dat_Windows_Width_val { get; set; }
         public string Dat_Windows_Height_val { get; set; }
+        public string VDSW_Windows_Title_val { get; set; }
+        public string VDSW_Windows_X_val { get; set; }
+        public string VDSW_Windows_Y_val { get; set; }
+        public string VDSW_Windows_Width_val { get; set; }
+        public string VDSW_Windows_Height_val { get; set; }
         public bool Save_Datfile_val { get; set; }
         public bool Fixed_Time_val { get; set; }
         public bool Stop_Writing_val { get; set; }
         public string Fixed_Time_Value_val { get; set; }
         public string Stop_Writing_Value_val { get; set; }
     }
+
     public partial class MainWindow : System.Windows.Window
     {
 
@@ -235,7 +242,7 @@ namespace AutoFlow
 
         private void Lock()
         {
-            if (GetBoardSerialNumber() != "BSS-0123456789")
+            if (GetBoardSerialNumber() != "220699153100202")
             {
                 MessageBox.Show("請聯繫廠商提供Licence!", "確認", MessageBoxButton.OK, MessageBoxImage.Warning);
                 Environment.Exit(0);
@@ -254,6 +261,7 @@ namespace AutoFlow
                 VSM_File_Location.Text = Parameter_info[0].VSM_File_Location_val;
                 Xlsx_File_Location.Text = Parameter_info[0].Xlsx_File_Location_val;
                 Wafer_Type.Text = Parameter_info[0].Wafer_Type_val;
+                Model_Type.Text = Parameter_info[0].Model_Type_val;
                 VSM_Windows_Title.Text = Parameter_info[0].VSM_Windows_Title_val;
                 VSM_Windows_X.Text = Parameter_info[0].VSM_Windows_X_val;
                 VSM_Windows_Y.Text = Parameter_info[0].VSM_Windows_Y_val;
@@ -264,6 +272,11 @@ namespace AutoFlow
                 Dat_Windows_Y.Text = Parameter_info[0].Dat_Windows_Y_val;
                 Dat_Windows_Width.Text = Parameter_info[0].Dat_Windows_Width_val;
                 Dat_Windows_Height.Text = Parameter_info[0].Dat_Windows_Height_val;
+                VDSW_Windows_Title.Text = Parameter_info[0].VDSW_Windows_Title_val;
+                VDSW_Windows_X.Text = Parameter_info[0].VDSW_Windows_X_val;
+                VDSW_Windows_Y.Text = Parameter_info[0].VDSW_Windows_Y_val;
+                VDSW_Windows_Width.Text = Parameter_info[0].VDSW_Windows_Width_val;
+                VDSW_Windows_Height.Text = Parameter_info[0].VDSW_Windows_Height_val;
                 Save_Datfile.IsChecked = Parameter_info[0].Save_Datfile_val;
                 Fixed_Time.IsChecked = Parameter_info[0].Fixed_Time_val;
                 Stop_Writing.IsChecked = Parameter_info[0].Stop_Writing_val;
@@ -282,6 +295,7 @@ namespace AutoFlow
                     VSM_File_Location_val = VSM_File_Location.Text,
                     Xlsx_File_Location_val = Xlsx_File_Location.Text,
                     Wafer_Type_val = Wafer_Type.Text,
+                    Model_Type_val = Model_Type.Text,
                     VSM_Windows_Title_val = VSM_Windows_Title.Text,
                     VSM_Windows_X_val = VSM_Windows_X.Text,
                     VSM_Windows_Y_val = VSM_Windows_Y.Text,
@@ -291,13 +305,18 @@ namespace AutoFlow
                     Dat_Windows_X_val = Dat_Windows_X.Text,
                     Dat_Windows_Y_val = Dat_Windows_Y.Text,
                     Dat_Windows_Width_val = Dat_Windows_Width.Text,
-                    Dat_Windows_Height_val =Dat_Windows_Height.Text,
+                    Dat_Windows_Height_val = Dat_Windows_Height.Text,
+                    VDSW_Windows_Title_val = VDSW_Windows_Title.Text,
+                    VDSW_Windows_X_val = VDSW_Windows_X.Text,
+                    VDSW_Windows_Y_val = VDSW_Windows_Y.Text,
+                    VDSW_Windows_Width_val = VDSW_Windows_Width.Text,
+                    VDSW_Windows_Height_val = VDSW_Windows_Height.Text,
                     Save_Datfile_val = (bool)Save_Datfile.IsChecked,
                     Fixed_Time_val = (bool)Fixed_Time.IsChecked,
                     Stop_Writing_val = (bool)Stop_Writing.IsChecked,
                     Fixed_Time_Value_val = Fixed_Time_Value.Text,
                     Stop_Writing_Value_val = Stop_Writing_Value.Text
-                }
+                 }
             };
             Config.Save(Parameter_config);
         }
@@ -462,13 +481,25 @@ namespace AutoFlow
 
         private void SetWindowsPos(TextBox Windows_Title, Xceed.Wpf.Toolkit.IntegerUpDown Windows_X, Xceed.Wpf.Toolkit.IntegerUpDown Windows_Y, Xceed.Wpf.Toolkit.IntegerUpDown Windows_Width, Xceed.Wpf.Toolkit.IntegerUpDown Windows_Height, string annotation = null)
         {
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
             int x = IntegerUpDownDispatcherGetValue(Windows_X);
             int y = IntegerUpDownDispatcherGetValue(Windows_Y);
             int w = IntegerUpDownDispatcherGetValue(Windows_Width);
             int h = IntegerUpDownDispatcherGetValue(Windows_Height);
             Tuple<int, int, int, int> vsm_dialogue_windows_pos = new Tuple<int, int, int, int>(x, y, w, h);
             Do.SetWindowsPosition(TextBoxDispatcherGetValue(Windows_Title), vsm_dialogue_windows_pos);
+        }
+
+        private void SetWindowsPosVDSW(string wafername, Xceed.Wpf.Toolkit.IntegerUpDown Windows_X, Xceed.Wpf.Toolkit.IntegerUpDown Windows_Y, Xceed.Wpf.Toolkit.IntegerUpDown Windows_Width, Xceed.Wpf.Toolkit.IntegerUpDown Windows_Height, string annotation = null)
+        {
+            Thread.Sleep(500);
+            Thread.Sleep(1000);
+            int x = IntegerUpDownDispatcherGetValue(Windows_X);
+            int y = IntegerUpDownDispatcherGetValue(Windows_Y);
+            int w = IntegerUpDownDispatcherGetValue(Windows_Width);
+            int h = IntegerUpDownDispatcherGetValue(Windows_Height);
+            Tuple<int, int, int, int> vsm_dialogue_windows_pos = new Tuple<int, int, int, int>(x, y, w, h);
+            Do.SetWindowsPosition("VCSEL/DBR Spectrum - [" + Path.GetFileName(wafername) + "]", vsm_dialogue_windows_pos);
         }
 
         private string CreateDateDir()
@@ -492,7 +523,7 @@ namespace AutoFlow
             dict.Add("MoveWaveCsvPath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), date, Path.GetFileNameWithoutExtension(vsm_file) + "_output_waveform.csv"));
             dict.Add("MoveParameterCsvPath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), date, Path.GetFileNameWithoutExtension(vsm_file) + "_output_parameters.csv"));
             dict.Add("WaveXlsxPath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), date, Path.GetFileNameWithoutExtension(vsm_file) + "_output_waveform.xlsx"));
-            dict.Add("ParameterXlsxPath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), date, Path.GetFileNameWithoutExtension(vsm_file) + "output_parameters.xlsx"));
+            dict.Add("ParameterXlsxPath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), date, Path.GetFileNameWithoutExtension(vsm_file) + "_output_parameters.xlsx"));
             dict.Add("DatePath", Path.Combine(TextBoxDispatcherGetValue(Xlsx_File_Location), date));
             return dict;
         }
@@ -709,6 +740,7 @@ namespace AutoFlow
                                     return;
                                 }
                             }
+                            SetWindowsPosVDSW(vsm_file[file], VDSW_Windows_X, VDSW_Windows_Y, VDSW_Windows_Width, VDSW_Windows_Height);
                             if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].Save_Text_val, "點選Save"))
                             {
                                 cts.Cancel();
@@ -979,6 +1011,33 @@ namespace AutoFlow
                 }
             };
         }
+
+        private void WriteListBoxContent()
+        {
+            using (StreamWriter file = new StreamWriter(@"Config/ListBox.txt"))
+            {
+                foreach (var item in Model_Type_Checklist.Items)
+                {
+                    file.WriteLine(item.ToString());
+                }
+            }
+        }
+
+        private void ReadListBoxContent()
+        {
+            string filePath = @"Config/ListBox.txt";
+            if (File.Exists(filePath))
+            {
+                using (StreamReader sr = new StreamReader(filePath))
+                {
+                    string line;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        Model_Type.Items.Add(line);
+                    }
+                }
+            }
+        }
         #endregion
 
         #region Parameter and Init
@@ -987,6 +1046,7 @@ namespace AutoFlow
             //Lock();
             InitialTray();
             LoadConfig();
+            ReadListBoxContent();
             //Do.LoadEIM();
             //Do.CloseCapsLock();
             CheckSendValueInit();
@@ -1009,7 +1069,7 @@ namespace AutoFlow
         List<AutoFlow.StepWindow.WaferPointParameter> WaferPointParameter_info;
         CancellationTokenSource cts;
         #endregion
-        
+
         #region Main Screen
         private void Main_Btn_Click(object sender, RoutedEventArgs e)
         {
@@ -1033,8 +1093,7 @@ namespace AutoFlow
                     }
                 case nameof(Open_Wafer_Point):
                     {
-                        //OpenWaferWindow();
-                        EH.ParameterToScatterChart(@"D:\Chimingkuei\repos\Project\AutoFlow\Document\output_parameters.csv", @"D:\Chimingkuei\repos\Project\AutoFlow\Document\output_parameters.xlsx");
+                        OpenWaferWindow();
                         break;
                     }
             }
@@ -1111,10 +1170,53 @@ namespace AutoFlow
                         Logger.WriteLog("設定dat對話視窗位置!", LogLevel.General, richTextBoxGeneral);
                         break;
                     }
+                case nameof(VDSW_Set_Windows):
+                    {
+                        SetWindowsPosVDSW(VDSW_Windows_Title.Text, VDSW_Windows_X, VDSW_Windows_Y, VDSW_Windows_Width, VDSW_Windows_Height);
+                        break;
+                    }
                 case nameof(Save_Config):
                     {
                         SaveConfig();
                         Logger.WriteLog("儲存參數!", LogLevel.General, richTextBoxGeneral);
+                        break;
+                    }
+                case nameof(Add_Item):
+                    {
+                        string item = Input_Model.Text;
+                        if (!string.IsNullOrEmpty(item))
+                        {
+                            Model_Type_Checklist.Items.Add(item);
+                            Logger.WriteLog("增加模型名稱!", LogLevel.General, richTextBoxGeneral);
+                        }
+                        break;
+                    }
+                case nameof(Delete_Item):
+                    {
+                        string item = Input_Model.Text;
+                        if (!string.IsNullOrEmpty(item))
+                        {
+                            Model_Type_Checklist.Items.Remove(item);
+                            Logger.WriteLog("刪除模型名稱!", LogLevel.General, richTextBoxGeneral);
+                        }
+                        break;
+                    }
+                case nameof(Change_Model_Item):
+                    {
+                        Model_Type.Items.Clear();
+                        List<Parameter> Parameter_info = Config.Load();
+                        string Content = Parameter_info[0].Model_Type_val;
+                        if (!Model_Type_Checklist.Items.Cast<object>().Any(item => item.ToString() == Content))
+                        {
+                            Model_Type.Items.Add(Content);
+                        }
+                        Model_Type.SelectedValue = Content;
+                        foreach (var item in Model_Type_Checklist.Items)
+                        {
+                            Model_Type.Items.Add(item.ToString());
+                        }
+                        WriteListBoxContent();
+                        Logger.WriteLog("變更模型下拉按鈕項目!", LogLevel.General, richTextBoxGeneral);
                         break;
                     }
             }
@@ -1174,8 +1276,11 @@ namespace AutoFlow
                     if (File.Exists(Setting_File_Location.Text))
                     {
                         string stringToRemove = "System.Windows.Controls.ComboBoxItem: ";
-                        Do.CheckModel(Setting_File_Location.Text, Model_Type.SelectedValue.ToString().Replace(stringToRemove, ""));
-                        Logger.WriteLog($"更新{Model_Type.SelectedValue.ToString().Replace(stringToRemove, "")}模型!", LogLevel.General, richTextBoxGeneral);
+                        if (Model_Type.SelectedValue != null)
+                        {
+                            Do.CheckModel(Setting_File_Location.Text, Model_Type.SelectedValue.ToString().Replace(stringToRemove, ""));
+                            Logger.WriteLog($"更新{Model_Type.SelectedValue.ToString().Replace(stringToRemove, "")}模型!", LogLevel.General, richTextBoxGeneral);
+                        }
                     }
                     else
                     {

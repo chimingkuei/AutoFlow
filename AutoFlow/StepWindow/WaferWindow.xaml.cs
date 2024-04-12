@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -35,9 +36,33 @@ namespace AutoFlow.StepWindow
         public WaferWindow()
         {
             InitializeComponent();
+            GetScreenPos();
         }
 
         #region Function
+        private void GetScreenPos()
+        {
+            Task.Run(() =>
+            {
+                while (true)
+                {
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        TextBoxDispatcherSetValue(X, Do.GetMousePosition().X.ToString());
+                        TextBoxDispatcherSetValue(Y, Do.GetMousePosition().Y.ToString());
+                    });
+                    Thread.Sleep(100);
+                }
+            });
+        }
+        public void TextBoxDispatcherSetValue(TextBox control, string name)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                control.Text = name  ;
+            });
+        }
+
         #region Config
         private void SaveWaferPointConfig(int index)
         {
