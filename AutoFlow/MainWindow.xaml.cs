@@ -242,7 +242,7 @@ namespace AutoFlow
 
         private void Lock()
         {
-            if (GetBoardSerialNumber() != "220699153100202")
+            if (GetBoardSerialNumber() != "07D5910_M71E680889")
             {
                 MessageBox.Show("請聯繫廠商提供Licence!", "確認", MessageBoxButton.OK, MessageBoxImage.Warning);
                 Environment.Exit(0);
@@ -581,6 +581,7 @@ namespace AutoFlow
                         if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].Open_Text_val, "點選資料夾圖示"))
                         {
                             cts.Cancel();
+                            Do.ForegroundAutoflow();
                             this.Dispatcher.Invoke(() =>
                             {
                                 Logger.WriteLog("有人員操作滑鼠!", LogLevel.General, richTextBoxGeneral);
@@ -594,6 +595,7 @@ namespace AutoFlow
                         if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].ChooseVSMPath_Text_val, "選擇vsm路徑"))
                         {
                             cts.Cancel();
+                            Do.ForegroundAutoflow();
                             this.Dispatcher.Invoke(() =>
                             {
                                 Logger.WriteLog("有人員操作滑鼠!", LogLevel.General, richTextBoxGeneral);
@@ -607,6 +609,7 @@ namespace AutoFlow
                         if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].VSM_Text_val, "點選開啟檔案類型欄位"))
                         {
                             cts.Cancel();
+                            Do.ForegroundAutoflow();
                             this.Dispatcher.Invoke(() =>
                             {
                                 Logger.WriteLog("有人員操作滑鼠!", LogLevel.General, richTextBoxGeneral);
@@ -619,6 +622,7 @@ namespace AutoFlow
                         if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].VSMType_Text_val, "選擇開檔類型vsm"))
                         {
                             cts.Cancel();
+                            Do.ForegroundAutoflow();
                             this.Dispatcher.Invoke(() =>
                             {
                                 Logger.WriteLog("有人員操作滑鼠!", LogLevel.General, richTextBoxGeneral);
@@ -631,6 +635,7 @@ namespace AutoFlow
                         if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].InputVSM_Text_val, "點選輸入vsm檔欄位"))
                         {
                             cts.Cancel();
+                            Do.ForegroundAutoflow();
                             this.Dispatcher.Invoke(() =>
                             {
                                 Logger.WriteLog("有人員操作滑鼠!", LogLevel.General, richTextBoxGeneral);
@@ -644,6 +649,7 @@ namespace AutoFlow
                         if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].TurnOn_Text_val, "點選開啟"))
                         {
                             cts.Cancel();
+                            Do.ForegroundAutoflow();
                             this.Dispatcher.Invoke(() =>
                             {
                                 Logger.WriteLog("有人員操作滑鼠!", LogLevel.General, richTextBoxGeneral);
@@ -656,6 +662,7 @@ namespace AutoFlow
                         if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].View_Text_val, "點選view"))
                         {
                             cts.Cancel();
+                            Do.ForegroundAutoflow();
                             this.Dispatcher.Invoke(() =>
                             {
                                 Logger.WriteLog("有人員操作滑鼠!", LogLevel.General, richTextBoxGeneral);
@@ -668,6 +675,7 @@ namespace AutoFlow
                         if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].Display_Text_val, "點選Display"))
                         {
                             cts.Cancel();
+                            Do.ForegroundAutoflow();
                             this.Dispatcher.Invoke(() =>
                             {
                                 Logger.WriteLog("有人員操作滑鼠!", LogLevel.General, richTextBoxGeneral);
@@ -680,6 +688,7 @@ namespace AutoFlow
                         if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].OnePane_Text_val, "點選1Pane"))
                         {
                             cts.Cancel();
+                            Do.ForegroundAutoflow();
                             this.Dispatcher.Invoke(() =>
                             {
                                 Logger.WriteLog("有人員操作滑鼠!", LogLevel.General, richTextBoxGeneral);
@@ -692,6 +701,7 @@ namespace AutoFlow
                         if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].Magnification_Text_val, "點選放大"))
                         {
                             cts.Cancel();
+                            Do.ForegroundAutoflow();
                             this.Dispatcher.Invoke(() =>
                             {
                                 Logger.WriteLog("有人員操作滑鼠!", LogLevel.General, richTextBoxGeneral);
@@ -707,6 +717,7 @@ namespace AutoFlow
                             if (!Do.SimulateLeftMouseDoubleClick(Do.ConvertWaferCoordStr(point).Item2, "點選Wafer點位"))
                             {
                                 cts.Cancel();
+                                Do.ForegroundAutoflow();
                                 this.Dispatcher.Invoke(() =>
                                 {
                                     Logger.WriteLog("有人員操作滑鼠!", LogLevel.General, richTextBoxGeneral);
@@ -719,6 +730,7 @@ namespace AutoFlow
                             if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].DTCS_Text_val, "點選DTCS"))
                             {
                                 cts.Cancel();
+                                Do.ForegroundAutoflow();
                                 this.Dispatcher.Invoke(() =>
                                 {
                                     Logger.WriteLog("有人員操作滑鼠!", LogLevel.General, richTextBoxGeneral);
@@ -731,6 +743,7 @@ namespace AutoFlow
                             if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].OK_Text_val, "點選OK"))
                             {
                                 cts.Cancel();
+                                Do.ForegroundAutoflow();
                                 this.Dispatcher.Invoke(() =>
                                 {
                                     Logger.WriteLog("有人員操作滑鼠!", LogLevel.General, richTextBoxGeneral);
@@ -744,6 +757,7 @@ namespace AutoFlow
                             if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].Save_Text_val, "點選Save"))
                             {
                                 cts.Cancel();
+                                Do.ForegroundAutoflow();
                                 this.Dispatcher.Invoke(() =>
                                 {
                                     Logger.WriteLog("有人員操作滑鼠!", LogLevel.General, richTextBoxGeneral);
@@ -757,6 +771,7 @@ namespace AutoFlow
                             if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].Dat_Text_val, "點選存檔類型欄位"))
                             {
                                 cts.Cancel();
+                                Do.ForegroundAutoflow();
                                 this.Dispatcher.Invoke(() =>
                                 {
                                     Logger.WriteLog("有人員操作滑鼠!", LogLevel.General, richTextBoxGeneral);
@@ -769,6 +784,7 @@ namespace AutoFlow
                             if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].DatType_Text_val, "選擇儲存類型dat"))
                             {
                                 cts.Cancel();
+                                Do.ForegroundAutoflow();
                                 this.Dispatcher.Invoke(() =>
                                 {
                                     Logger.WriteLog("有人員操作滑鼠!", LogLevel.General, richTextBoxGeneral);
@@ -781,6 +797,7 @@ namespace AutoFlow
                             if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].InputDat_Text_val, "點選輸入dat檔欄位"))
                             {
                                 cts.Cancel();
+                                Do.ForegroundAutoflow();
                                 this.Dispatcher.Invoke(() =>
                                 {
                                     Logger.WriteLog("有人員操作滑鼠!", LogLevel.General, richTextBoxGeneral);
@@ -794,6 +811,7 @@ namespace AutoFlow
                             if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].Archive_Text_val, "點選存檔"))
                             {
                                 cts.Cancel();
+                                Do.ForegroundAutoflow();
                                 this.Dispatcher.Invoke(() =>
                                 {
                                     Logger.WriteLog("有人員操作滑鼠!", LogLevel.General, richTextBoxGeneral);
@@ -806,6 +824,7 @@ namespace AutoFlow
                             if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].CloseVDSW_Text_val, "關閉VDSW"))
                             {
                                 cts.Cancel();
+                                Do.ForegroundAutoflow();
                                 this.Dispatcher.Invoke(() =>
                                 {
                                     Logger.WriteLog("有人員操作滑鼠!", LogLevel.General, richTextBoxGeneral);
@@ -820,6 +839,7 @@ namespace AutoFlow
                         if (!Do.SimulateLeftMouseClick(Step1Parameter_info[0].CloseWafer_Text_val, "關閉Wafer"))
                         {
                             cts.Cancel();
+                            Do.ForegroundAutoflow();
                             this.Dispatcher.Invoke(() =>
                             {
                                 Logger.WriteLog("有人員操作滑鼠!", LogLevel.General, richTextBoxGeneral);
@@ -855,6 +875,7 @@ namespace AutoFlow
                             }
                         }
                     };
+                    Do.ForegroundAutoflow();
                     this.Dispatcher.Invoke(() =>
                     {
                         Logger.WriteLog("自動化流程完成!", LogLevel.General, richTextBoxGeneral);
@@ -1047,8 +1068,8 @@ namespace AutoFlow
             InitialTray();
             LoadConfig();
             ReadListBoxContent();
-            //Do.LoadEIM();
-            //Do.CloseCapsLock();
+            Do.LoadEIM();
+            Do.CloseCapsLock();
             CheckSendValueInit();
             Model_Type_state = true;
             Wafer_Type_state = true;

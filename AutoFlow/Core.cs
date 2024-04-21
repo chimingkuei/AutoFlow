@@ -49,10 +49,10 @@ namespace AutoFlow
 
         #region Set foreground windows
         [DllImport("user32.dll")]
-        static extern bool SetForegroundWindows(IntPtr hWnd);
+        static extern bool SetForegroundWindow(IntPtr hWnd);
         public bool PackSetForegroundWindows(IntPtr hWnd)
         {
-            return SetForegroundWindows(hWnd);
+            return SetForegroundWindow(hWnd);
         }
         #endregion
 
@@ -74,6 +74,23 @@ namespace AutoFlow
                 System.Windows.MessageBox.Show($"未找到標題{windows_title}視窗!", "確認", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
+        }
+        #endregion
+
+        #region Show Windows
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        // Define constants for window show commands
+        const int SW_HIDE = 0;
+        const int SW_SHOWNORMAL = 1;
+        const int SW_SHOWMINIMIZED = 2;
+        const int SW_SHOWMAXIMIZED = 3;
+        const int SW_SHOWNOACTIVATE = 4;
+        const int SW_SHOW = 5;
+        const int SW_RESTORE = 9;
+        public bool PackShowWindows(IntPtr hWnd)
+        {
+            return ShowWindow(hWnd, SW_RESTORE);
         }
         #endregion
 
@@ -370,6 +387,17 @@ namespace AutoFlow
             process.StandardInput.WriteLine("run_RefFitTool.exe");
             process.Close();
         }
+
+        public void ForegroundAutoflow()
+        {
+            IntPtr targetWindowHandle = PackFindWindows(null, "AutoFlow");
+            if (targetWindowHandle != IntPtr.Zero)
+            {
+                PackShowWindows(targetWindowHandle);
+                PackSetForegroundWindows(targetWindowHandle);
+                //Console.WriteLine("視窗設定前景成功!");
+            }
+        }
     }
 
     class ExcelHandler
@@ -539,7 +567,7 @@ namespace AutoFlow
         #region Generate output_parameters.xlsx
         private void ParameterFieldLabel(ExcelWorksheet worksheet)
         {
-            string[] labels = { "tag", "filename", "X", "Y", "", "Gp1", "Gp2", "Gp3", "Gp4", "WL", "gth", "dn", "dip(meas)", "sbc(meas)", "sbw(meas)", "dip(sim)", "sbc(sim)", "sbw(sim)", "Gp1", "Gp2", "Gp3"};
+            string[] labels = { "tag", "filename", "X", "Y", "", "Gp1", "Gp2", "Gp3", "Gp4", "SCORE", "WL", "gth", "dn", "dTJ0", "dTJ1", "dip(meas)", "sbc(meas)", "sbw(meas)", "dip(sim)", "sbc(sim)", "sbw(sim)", "Gp1", "Gp2", "Gp3"};
             for (int i = 0; i < labels.Length; i++)
             {
                 worksheet.Cells[1, i + 1].Value = labels[i];
@@ -648,9 +676,9 @@ namespace AutoFlow
             if (!CheckChartName(worksheet, chartnameGp))
             {
                 ExcelChart chart = worksheet.Drawings.AddChart(chartnameGp, eChartType.XYScatter);
-                ParameterSetChartStyle(chart, new Tuple<int, int, int, int>(pos, 0, 22, 0), title);
+                ParameterSetChartStyle(chart, new Tuple<int, int, int, int>(pos, 0, 25, 0), title);
                 var yaxis_x = GetRange(worksheet, "E", 2, list_string.Count + 1);
-                var yaxis_y = GetRange(worksheet, "S", 2, list_string.Count + 1);
+                var yaxis_y = GetRange(worksheet, "V", 2, list_string.Count + 1);
                 var yaxis_series = (ExcelScatterChartSerie)chart.Series.Add(yaxis_y, yaxis_x);
                 yaxis_series.Marker.Style = eMarkerStyle.Circle;
                 yaxis_series.Fill.Color = Color.AliceBlue;
@@ -662,7 +690,7 @@ namespace AutoFlow
             if (!CheckChartName(worksheet, chartnameGp))
             {
                 ExcelChart chart = worksheet.Drawings.AddChart(chartnameGp, eChartType.XYScatter);
-                ParameterSetChartStyle(chart, new Tuple<int, int, int, int>(pos, 0, 22, 0), title);
+                ParameterSetChartStyle(chart, new Tuple<int, int, int, int>(pos, 0, 25, 0), title);
                 var yaxis_x = GetRange(worksheet, "D", 2, yaxis_length + 1);
                 var yaxis_y = GetRange(worksheet, field, 2, yaxis_length + 1);
                 var yaxis_series = (ExcelScatterChartSerie)chart.Series.Add(yaxis_y, yaxis_x);
@@ -709,9 +737,12 @@ namespace AutoFlow
                     worksheet.Cells["P" + index1.ToString()].Value = Convert.ToDouble(fields[12]);
                     worksheet.Cells["Q" + index1.ToString()].Value = Convert.ToDouble(fields[13]);
                     worksheet.Cells["R" + index1.ToString()].Value = Convert.ToDouble(fields[14]);
-                    worksheet.Cells["S" + index1.ToString()].Value = (Convert.ToDouble(fields[2]) - 1) * 100;
-                    worksheet.Cells["T" + index1.ToString()].Value = Convert.ToDouble(fields[3]);
-                    worksheet.Cells["U" + index1.ToString()].Value = (Convert.ToDouble(fields[4]) - 1) * 100;
+                    worksheet.Cells["S" + index1.ToString()].Value = Convert.ToDouble(fields[15]);
+                    worksheet.Cells["T" + index1.ToString()].Value = Convert.ToDouble(fields[16]);
+                    worksheet.Cells["U" + index1.ToString()].Value = Convert.ToDouble(fields[17]);
+                    worksheet.Cells["V" + index1.ToString()].Value = (Convert.ToDouble(fields[2]) - 1) * 100;
+                    worksheet.Cells["W" + index1.ToString()].Value = Convert.ToDouble(fields[3]);
+                    worksheet.Cells["X" + index1.ToString()].Value = (Convert.ToDouble(fields[4]) - 1) * 100;
                     index1 += 1;
                 }
                 int index2 = list_string.Count - dict["firstZeroIndex"] + 2;
@@ -736,15 +767,18 @@ namespace AutoFlow
                     worksheet.Cells["P" + index2.ToString()].Value = Convert.ToDouble(fields[12]);
                     worksheet.Cells["Q" + index2.ToString()].Value = Convert.ToDouble(fields[13]);
                     worksheet.Cells["R" + index2.ToString()].Value = Convert.ToDouble(fields[14]);
-                    worksheet.Cells["S" + index2.ToString()].Value = (Convert.ToDouble(fields[2]) - 1) * 100;
-                    worksheet.Cells["T" + index2.ToString()].Value = Convert.ToDouble(fields[3]);
-                    worksheet.Cells["U" + index2.ToString()].Value = (Convert.ToDouble(fields[4]) - 1) * 100;
+                    worksheet.Cells["S" + index2.ToString()].Value = Convert.ToDouble(fields[15]);
+                    worksheet.Cells["T" + index2.ToString()].Value = Convert.ToDouble(fields[16]);
+                    worksheet.Cells["U" + index2.ToString()].Value = Convert.ToDouble(fields[17]);
+                    worksheet.Cells["V" + index2.ToString()].Value = (Convert.ToDouble(fields[2]) - 1) * 100;
+                    worksheet.Cells["W" + index2.ToString()].Value = Convert.ToDouble(fields[3]);
+                    worksheet.Cells["X" + index2.ToString()].Value = (Convert.ToDouble(fields[4]) - 1) * 100;
                     index2 += 1;
                 }
                 DrawParameterScatterChart1(worksheet, list_string, "None", 0, "None");
-                DrawParameterScatterChart2(worksheet, list_string, "Gp1", 22, "Gp1", "S", dict["lastZeroIndex"] - dict["firstZeroIndex"] + 1);
-                DrawParameterScatterChart2(worksheet, list_string, "Gp2", 44, "Gp2", "T", dict["lastZeroIndex"] - dict["firstZeroIndex"] + 1);
-                DrawParameterScatterChart2(worksheet, list_string, "Gp3", 66, "Gp3", "U", dict["lastZeroIndex"] - dict["firstZeroIndex"] + 1);
+                DrawParameterScatterChart2(worksheet, list_string, "Gp1", 22, "Gp1", "V", dict["lastZeroIndex"] - dict["firstZeroIndex"] + 1);
+                DrawParameterScatterChart2(worksheet, list_string, "Gp2", 44, "Gp2", "W", dict["lastZeroIndex"] - dict["firstZeroIndex"] + 1);
+                DrawParameterScatterChart2(worksheet, list_string, "Gp3", 66, "Gp3", "X", dict["lastZeroIndex"] - dict["firstZeroIndex"] + 1);
                 try
                 {
                     package.SaveAs(new FileInfo(xlsxfilepath));
